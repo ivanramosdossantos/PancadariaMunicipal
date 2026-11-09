@@ -45,6 +45,9 @@ jobs:
           done
           node --check src/municipal.js
           node --check src/arte-pacotes.js
+          node --check src/arte-articulada.js
+          node --check src/arte.js
+          node --check src/scenes/BattleScene.js
       - name: Preparar arquivos estáticos
         run: |
           mkdir -p _site
