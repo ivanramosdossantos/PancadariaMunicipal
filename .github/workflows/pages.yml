@@ -30,6 +30,14 @@ jobs:
           test -f src/municipal.js
           test -f src/elenco.js
           test -f design/logo.svg
+          for id in periquito pagodeiro prefeito gladiador oaa patinho; do
+            for asset in retrato pose sprites; do
+              test -s "assets/lutadores/$id/$asset.png" || {
+                echo "::error::Arte ausente: assets/lutadores/$id/$asset.png"
+                exit 1
+              }
+            done
+          done
           node --check src/municipal.js
           node --check src/arte-pacotes.js
       - name: Preparar arquivos estáticos
