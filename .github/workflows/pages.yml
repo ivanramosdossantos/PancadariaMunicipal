@@ -25,8 +25,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Extrair pacote de artes, quando presente
         run: |
-          if [ -f pancadaria-pacote-de-artes.zip ]; then
-            unzip -oq pancadaria-pacote-de-artes.zip -d .
+          if [ -f artes-pancadaria.zip ]; then
+            unzip -oq artes-pancadaria.zip -d .
           fi
       - name: Verificar arquivos do jogo
         run: |
