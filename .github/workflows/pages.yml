@@ -23,6 +23,11 @@ jobs:
     steps:
       - name: Checkout motor-combate
         uses: actions/checkout@v4
+      - name: Extrair pacote de artes, quando presente
+        run: |
+          if [ -f pancadaria-pacote-de-artes.zip ]; then
+            unzip -oq pancadaria-pacote-de-artes.zip -d .
+          fi
       - name: Verificar arquivos do jogo
         run: |
           test -f index.html
