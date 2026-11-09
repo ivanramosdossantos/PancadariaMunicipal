@@ -3,11 +3,13 @@ import { Control } from './constants/controls.js';
 import { FRAME_TIME } from './constants/game.js';
 import { SCENE_WIDTH, SCENE_HEIGHT } from './constants/stage.js';
 import { elenco } from './elenco.js';
+import { arenas } from './arenas.js';
 import { drawFighter } from './arte.js';
 
 const $ = id => document.getElementById(id);
 const selection = [null, null];
 const cards = [];
+const arenaCards = [];
 const keyboard = new Set();
 const touches = new Map();
 const movementKeys = new Map([
@@ -27,7 +29,7 @@ let accumulator = 0;
 let last = null;
 let audio;
 let selectionStep = 0;
-let arenaReady = false;
+let selectedArena = null;
 
 function unlockAudio() {
   if (!window.AudioContext) return;
@@ -38,14 +40,15 @@ function unlockAudio() {
 function playSound(kind) {
   if (audio?.state !== 'running') return;
   const tones = {
-    prefeito: [68, 58, 47], pagodeiro: [392, 494, 587, 659],
+    prefeito: [150, 113, 68], pagodeiro: [392, 494, 587, 659],
+    periquito: [1300, 1040], gladiador: [105, 175], oaa: [185, 155, 112], patinho: [310, 365],
     hit: [95], block: [270], swing: [156],
   };
   for (const [index, frequency] of (tones[kind] ?? [262, 392]).entries()) {
     const start = audio.currentTime + index * 0.066;
     const oscillator = audio.createOscillator();
     const gain = audio.createGain();
-    oscillator.type = kind === 'pagodeiro' ? 'triangle' : 'sine';
+    oscillator.type = kind === 'pagodeiro' || kind === 'oaa' ? 'triangle' : 'sine';
     oscillator.frequency.setValueAtTime(frequency, start);
     oscillator.frequency.exponentialRampToValueAtTime(frequency * 0.52, start + 0.11);
     gain.gain.setValueAtTime(0.001, start);
@@ -98,6 +101,15 @@ function makeCards(container) {
 }
 
 function updateSelection() {
+  if (selectionStep === 2) {
+    for (const item of arenaCards) item.button.setAttribute('aria-pressed', String(item === selectedArena));
+    $('avancar').disabled = selectedArena?.status !== 'ready';
+    const status = $('carregamento');
+    status.textContent = selectedArena?.status === 'loading' ? 'Carregando a arena…'
+      : selectedArena?.status === 'error' ? 'A arena não carregou. Selecione outra ou recarregue a página.' : '';
+    status.hidden = !status.textContent;
+    return;
+  }
   const selected = selection[selectionStep];
   for (const button of cards) {
     button.setAttribute('aria-pressed', String(button.dataset.id === selected?.id));
@@ -115,17 +127,55 @@ function updateSelection() {
   $('nome-ficha').textContent = selected?.nome ?? 'Escolha na grade';
   $('golpes-ficha').textContent = selected ? 'Z · ' + selected.normal + '   /   X · ' + selected.especial : '';
   $('descricao-ficha').textContent = selected?.descricao ?? 'Selecione um retrato para ver os golpes.';
-  $('avancar').disabled = !selected || (selectionStep === 1 && !arenaReady);
+  $('avancar').disabled = !selected;
+}
+
+function makeArenaCards(container) {
+  for (const [index, arena] of arenas.entries()) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'card card-arena';
+    button.dataset.arena = arena.id;
+    const image = new Image();
+    image.alt = '';
+    const name = document.createElement('strong');
+    name.textContent = arena.nome;
+    const description = document.createElement('span');
+    description.textContent = arena.descricao;
+    const item = { arena, button, image, status: 'loading' };
+    image.src = arena.imagem;
+    image.decode().then(() => { item.status = 'ready'; }, () => { item.status = 'error'; })
+      .then(() => { if (selectionStep === 2) updateSelection(); });
+    button.append(image, name, description);
+    button.addEventListener('click', () => {
+      selectedArena = item;
+      updateSelection();
+    });
+    button.addEventListener('keydown', event => {
+      const next = index + ({ ArrowLeft: -1, ArrowRight: 1, ArrowUp: -1, ArrowDown: 1 }[event.key] ?? 0);
+      if (next === index || !arenaCards[next]) return;
+      event.preventDefault();
+      arenaCards[next].button.focus();
+      arenaCards[next].button.click();
+    });
+    arenaCards.push(item);
+    container.append(button);
+  }
 }
 
 function showSelection(step, focus = true) {
   selectionStep = step;
-  $('etapa').textContent = step ? '02 / 02 · MÁQUINA' : '01 / 02 · VOCÊ';
-  $('titulo-selecao').textContent = step ? 'Escolha o adversário' : 'Escolha seu lutador';
-  $('lado-ficha').textContent = step ? 'ADVERSÁRIO · CPU' : 'SEU LUTADOR · 1P';
-  $('avancar').textContent = step ? 'Começar duelo →' : 'Confirmar lutador →';
+  $('escolhas-lutadores').hidden = step === 2;
+  $('escolhas-arenas').hidden = step !== 2;
+  $('carregamento').hidden = true;
+  $('etapa').textContent = ['01 / 03 · VOCÊ', '02 / 03 · MÁQUINA', '03 / 03 · ARENA'][step];
+  $('titulo-selecao').textContent = ['Escolha seu lutador', 'Escolha o adversário', 'Escolha a arena'][step];
+  $('lado-ficha').textContent = step === 1 ? 'ADVERSÁRIO · CPU' : 'SEU LUTADOR · 1P';
+  $('avancar').textContent = ['Confirmar lutador →', 'Confirmar adversário →', 'Começar duelo →'][step];
   $('voltar-etapa').hidden = step === 0;
-  $('resumo-selecao').textContent = step ? 'Você joga com ' + selection[0].nome : 'Arena · Praça da Matriz';
+  $('voltar-etapa').textContent = step === 2 ? '← Voltar ao adversário' : '← Voltar ao seu lutador';
+  $('resumo-selecao').textContent = step === 2 ? selection[0].nome + ' × ' + selection[1].nome
+    : step === 1 ? 'Você joga com ' + selection[0].nome : 'Pato Branco · Edição 01';
   $('selecao').dataset.step = String(step);
   updateSelection();
   if (focus) $('titulo-selecao').focus();
@@ -139,6 +189,7 @@ function resetInput() {
 }
 
 function start() {
+  if (!selection[0] || !selection[1] || selectedArena?.status !== 'ready') return;
   unlockAudio();
   resetInput();
   elapsed = 0;
@@ -147,7 +198,10 @@ function start() {
   const [player, opponent] = selection;
   const alternative = opponent.alternativa ?? { color: '#ac657d', deep: '#63304d', shine: '#f3c7b8' };
   const cpu = player === opponent ? { ...opponent, ...alternative } : opponent;
-  battle = new BattleScene([player, cpu], $('matriz'), playSound);
+  battle = new BattleScene([player, cpu], selectedArena.image, playSound);
+  $('edicao-duelo').textContent = 'Arena · ' + selectedArena.arena.cidade;
+  $('arena-duelo').textContent = selectedArena.arena.nome;
+  canvas.setAttribute('aria-label', 'Arena de combate · ' + selectedArena.arena.nome);
   $('selecao').hidden = true;
   $('duelo').hidden = false;
   $('fim').hidden = true;
@@ -226,9 +280,10 @@ for (const button of document.querySelectorAll('[data-key]')) {
 }
 
 makeCards($('elenco'));
+makeArenaCards($('escolhas-arenas'));
 showSelection(0, false);
-$('avancar').addEventListener('click', () => selectionStep === 0 ? showSelection(1) : start());
-$('voltar-etapa').addEventListener('click', () => showSelection(0));
+$('avancar').addEventListener('click', () => selectionStep < 2 ? showSelection(selectionStep + 1) : start());
+$('voltar-etapa').addEventListener('click', () => showSelection(selectionStep - 1));
 $('revanche').addEventListener('click', start);
 $('voltar').addEventListener('click', () => {
   battle = null;
@@ -237,9 +292,4 @@ $('voltar').addEventListener('click', () => {
   $('selecao').hidden = false;
   showSelection(0);
 });
-$('matriz').decode().then(() => {
-  arenaReady = true;
-  $('carregamento').hidden = true;
-  updateSelection();
-}).catch(() => { $('carregamento').textContent = 'A arena não carregou. Recarregue a página.'; });
 requestAnimationFrame(frame);

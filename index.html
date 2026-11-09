@@ -13,7 +13,7 @@
   <header><span>◆ PANCADARIA MUNICIPAL</span><span>EDIÇÃO 01 / PATO BRANCO</span></header>
   <section id="selecao">
     <div class="intro"><p id="etapa" class="eyebrow"></p><h1 id="titulo-selecao" tabindex="-1"></h1></div>
-    <div class="escolhas">
+    <div class="escolhas" id="escolhas-lutadores">
       <div class="elenco" id="elenco" aria-label="Lutadores disponíveis"></div>
       <aside class="ficha" aria-labelledby="nome-ficha">
         <p class="eyebrow" id="lado-ficha"></p>
@@ -21,13 +21,14 @@
         <h2 id="nome-ficha"></h2><p id="golpes-ficha"></p><p id="descricao-ficha"></p>
       </aside>
     </div>
+    <div class="elenco elenco-arenas" id="escolhas-arenas" aria-label="Arenas disponíveis" hidden></div>
     <div class="rodape"><button id="voltar-etapa" hidden>← Voltar ao seu lutador</button><p id="resumo-selecao"></p><button id="avancar" class="principal" disabled></button></div>
-    <p id="carregamento" role="status">Carregando a arena…</p>
+    <p id="carregamento" role="status" hidden></p>
   </section>
   <section id="duelo" hidden>
-    <div class="intro combate"><div><p class="eyebrow">ARENA 01 · PRAÇA DA MATRIZ</p><h1>Duelo na <em>Matriz</em></h1></div><button id="voltar">Trocar lutadores</button></div>
+    <div class="intro combate"><div><p class="eyebrow" id="edicao-duelo"></p><h1>Duelo · <em id="arena-duelo"></em></h1></div><button id="voltar">Trocar lutadores ou arena</button></div>
     <div class="arena">
-      <canvas width="1146" height="672" aria-label="Arena de combate na Matriz de Pato Branco"></canvas>
+      <canvas width="1146" height="672" aria-label="Arena de combate"></canvas>
       <div class="placar">
         <div class="lado"><strong id="nome0"></strong><progress id="vida0" aria-label="Vida do jogador" max="100" value="100"></progress><small id="especial0"></small></div>
         <time id="tempo">60</time>
@@ -41,6 +42,5 @@
     </div></div>
   </section>
 </main>
-<img id="matriz" src="matriz.svg" alt="" hidden>
 </body>
 </html>

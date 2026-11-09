@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 487 262">
+  <title>Prefeitura de Pato Branco, arena provisória</title>
+  <defs>
+    <linearGradient id="ceu" x2="0" y2="1"><stop stop-color="#2674ac"/><stop offset="1" stop-color="#9ecbd2"/></linearGradient>
+    <pattern id="janelas" width="33" height="29" patternUnits="userSpaceOnUse">
+      <path fill="#586673" d="M2 3h29v19H2z"/><path fill="#97a9a4" d="M4 5h11v15H4zm13 0h12v15H17z"/>
+      <path stroke="#c7c3a6" d="M8 5v15m4-15v15m9-15v15m4-15v15"/><path fill="#d0c7aa" d="M21 22h8v5h-8z"/>
+    </pattern>
+    <pattern id="torre" width="23" height="12" patternUnits="userSpaceOnUse">
+      <path fill="#b8c9c3" d="M0 0h23v12H0z"/><path fill="#455a72" d="M0 2h21v5H0z"/><path fill="#7b98a8" d="M1 2h5v5H1zm11 0h4v5h-4z"/>
+    </pattern>
+  </defs>
+  <path fill="url(#ceu)" d="M0 0h487v262H0z"/>
+  <path fill="#ddedf0" opacity=".45" d="M112 31h28v-4h28v5h23v4h-79zm198-9h36v-4h24v5h28v5h-88z"/>
+  <path fill="#6a8690" d="M0 123h14v-15h31v16h67v75H0z"/>
+  <path fill="url(#torre)" stroke="#648095" stroke-width="2" d="M31 45l55 8v147H31z"/>
+  <path fill="#536a80" d="M28 45l58 6v6l-58-6zm5 21l51 6v3l-51-5z"/>
+  <path fill="#9c9f91" d="M77 107l410-49v137H77z"/>
+  <path fill="#dfdaca" stroke="#848983" stroke-width="2" d="M81 100l406-50v139H81z"/>
+  <path fill="url(#janelas)" d="M85 103l402-48v46L85 132zm0 39l402-29v63l-402-1z"/>
+  <path fill="#c9c7b7" d="M82 132l405-31v12L82 143z"/>
+  <text x="147" y="127" fill="#363f47" font-family="Arial,sans-serif" font-weight="900" font-size="10" letter-spacing=".35" transform="rotate(-5 147 127)">PREFEITURA MUNICIPAL DE PATO BRANCO</text>
+  <path fill="#545e62" d="M85 174h402v16H85z"/>
+  <path fill="#c3b499" d="M79 170h408v5H79z"/>
+  <path fill="#414e4e" d="M209 177h39v17h-39z"/><path fill="#b9b8a0" d="M213 180h12v11h-12zm17 0h13v11h-13z"/>
+  <path fill="#55715b" d="M0 191h487v18H0z"/><path fill="#708b65" d="M0 194h170v5H0zm266 0h221v5H266z"/>
+  <path fill="#c0ad91" d="M195 193h66l19 17H175zm155 1h58l24 14H323z"/>
+  <path fill="#b8a785" d="M361 187h32v15h-32z"/><path fill="#87785a" d="M359 185h36v4h-36z"/>
+  <path fill="#746e5c" d="M372 184l4-20-3-8 5-8 6 4-2 10 7 3-1 4-8-3-3 18zm1-39l5-6 6 2v7l-5 4z"/>
+  <path fill="#cbad8b" d="M0 205h487v11H0z"/><path fill="#6e655e" d="M0 215h487v47H0z"/>
+  <path stroke="#ae9c89" stroke-width="2" stroke-dasharray="29 25" d="M0 234h487"/>
+  <path stroke="#81746b" d="M0 248h487m-487 8h487"/>
+</svg>

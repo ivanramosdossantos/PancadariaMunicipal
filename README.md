@@ -4,7 +4,7 @@ Jogo de luta em 2D inspirado em rivalidades e personagens fictícios de cada cid
 
 ## Jogar localmente
 
-Na pasta do projeto, execute `node serve.mjs` e abra [o jogo local](http://127.0.0.1:8765/). Selecione seu lutador na primeira tela, confirme e escolha o adversário da máquina na segunda. A grade tem sete personagens jogáveis e duas vagas para expansão.
+Na pasta do projeto, execute `node serve.mjs` e abra [o jogo local](http://127.0.0.1:8765/). Confirme seu lutador, o adversário da máquina e a arena. Qualquer lutador pode jogar na Prefeitura, no Bobódromo ou na Frente da Matriz.
 
 - **← / →** movem, **↑** pula e **↓** defende.
 - **Z** ataca e **X** ativa o especial.
@@ -13,8 +13,12 @@ Na pasta do projeto, execute `node serve.mjs` e abra [o jogo local](http://127.0
 
 | Lutador | Golpe normal | Especial |
 | --- | --- | --- |
-| Prefeito da Maquete | Soco de gabinete | Asfalto Superfaturado |
-| Pagodeiro Maluco | Chute do compasso | Pagode de Choque |
+| Periquito do Estar | Tapão do Talão | Multa |
+| Pagodeiro Maluco | Chute do Compasso | Cavaco da Morte |
+| Prefeito | Soco de Gabinete | Asfaltadora da Morte |
+| Gladiador da Avenida | Escudada da Avenida | Vodka Shot |
+| OAA | Soco Ignorante | Grito OAA |
+| Patinho Futsal | Chute de Bico | Bicada Mortal |
 
 ## Criação de conteúdo
 

@@ -46,6 +46,7 @@ export class BattleScene {
     this.remaining = 60;
     this.freezeUntil = 0;
     this.impactTime = 0;
+    this.shakeUntil = 0;
     this.caption = { text: 'Valendo!', until: 750 };
     this.drawOrder = [0, 1];
     this.cpu = { decision: 0, movement: new Set(), action: null };
@@ -64,12 +65,16 @@ export class BattleScene {
       fighter.states[specialState].init = () => {
         fighter.resetVelocities();
         fighter.effectSpawned = false;
+        fighter.specialDashing = false;
       };
       fighter.states[specialState].update = time => {
         if (fighter.animationFrame >= 3 && !fighter.effectSpawned) {
           fighter.effectSpawned = true;
           this.entities.add(profile.efeito, fighter, time);
           this.sound(profile.id);
+          if (profile.id === 'oaa' && !globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+            this.shakeUntil = time.previous + 150;
+          }
         }
         if (fighter.isAnimationCompleted()) fighter.changeState(FighterState.IDLE, time);
       };
@@ -203,6 +208,8 @@ export class BattleScene {
     const pan = (x - STAGE_PADDING) / (STAGE_MID_POINT * 2 - SCENE_WIDTH);
     context.fillStyle = '#344258';
     context.fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT);
+    context.save();
+    if (now < this.shakeUntil) context.translate(Math.sin(now / 8) * (this.shakeUntil - now) / 75, 0);
     context.drawImage(this.background, -pan * 105, STAGE_FLOOR - 228 - y, SCENE_WIDTH + 105, 262);
     for (const fighter of this.fighters) {
       const height = Math.max(0, STAGE_FLOOR - fighter.position.y);
@@ -235,6 +242,8 @@ export class BattleScene {
         guard: fighter.guarding,
         ...motion,
         special: state === specialState,
+        dash: state === specialState && fighter.specialDashing,
+        feint: state === specialState && fighter.profile.id === 'patinho' && frame < 3 ? Math.sin(frame * Math.PI / 3) : 0,
         hurt: clamp(((fighter.flashUntil ?? 0) - poseTime) / 155),
         ko: state === FighterState.KO,
       };
@@ -261,5 +270,6 @@ export class BattleScene {
       oval(context, 0, 0, 4 + age * 6, 4 + age * 6, '#fff1ba');
       context.restore();
     }
+    context.restore();
   }
 }

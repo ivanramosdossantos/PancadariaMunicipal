@@ -19,6 +19,11 @@ em{color:var(--accent);font-style:normal}
 .card[aria-pressed=true]{border-color:var(--cursor);box-shadow:0 0 0 1px var(--cursor) inset;background:#49311e}
 .card canvas{width:100%;height:auto;aspect-ratio:1.88;display:block;border-radius:3px;background:radial-gradient(ellipse at center,#795238,#292027 78%)}
 .card strong{min-height:2.4em;display:grid;place-items:center;font-size:clamp(10px,1.55vw,14px);line-height:1.13}
+.card-arena{align-content:start;text-align:left;padding:8px;gap:8px}
+.card-arena img{width:100%;aspect-ratio:487/262;object-fit:cover;border-radius:3px;background:#273647}
+.card-arena strong{display:block;min-height:0;font-size:16px}
+.card-arena span{color:var(--dim);font-size:13px;line-height:1.35}
+@media(max-width:540px){.elenco-arenas{grid-template-columns:1fr}.card-arena{grid-template-columns:minmax(94px,34%) 1fr;gap:5px 9px}.card-arena img{grid-row:1 / span 2}}
 .vaga{min-height:65px;place-items:center;border-style:dashed;color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
 .ficha{min-width:0;padding:15px 17px;border:1px solid var(--line);border-top:3px solid var(--cursor);border-radius:7px;background:radial-gradient(ellipse at 55% 35%,#59382d,#211917 74%)}
 .ficha canvas{display:block;width:100%;height:clamp(115px,29vw,255px);object-fit:contain}.ficha canvas.vazio{opacity:0}

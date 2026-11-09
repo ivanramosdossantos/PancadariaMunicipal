@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 487 262">
+  <title>Bobódromo na Avenida Tupi, arena provisória</title>
+  <defs>
+    <linearGradient id="ceu" x2="0" y2="1"><stop stop-color="#26324f"/><stop offset="1" stop-color="#a37472"/></linearGradient>
+    <pattern id="persiana" width="4" height="4" patternUnits="userSpaceOnUse"><path fill="#463b47" d="M0 0h4v4H0z"/><path stroke="#594956" d="M0 1h4"/></pattern>
+    <pattern id="calcada" width="16" height="6" patternUnits="userSpaceOnUse"><path fill="#82736e" d="M0 0h16v6H0z"/><path stroke="#665a60" d="M0 0h16m8 0v6"/></pattern>
+  </defs>
+  <path fill="url(#ceu)" d="M0 0h487v262H0z"/>
+  <path fill="#ddb5a0" opacity=".5" d="M50 39h54v6H50zm-32 7h66v3H18zm255-20h57v4h-57z"/>
+  <path fill="#424e58" d="M0 113h37V99h33v34h43v-16h39v20h74v48H0z"/>
+  <path fill="#686a61" d="M24 165q0-30 13-55-14 0-25 7 4-14 20-18-13-4-21-3 7-7 28-3 11-15 32-12-13 8-21 15 17-3 30 9-16-5-31 2-12 24-15 58z"/>
+  <path fill="#906557" d="M62 129h147v62H62z"/><path fill="#6b4d50" d="M53 137h164v9H53z"/>
+  <path fill="#e0b57f" d="M75 151h25v32H75zm31 0h36v32h-36zm42 0h37v32h-37z"/>
+  <path fill="#6d665e" d="M79 153h6v29h-6zm12 0h5v29h-5zm21 0h23v5h-23zm42 0h25v6h-25z"/>
+  <path fill="#9c8981" d="M202 92l285-29v128H202z"/>
+  <path fill="#c4aca1" d="M207 96l280-27v61H207z"/>
+  <path fill="#746879" d="M200 92l287-30v6L200 98zm7 31l280-14v5l-280 14z"/>
+  <path fill="#536071" d="M236 105h24v16h-24zm62-5h26v18h-26zm79-8h29v22h-29zm66-6h26v23h-26z"/>
+  <path stroke="#bca994" d="M248 106v14m63-19v16m81-24v20m64-26v21"/>
+  <path fill="#4f3c49" d="M202 130h285v61H202z"/>
+  <path fill="#965957" d="M371 146h116v45H371z"/>
+  <path fill="url(#persiana)" d="M377 151h42v39h-42zm51 0h47v39h-47z"/>
+  <path fill="#372e3d" d="M203 140h163v8H203z"/><path fill="#a86f5e" d="M221 149h54v33h-54zm63 0h60v33h-60z"/>
+  <path fill="#c28d68" d="M285 151h58v19h-58z"/><path stroke="#685151" stroke-width="3" d="M305 151v20m19-20v20"/>
+  <text x="238" y="139" fill="#f5cb93" font-family="Arial,sans-serif" font-weight="900" font-size="9">BOTECO DA TUPI</text>
+  <path fill="url(#calcada)" d="M0 189h487v23H0z"/>
+  <path fill="#657d7c" d="M110 155h67v34h-67z"/><path fill="#8da49d" d="M113 157h60v28h-60z"/>
+  <path fill="none" stroke="#385763" stroke-width="3" d="M110 189v-38h67v38m-45-32v29m27-29v29"/>
+  <path fill="none" stroke="#333f55" stroke-width="2" d="M0 80q103 25 226 7T487 60M0 87q103 25 226 7T487 67"/>
+  <path fill="#3d4a56" d="M196 71h4v129h-4zm159 18h4v115h-4zm-4-3h11v7h-11z"/>
+  <path fill="#f7bf72" d="M354 85h5v6h-5z"/>
+  <path fill="#555466" d="M0 211h487v51H0z"/><path fill="#a29887" d="M0 211h487v3H0z"/>
+  <path stroke="#aa9d87" stroke-width="2" stroke-dasharray="36 24" d="M0 237h487"/>
+  <path stroke="#64606d" d="M0 249h487m-487 7h487"/>
+</svg>

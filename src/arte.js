@@ -60,13 +60,17 @@ function cavaco(ctx, strum) {
 
 export function drawFighter(ctx, profile, x, y, facing, pose = {}) {
   const mayor = profile.id === 'prefeito';
+  const periquito = profile.id === 'periquito';
+  const gladiador = profile.id === 'gladiador';
+  const patinho = profile.id === 'patinho';
+  const oaa = profile.id === 'oaa';
   const phase = pose.phase ?? 0;
   const strike = pose.strike ?? 0;
   const windup = pose.windup ?? 0;
   const stride = pose.walk ? Math.sin(phase * 1.6) * (pose.backward ? -1 : 1) : 0;
   const step = stride * 12;
   const hop = pose.air ? 5 + (pose.airLift ?? 0) * 8 : 0;
-  const kick = profile.estadoNormal.endsWith('Kick') || pose.air;
+  const kick = (!pose.special && profile.estadoNormal.endsWith('Kick')) || pose.air;
   const crouch = pose.crouch ?? 0;
   const hurt = pose.hurt ?? 0;
   const bob = crouch * 18 + (pose.walk ? Math.abs(step) * 0.18 : Math.sin(phase) * 1.4) + windup * 4;
@@ -85,8 +89,8 @@ export function drawFighter(ctx, profile, x, y, facing, pose = {}) {
   const rearFoot = [-14 + step - crouch * 4, -3 - hop - Math.max(0, stride) * 7];
   limb(ctx, [[-7,torsoY],[-13+step*0.5,-21+hop+bob*0.4],rearFoot], '#252b39', '#555362', 10);
   boot(...rearFoot,'#362d32');
-  const kickX = kick ? strike * 29 + windup * 4 : 0;
-  const kickY = kick ? strike * 38 + windup * 14 : 0;
+  const kickX = (kick ? strike * 29 + windup * 4 : 0) + (pose.feint ?? 0) * 5;
+  const kickY = (kick ? strike * 38 + windup * 14 : 0) + (pose.feint ?? 0) * 17;
   const frontFoot = [13-step+kickX+crouch*5,-3-hop-kickY-Math.max(0,-stride)*7];
   limb(ctx, [[7,torsoY],[11-step*0.5+kickX*0.54,-22-hop-kickY*0.66+bob*0.42],frontFoot], '#343847', '#656778', 10.5);
   boot(...frontFoot,mayor ? '#453037' : '#d8c4aa');
@@ -95,7 +99,7 @@ export function drawFighter(ctx, profile, x, y, facing, pose = {}) {
   }
 
   ctx.translate(strike * (kick ? -3 : 7) - windup * 6 + stride * 2,bob);
-  ctx.rotate(strike * (kick ? -0.08 : 0.12) - windup * 0.1);
+  ctx.rotate(strike * (kick ? -0.08 : 0.12) - windup * 0.1 + (pose.dash ? 0.19 : 0));
   const rearHand = pose.guard ? [1,-74] : [-14-step*0.4-strike*6,-45-hop*0.52-windup*5];
   limb(ctx, [[-11,-66],[-21-step*0.24,-54],rearHand], profile.deep, profile.color, 9);
   oval(ctx,...rearHand,4.4,4.7,profile.skin,ink);
@@ -109,6 +113,12 @@ export function drawFighter(ctx, profile, x, y, facing, pose = {}) {
     shape(ctx,[[0,-65],[5,-65],[5,-60],[3,-47],[-2,-45],[-3,-51]],'#a93837','#653130',0.65);
     line(ctx,[[-10,-65],[-6,-54],[-10,-47]],'#ffc879',1.35);
     shape(ctx,[[9,-62],[13,-62],[13,-59],[9,-59]],'#fff0bb',null);
+  } else if (periquito) {
+    line(ctx,[[-10,-68],[3,-48],[11,-43]],'#ffad58',4);
+    line(ctx,[[-14,-54],[-5,-48],[13,-47]],'#ffcc81',3);
+  } else if (gladiador) {
+    shape(ctx,[[-13,-67],[-2,-71],[8,-60],[10,-46],[-3,-49]],'#875444');
+    line(ctx,[[-11,-66],[9,-46]],'#e1ab6e',2.4);
   } else {
     line(ctx,[[-13,-64],[-8,-60],[12,-62]],'#a5dec6',2.9);
     line(ctx,[[-14,-52],[-5,-48],[12,-51]],'#d7c68d',2.6);
@@ -120,28 +130,38 @@ export function drawFighter(ctx, profile, x, y, facing, pose = {}) {
   if (profile.id === 'pagodeiro') {
     shape(ctx,[[-13,-87],[-12,-94],[-5,-100],[5,-101],[14,-94],[16,-90],[23,-88],[21,-85],[10,-87],[-9,-85]],'#328779');
     line(ctx,[[-9,-93],[-3,-97],[7,-97]],'#83c4ac',1.1);
-  } else if (profile.acessorio === 'capacete') {
-    shape(ctx,[[-13,-79],[-14,-91],[-7,-100],[7,-102],[16,-96],[19,-85],[12,-77]],profile.color);
-    shape(ctx,[[1,-91],[17,-92],[19,-85],[4,-84]],'#b6deea');
-  } else if (profile.acessorio === 'lenco' || profile.acessorio === 'faixa') {
-    shape(ctx,[[-13,-89],[-8,-94],[10,-94],[15,-89],[12,-85],[-10,-85]],profile.shine);
-    shape(ctx,[[-11,-90],[-19,-90],[-15,-83],[-10,-86]],profile.color);
-  } else if (profile.acessorio === 'fone') {
-    line(ctx,[[-10,-80],[-11,-92],[-4,-99],[8,-99],[14,-91]],profile.shine,3);
-    oval(ctx,-9,-82,4,6,profile.deep,ink);
-  } else if (profile.acessorio === 'oculos') {
-    line(ctx,[[-4,-83],[14,-83]],ink,2);
-    oval(ctx,10,-82,4,3,'#55404a',ink);
+  } else if (periquito) {
+    shape(ctx,[[-13,-87],[-11,-95],[-2,-99],[10,-97],[16,-89],[24,-88],[21,-85],[10,-87],[-9,-85]],'#fff0db');
+    line(ctx,[[-2,-91],[8,-91]],'#e18751',1.6);
+  } else if (gladiador) {
+    shape(ctx,[[-14,-85],[-12,-95],[-5,-100],[7,-101],[16,-93],[14,-85],[5,-88],[-7,-85]],'#b58056');
+    line(ctx,[[-6,-98],[4,-102],[12,-97]],'#f0bd75',2);
+  } else if (patinho) {
+    oval(ctx,1,-84,14,15,'#e9e5db',ink);
+    shape(ctx,[[-7,-94],[-3,-103],[2,-98],[7,-102],[8,-93]],'#e9e5db');
+    shape(ctx,[[4,-82],[17,-83],[22,-79],[19,-74],[8,-74],[3,-77]],'#ffb050');
+    oval(ctx,8,-87,2.7,4.2,'#263142');
+  } else if (oaa) {
+    shape(ctx,[[-10,-92],[-9,-98],[-4,-95],[0,-101],[5,-96],[10,-98],[12,-90]],'#483341');
   }
-  line(ctx,[[6,-83],[11,-83]],ink,1.5);
-  line(ctx,[[7,-74],[11,-74]],'#713b39',1);
-  oval(ctx,-7,-79,2.3,2.9,profile.skin,'#7d483e');
-  if (!mayor) oval(ctx,-8,-75,1.2,1.4,'#ffce65');
+  if (!patinho) {
+    line(ctx,[[6,-83],[11,-83]],ink,1.5);
+    if (pose.special && oaa) oval(ctx,12,-75,4.5,5.5,'#40232b',ink);
+    else line(ctx,[[7,-74],[11,-74]],'#713b39',1);
+    oval(ctx,-7,-79,2.3,2.9,profile.skin,'#7d483e');
+  }
   const reach = kick ? 0 : strike * 31;
-  const hand = pose.guard ? [19,-76] : [20+reach+step*0.6-windup*12,-57-hop*0.45-strike*4+windup*9];
+  const hand = pose.guard || (pose.special && (oaa || periquito)) ? [19,-76] : [20+reach+step*0.6-windup*12,-57-hop*0.45-strike*4+windup*9];
   limb(ctx, [[9,-64],[16+reach*0.45+step*0.22,-54-windup*3],hand],profile.deep,profile.color,9);
   oval(ctx,...hand,5,4.3,profile.skin,ink);
   line(ctx,[[hand[0]+1,hand[1]-2],[hand[0]+4,hand[1]-1]],'#efb082',1);
+  if (gladiador) {
+    oval(ctx,hand[0]-2,hand[1]+3,10,14,'#ba865a',ink);
+    oval(ctx,hand[0]-2,hand[1]+3,5,8,'#e2ae6c','#744b41');
+    if (pose.special && !pose.dash) shape(ctx,[[6,-73],[13,-73],[12,-67],[7,-67]],'#edce9d',ink,0.8);
+  } else if (periquito && !pose.special) {
+    shape(ctx,[[hand[0]-1,hand[1]-5],[hand[0]+8,hand[1]-5],[hand[0]+8,hand[1]+4],[hand[0]-1,hand[1]+4]],'#f2e2b3',ink,0.8);
+  }
   if (!kick && strike > 0.55) {
     line(ctx, [[hand[0]-24,hand[1]+6],[hand[0]-10,hand[1]+4],[hand[0]-3,hand[1]+1]], '#ffdd9b90', 1.5);
   }
@@ -150,6 +170,22 @@ export function drawFighter(ctx, profile, x, y, facing, pose = {}) {
     shape(ctx,[[8,-50],[21,-52],[24,-40],[11,-38]],'#f6db9e','#6b4841');
     line(ctx,[[12,-47],[20,-48],[13,-44],[20,-45]],'#a97555',0.9);
   }
+  ctx.restore();
+}
+
+export function drawParkingCart(ctx, x, y, facing, phase) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(facing, 1);
+  oval(ctx,0,1,27,4,'#28222a99');
+  shape(ctx,[[-25,-5],[-24,-17],[-14,-19],[-9,-26],[9,-26],[15,-17],[25,-13],[25,-5]],'#85bad1','#273647',2);
+  shape(ctx,[[-9,-24],[8,-24],[13,-17],[-13,-17]],'#3d5976','#273647',1);
+  shape(ctx,[[-22,-13],[23,-13],[23,-9],[-22,-9]],'#f39a51',null);
+  oval(ctx,-15,-5,6,6,'#302f3c','#171923');
+  oval(ctx,15,-5,6,6,'#302f3c','#171923');
+  oval(ctx,-15,-5,2,2,'#9a9faf');
+  oval(ctx,15,-5,2,2,'#9a9faf');
+  oval(ctx,0,-28,4,2,Math.sin(phase*6)>0?'#fff0a2':'#e18a47','#61443f');
   ctx.restore();
 }
 
