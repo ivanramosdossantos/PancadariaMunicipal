@@ -77,7 +77,7 @@ export function drawRig(ctx,profile,x,y,facing,pose={}){
   leg(ctx,[-7,hip[1]],rearKnee,rearFoot,pants,shoe);
   leg(ctx,[7,hip[1]],frontKnee,frontFoot,pants,shoe);
   ctx.translate(-wind*3+(kick?-2:5)*strike,bob+crouchY);
-  ctx.rotate((kick?-.045:.085)*strike-.09*wind+(pose.dash?.13:0));
+  ctx.rotate((kick?-.045:.085)*strike-.09*wind+(pose.dash ? 0.13 : 0));
   const rearShoulder=[-12,-67],frontShoulder=[12,-66];
   const rearHand=pose.guard?[-2,-77]:[-19-walking*2,-51-wind*4];
   const hand=pose.guard?[17,-77]:pose.special?
