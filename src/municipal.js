@@ -5,7 +5,7 @@ import { SCENE_WIDTH, SCENE_HEIGHT } from './constants/stage.js';
 import { elenco } from './elenco.js';
 import { arenas } from './arenas.js';
 import { drawFighter } from './arte.js';
-import { drawPackPortrait, drawPackSelection } from './arte-pacotes.js';
+import { drawPackPortrait, drawPackSelection, artDiagnostics } from './arte-pacotes.js';
 
 const $ = id => document.getElementById(id);
 const selection = [null, null];
@@ -290,7 +290,20 @@ for (const button of document.querySelectorAll('[data-key]')) {
   }
 }
 
+function reportArtStatus() {
+  const status = $('status-artes');
+  if (!status) return;
+  const {loaded, failed, requested, failures} = artDiagnostics;
+  status.hidden = false;
+  status.textContent = failed
+    ? 'Erro no carregamento de ' + failed + ' imagens: ' + failures.slice(0,3).join(', ')
+    : loaded === requested
+      ? 'Artes atualizadas: 6 personagens carregados.'
+      : 'Carregando artes dos personagens: ' + loaded + '/' + requested;
+  status.dataset.state = failed ? 'error' : loaded === requested ? 'ready' : 'loading';
+}
 function refreshCards() {
+  reportArtStatus();
   for (const button of cards) {
     const profile = elenco.find(item => item.id === button.dataset.id);
     if (!profile) continue;
@@ -307,6 +320,7 @@ window.addEventListener('pancadaria:arte-carregada', refreshCards);
 makeCards($('elenco'));
 makeArenaCards($('escolhas-arenas'));
 showSelection(0, false);
+reportArtStatus();
 $('avancar').addEventListener('click', () => selectionStep < 2 ? showSelection(selectionStep + 1) : start());
 $('voltar-etapa').addEventListener('click', () => showSelection(selectionStep - 1));
 $('revanche').addEventListener('click', start);
