@@ -65,9 +65,18 @@ function drawFrame(ctx,image,frame) {
 // O atlas do Patinho foi gerado com cabeça e pés em quadros diferentes.
 // Remontar uma pose única com regiões existentes sem depender de novas ilustrações.
 function drawPatinho(ctx,image){
-  drawFrame(ctx,image,5);
-  // Pés originais são preservados do primeiro quadro, sem reutilizar a cabeça cortada.
-  ctx.drawImage(image,0,79,128,43,-48,-34,96,34);
+  // A exportação contém cabeça e pernas em componentes separados.
+  // Construir UMA silhueta completa uma única vez, sem figuras repetidas.
+  if (!image.cleanPatinho) {
+    const layer=document.createElement('canvas');
+    layer.width=128;layer.height=80;
+    const g=layer.getContext('2d');
+    g.imageSmoothingEnabled=false;
+    g.drawImage(image,0,64,128,45,0,5,128,45);
+    g.drawImage(image,0,36,128,28,0,46,128,28);
+    image.cleanPatinho=layer;
+  }
+  ctx.drawImage(image.cleanPatinho,0,0,128,80,-48,-100,96,100);
 }
 export function drawPackFighter(ctx,profile,x,y,facing,pose={}){
   const image=packages.get(profile.id)?.sprites;
