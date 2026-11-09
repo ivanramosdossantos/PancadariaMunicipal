@@ -3,30 +3,40 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#141310">
+<meta name="theme-color" content="#171210">
 <title>Pancadaria Municipal · Pato Branco</title>
-<style>
-:root{color-scheme:dark;--paper:#fff2d5;--gold:#ffca66;--line:#544638;--muted:#c8b9a6}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 70% 0,#30241b,#151310 55%);color:var(--paper);font:15px system-ui,sans-serif}main{max-width:1150px;margin:auto;padding:22px 24px}header,.title,.score,.controls,.fighters{display:flex;justify-content:space-between;align-items:center;gap:12px}header{border-bottom:1px solid var(--line);padding-bottom:13px;font-size:12px;letter-spacing:.15em;font-weight:800}.mark,.eyebrow{color:var(--gold)}.issue{color:var(--muted);text-align:right}.title{align-items:end;padding:16px 0 13px}h1,h2,p{margin:0}h1{font-family:Impact,'Arial Narrow',sans-serif;font-size:clamp(34px,7vw,78px);line-height:.98;text-transform:uppercase;font-weight:900;letter-spacing:.025em}h1 span{color:var(--gold)}.eyebrow{font-size:10px;letter-spacing:.22em;font-weight:900;margin-bottom:6px}.title p{color:var(--muted);text-align:right;max-width:23ch}.stage{position:relative;border:1px solid #81634a;border-radius:12px;overflow:hidden;background:#263745}canvas{width:100%;display:block;aspect-ratio:1000/425}.score{position:absolute;top:0;left:0;right:0;padding:12px 17px;background:linear-gradient(#131818ed,transparent);align-items:start}.side{flex:1;min-width:0;font-size:clamp(9px,2vw,14px);font-weight:900;text-shadow:0 1px 2px #000}.right{text-align:right}.bar{height:11px;background:#2b2525;border:1px solid #fff4;border-radius:4px;overflow:hidden;margin:4px 0}.bar i{display:block;height:100%;background:#ffbe53}.right .bar i{background:#67dfcb;margin-left:auto}.clock{font-weight:950;font-size:clamp(16px,4vw,29px);line-height:1.25;background:#1c1816;border:1px solid #aa815c;border-radius:6px;padding:1px 8px;font-variant-numeric:tabular-nums}.overlay{position:absolute;inset:0;display:grid;place-items:center;background:#11141955;padding:8px;text-align:center}.overlay[hidden]{display:none}.panel{background:#1b1713ed;border:1px solid #866944;border-radius:10px;padding:clamp(8px,2vw,20px);box-shadow:0 10px 40px #0008}.panel h2{font-size:clamp(17px,3vw,34px);line-height:1}.panel p{margin:6px 0 10px;color:var(--muted);font-size:clamp(10px,2vw,14px)}button{font:inherit;color:inherit;cursor:pointer;border:1px solid #62523f;background:#251f19;border-radius:6px;padding:7px 10px;touch-action:none}button:hover,button:focus-visible{border-color:var(--gold)}button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}button.primary{font-weight:900;background:var(--gold);color:#23180e;border-color:var(--gold)}.fighters{margin-top:10px}.fighters button{flex:1;text-align:left}.fighters button[aria-pressed=true]{border-color:var(--gold);background:#382817}.fighters strong,.fighters small{display:block}.fighters small{color:var(--muted);margin-top:3px}.controls{margin-top:11px;flex-wrap:wrap;color:var(--muted);font-size:12px}.touch{display:flex;gap:5px;flex-wrap:wrap}.touch button{min-width:38px;min-height:38px;font-weight:800}.caption{position:absolute;bottom:9px;left:0;right:0;text-align:center;pointer-events:none;color:white;font-weight:900;text-shadow:0 2px 4px #000,0 1px 4px #000;font-size:clamp(10px,2.5vw,17px)}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:580px){main{padding:13px 10px}.title{align-items:start;flex-direction:column;gap:5px}.title p{text-align:left;max-width:none;font-size:12px}.score{padding:7px 8px}.bar{height:6px}.panel .eyebrow{display:none}.fighters{gap:6px}.fighters button{font-size:13px}.caption{bottom:4px}}
-</style>
-<script defer src="colisoes.js"></script>
-<script defer src="jogo.js"></script>
+<link rel="stylesheet" href="estilo.css">
+<script type="module" src="src/municipal.js"></script>
 </head>
-<body><main>
-<header><span class="mark">◆ PANCADARIA MUNICIPAL</span><span class="issue">EDIÇÃO 01 / PATO BRANCO</span></header>
-<section class="title"><div><div class="eyebrow">PILOTO JOGÁVEL · LUTA 1 × 1</div><h1>Duelo na <span>Matriz</span></h1></div><p>Uma rivalidade de plenário vai parar na praça.</p></section>
-<section class="stage" aria-label="Arena em frente à Matriz de Pato Branco">
-<canvas id="arena" width="1000" height="425" aria-hidden="true"></canvas>
-<div class="score" aria-hidden="true">
-<div class="side"><span id="left-name"></span><div class="bar"><i id="left-hp"></i></div><span>VOCÊ</span></div>
-<div class="clock" id="clock">60</div>
-<div class="side right"><span id="right-name"></span><div class="bar"><i id="right-hp"></i></div><span>CPU</span></div>
-</div>
-<div id="caption" class="caption"></div>
-<div id="overlay" class="overlay">
-<div class="panel"><div class="eyebrow">PRAÇA DA MATRIZ</div><h2 id="round-title">Escolha seu lutador</h2><p id="round-copy">O outro entra como adversário.</p><button class="primary" id="start">Começar duelo</button></div>
-</div>
-</section>
-<div class="fighters" id="fighters" aria-label="Seleção de lutadores"></div>
-<div class="controls"><span>← → Mover · ↑ Pular · ↓ Defender · Z Golpe · X Especial</span><div class="touch" aria-label="Controles na tela"><button data-key="ArrowLeft" aria-label="Esquerda">←</button><button data-key="ArrowRight" aria-label="Direita">→</button><button data-key="ArrowUp" aria-label="Pular">↑</button><button data-key="ArrowDown" aria-label="Defender">↓</button><button data-key="KeyZ">Golpe</button><button data-key="KeyX">Especial</button></div><span>Segure ← ou → e aperte ↑ para saltar por cima do rival. Use Z no ar para atacar.</span></div>
-<p id="status" class="sr" aria-live="polite"></p>
-</main></body></html>
+<body>
+<main>
+  <header><span>◆ PANCADARIA MUNICIPAL</span><span>EDIÇÃO 01 / PATO BRANCO</span></header>
+  <section id="selecao">
+    <div class="intro"><p class="eyebrow">ARCADE MUNICIPAL · PATO BRANCO</p><h1>Monte o <em>duelo</em></h1><p>Escolha quem você controla e quem a máquina leva para a praça.</p></div>
+    <div class="escolhas">
+      <fieldset><legend><b>01</b> Você</legend><div id="jogador" class="elenco"></div></fieldset>
+      <fieldset><legend><b>02</b> Máquina</legend><div id="maquina" class="elenco"></div></fieldset>
+    </div>
+    <div class="rodape"><p><b>Arena</b> Praça da Matriz · Pato Branco</p><button id="iniciar" class="principal" disabled>Começar duelo <span aria-hidden="true">→</span></button></div>
+    <p id="carregamento" role="status">Carregando a arena…</p>
+  </section>
+  <section id="duelo" hidden>
+    <div class="intro combate"><div><p class="eyebrow">ARENA 01 · PRAÇA DA MATRIZ</p><h1>Duelo na <em>Matriz</em></h1></div><button id="voltar">Trocar lutadores</button></div>
+    <div class="arena">
+      <canvas width="1146" height="672" aria-label="Arena de combate na Matriz de Pato Branco"></canvas>
+      <div class="placar">
+        <div class="lado"><strong id="nome0"></strong><progress id="vida0" aria-label="Vida do jogador" max="100" value="100"></progress><small id="especial0"></small></div>
+        <time id="tempo">60</time>
+        <div class="lado direita"><strong id="nome1"></strong><progress id="vida1" aria-label="Vida da máquina" max="100" value="100"></progress><small id="especial1"></small></div>
+      </div>
+      <div id="chamada" class="chamada" aria-live="polite"></div>
+      <div id="fim" class="fim" hidden><div><p class="eyebrow">FIM DO DUELO</p><h2 id="resultado"></h2><button id="revanche" class="principal">Revanche</button></div></div>
+    </div>
+    <div class="rodape comandos"><p>← → Mover · ↑ Pular · ↓ Defender · Z Golpe · X Especial</p><div aria-label="Controles na tela">
+      <button data-key="ArrowLeft" aria-label="Esquerda">←</button><button data-key="ArrowRight" aria-label="Direita">→</button><button data-key="ArrowUp" aria-label="Pular">↑</button><button data-key="ArrowDown" aria-label="Defender">↓</button><button data-key="KeyZ">Golpe</button><button data-key="KeyX">Especial</button>
+    </div></div>
+  </section>
+</main>
+<img id="matriz" src="matriz.svg" alt="" hidden>
+</body>
+</html>

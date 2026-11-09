@@ -1,5 +1,4 @@
-// Mayank Jain, StreetFighter, commit 643b01e5ad0f148ffa883b5b52f069d0288232a3 (MIT; ver LICENSE).
-const rectsOverlap = (
+export const rectsOverlap = (
 	x1,
 	y1,
 	width1,
@@ -17,7 +16,7 @@ const rectsOverlap = (
 	);
 };
 
-const boxOverlap = (box1, box2) => {
+export const boxOverlap = (box1, box2) => {
 	return rectsOverlap(
 		box1.x,
 		box1.y,
@@ -30,7 +29,7 @@ const boxOverlap = (box1, box2) => {
 	);
 };
 
-const getActualBoxDimensions = (position, direction, box) => {
+export const getActualBoxDimensions = (position, direction, box) => {
 	const x1 = position.x + box.x * direction;
 	const x2 = x1 + box.width * direction;
 	return {
@@ -40,4 +39,3 @@ const getActualBoxDimensions = (position, direction, box) => {
 		height: box.height,
 	};
 };
-
