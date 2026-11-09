@@ -1,6 +1,17 @@
 // Pacotes PNG opcionais. Se um arquivo estiver ausente ou falhar, o desenho procedural permanece ativo.
 const ids = ['periquito','pagodeiro','prefeito','gladiador','oaa','patinho'];
 const packages = new Map();
+export const artDiagnostics = { loaded: 0, failed: 0, requested: ids.length * 3, failures: [] };
+function notify(id, kind, success, url) {
+  if (success) artDiagnostics.loaded++;
+  else {
+    artDiagnostics.failed++;
+    artDiagnostics.failures.push(id + '/' + kind + ' (' + url + ')');
+    console.warn('[Pancadaria] Arte não encontrada:', id, kind, url);
+  }
+  window.dispatchEvent(new CustomEvent('pancadaria:arte-carregada', { detail: { id, kind, success } }));
+}
+
 for (const id of ids) {
   const pack = { retrato: null, pose: null, sprites: null };
   packages.set(id, pack);
@@ -8,10 +19,10 @@ for (const id of ids) {
     const img = new Image();
     img.onload = () => {
       pack[kind] = img;
-      window.dispatchEvent(new CustomEvent('pancadaria:arte-carregada', { detail: { id, kind } }));
+      notify(id, kind, true, img.src);
     };
-    img.onerror = () => { pack[kind] = null; };
-    img.src = new URL('../assets/lutadores/' + id + '/' + kind + '.png', import.meta.url).href;
+    img.onerror = () => { pack[kind] = null; notify(id, kind, false, img.src); };
+    img.src = new URL('assets/lutadores/' + id + '/' + kind + '.png?v=artes-20261109-2', document.baseURI).href;
   }
 }
 const rect = (ctx,img,x,y,w,h) => ctx.drawImage(img,x,y,w,h);
