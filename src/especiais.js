@@ -42,14 +42,18 @@ export class AsphaltRoller {
   }
 }
 
-export class CavacoWaves {
+export class WaveSpecial {
   constructor(owner, time, entities) {
     this.entities = entities;
     this.target = owner.opponent;
     this.direction = owner.direction;
     this.origin = { x: owner.position.x + 25 * owner.direction, y: owner.position.y - 44 };
     this.age = 0;
-    this.waves = [0, 0.12, 0.24].map(delay => ({ delay, connected: false }));
+    const { delays = [0, 0.12, 0.24], damage = 9, speed = 218, tint = '#b6ffe8' } = owner.profile.onda ?? {};
+    this.waves = delays.map(delay => ({ delay, connected: false }));
+    this.damage = damage;
+    this.speed = speed;
+    this.tint = tint;
   }
 
   update(time) {
@@ -57,9 +61,9 @@ export class CavacoWaves {
     for (const wave of this.waves) {
       const elapsed = this.age - wave.delay;
       if (elapsed < 0 || elapsed > 0.55 || wave.connected) continue;
-      const x = this.origin.x + elapsed * 218 * this.direction;
+      const x = this.origin.x + elapsed * this.speed * this.direction;
       wave.connected = hitArea(this.target, { x: x - 13, y: this.origin.y - 20, width: 26, height: 40 },
-        time, FighterAttackStrength.LIGHT, 9, this.direction);
+        time, FighterAttackStrength.LIGHT, this.damage, this.direction);
     }
     if (this.age > 0.8) this.entities.remove(this);
   }
@@ -69,10 +73,10 @@ export class CavacoWaves {
     for (const wave of this.waves) {
       const elapsed = this.age - wave.delay;
       if (elapsed < 0 || elapsed > 0.55) continue;
-      const x = this.origin.x + elapsed * 218 * this.direction - camera.position.x;
+      const x = this.origin.x + elapsed * this.speed * this.direction - camera.position.x;
       const y = this.origin.y - camera.position.y;
       context.globalAlpha = 1 - elapsed;
-      context.strokeStyle = '#b6ffe8';
+      context.strokeStyle = this.tint;
       context.lineWidth = 2.1;
       for (const radius of [9, 14, 20]) {
         context.beginPath();

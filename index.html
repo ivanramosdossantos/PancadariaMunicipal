@@ -12,12 +12,16 @@
 <main>
   <header><span>◆ PANCADARIA MUNICIPAL</span><span>EDIÇÃO 01 / PATO BRANCO</span></header>
   <section id="selecao">
-    <div class="intro"><p class="eyebrow">ARCADE MUNICIPAL · PATO BRANCO</p><h1>Monte o <em>duelo</em></h1><p>Escolha quem você controla e quem a máquina leva para a praça.</p></div>
+    <div class="intro"><p id="etapa" class="eyebrow"></p><h1 id="titulo-selecao" tabindex="-1"></h1></div>
     <div class="escolhas">
-      <fieldset><legend><b>01</b> Você</legend><div id="jogador" class="elenco"></div></fieldset>
-      <fieldset><legend><b>02</b> Máquina</legend><div id="maquina" class="elenco"></div></fieldset>
+      <div class="elenco" id="elenco" aria-label="Lutadores disponíveis"></div>
+      <aside class="ficha" aria-labelledby="nome-ficha">
+        <p class="eyebrow" id="lado-ficha"></p>
+        <canvas id="retrato" width="420" height="310" aria-hidden="true"></canvas>
+        <h2 id="nome-ficha"></h2><p id="golpes-ficha"></p><p id="descricao-ficha"></p>
+      </aside>
     </div>
-    <div class="rodape"><p><b>Arena</b> Praça da Matriz · Pato Branco</p><button id="iniciar" class="principal" disabled>Começar duelo <span aria-hidden="true">→</span></button></div>
+    <div class="rodape"><button id="voltar-etapa" hidden>← Voltar ao seu lutador</button><p id="resumo-selecao"></p><button id="avancar" class="principal" disabled></button></div>
     <p id="carregamento" role="status">Carregando a arena…</p>
   </section>
   <section id="duelo" hidden>

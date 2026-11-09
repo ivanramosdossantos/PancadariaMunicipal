@@ -6,7 +6,8 @@ import { elenco } from './elenco.js';
 import { drawFighter } from './arte.js';
 
 const $ = id => document.getElementById(id);
-const selection = ['prefeito', 'pagodeiro'];
+const selection = [null, null];
+const cards = [];
 const keyboard = new Set();
 const touches = new Map();
 const movementKeys = new Map([
@@ -25,6 +26,8 @@ let elapsed = 0;
 let accumulator = 0;
 let last = null;
 let audio;
+let selectionStep = 0;
+let arenaReady = false;
 
 function unlockAudio() {
   if (!window.AudioContext) return;
@@ -38,7 +41,7 @@ function playSound(kind) {
     prefeito: [68, 58, 47], pagodeiro: [392, 494, 587, 659],
     hit: [95], block: [270], swing: [156],
   };
-  for (const [index, frequency] of tones[kind].entries()) {
+  for (const [index, frequency] of (tones[kind] ?? [262, 392]).entries()) {
     const start = audio.currentTime + index * 0.066;
     const oscillator = audio.createOscillator();
     const gain = audio.createGain();
@@ -54,37 +57,78 @@ function playSound(kind) {
   }
 }
 
-function makeCards(container, side) {
-  for (const profile of elenco) {
+function makeCards(container) {
+  for (const [index, profile] of elenco.entries()) {
     const button = document.createElement('button');
     const art = document.createElement('canvas');
     const name = document.createElement('strong');
-    const description = document.createElement('small');
     button.type = 'button';
     button.className = 'card';
     button.dataset.id = profile.id;
-    art.width = 216;
-    art.height = 160;
+    art.width = 210;
+    art.height = 112;
     art.setAttribute('aria-hidden', 'true');
     const portrait = art.getContext('2d');
-    portrait.scale(2.1, 2.1);
-    drawFighter(portrait, profile, 45, 122, 1, { special: profile.id === 'pagodeiro' });
+    portrait.scale(2, 2);
+    drawFighter(portrait, profile, 48, 105, 1);
     name.textContent = profile.nome;
-    description.textContent = 'Z · ' + profile.normal + ' / X · ' + profile.especial;
-    button.append(art, name, description);
+    button.append(art, name);
     button.addEventListener('click', () => {
-      selection[side] = profile.id;
-      updateCards(container, side);
+      selection[selectionStep] = profile;
+      updateSelection();
     });
+    button.addEventListener('keydown', event => {
+      const delta = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -3, ArrowDown: 3 }[event.key];
+      if (!delta) return;
+      event.preventDefault();
+      const next = index + delta;
+      if (!cards[next] || (Math.abs(delta) === 1 && Math.floor(next / 3) !== Math.floor(index / 3))) return;
+      cards[next].focus();
+      cards[next].click();
+    });
+    cards.push(button);
     container.append(button);
   }
-  updateCards(container, side);
+  for (let slot = cards.length; slot < 9; slot++) {
+    const placeholder = document.createElement('div');
+    placeholder.className = 'vaga';
+    placeholder.textContent = 'Em breve';
+    container.append(placeholder);
+  }
 }
 
-function updateCards(container, side) {
-  for (const button of container.children) {
-    button.setAttribute('aria-pressed', String(button.dataset.id === selection[side]));
+function updateSelection() {
+  const selected = selection[selectionStep];
+  for (const button of cards) {
+    button.setAttribute('aria-pressed', String(button.dataset.id === selected?.id));
   }
+  const art = $('retrato');
+  const portrait = art.getContext('2d');
+  portrait.setTransform(1, 0, 0, 1, 0, 0);
+  portrait.clearRect(0, 0, art.width, art.height);
+  if (selected) {
+    portrait.scale(3, 3);
+    drawFighter(portrait, selected, 68, 101, selectionStep ? -1 : 1,
+      { special: selected.id === 'pagodeiro' });
+  }
+  art.classList.toggle('vazio', !selected);
+  $('nome-ficha').textContent = selected?.nome ?? 'Escolha na grade';
+  $('golpes-ficha').textContent = selected ? 'Z · ' + selected.normal + '   /   X · ' + selected.especial : '';
+  $('descricao-ficha').textContent = selected?.descricao ?? 'Selecione um retrato para ver os golpes.';
+  $('avancar').disabled = !selected || (selectionStep === 1 && !arenaReady);
+}
+
+function showSelection(step, focus = true) {
+  selectionStep = step;
+  $('etapa').textContent = step ? '02 / 02 · MÁQUINA' : '01 / 02 · VOCÊ';
+  $('titulo-selecao').textContent = step ? 'Escolha o adversário' : 'Escolha seu lutador';
+  $('lado-ficha').textContent = step ? 'ADVERSÁRIO · CPU' : 'SEU LUTADOR · 1P';
+  $('avancar').textContent = step ? 'Começar duelo →' : 'Confirmar lutador →';
+  $('voltar-etapa').hidden = step === 0;
+  $('resumo-selecao').textContent = step ? 'Você joga com ' + selection[0].nome : 'Arena · Praça da Matriz';
+  $('selecao').dataset.step = String(step);
+  updateSelection();
+  if (focus) $('titulo-selecao').focus();
 }
 
 function resetInput() {
@@ -100,8 +144,9 @@ function start() {
   elapsed = 0;
   accumulator = 0;
   last = null;
-  const [player, opponent] = selection.map(id => elenco.find(profile => profile.id === id));
-  const cpu = player === opponent ? { ...opponent, ...opponent.alternativa } : opponent;
+  const [player, opponent] = selection;
+  const alternative = opponent.alternativa ?? { color: '#ac657d', deep: '#63304d', shine: '#f3c7b8' };
+  const cpu = player === opponent ? { ...opponent, ...alternative } : opponent;
   battle = new BattleScene([player, cpu], $('matriz'), playSound);
   $('selecao').hidden = true;
   $('duelo').hidden = false;
@@ -180,19 +225,21 @@ for (const button of document.querySelectorAll('[data-key]')) {
   }
 }
 
-makeCards($('jogador'), 0);
-makeCards($('maquina'), 1);
-$('iniciar').addEventListener('click', start);
+makeCards($('elenco'));
+showSelection(0, false);
+$('avancar').addEventListener('click', () => selectionStep === 0 ? showSelection(1) : start());
+$('voltar-etapa').addEventListener('click', () => showSelection(0));
 $('revanche').addEventListener('click', start);
 $('voltar').addEventListener('click', () => {
   battle = null;
   resetInput();
   $('duelo').hidden = true;
   $('selecao').hidden = false;
-  $('iniciar').focus();
+  showSelection(0);
 });
 $('matriz').decode().then(() => {
-  $('iniciar').disabled = false;
+  arenaReady = true;
   $('carregamento').hidden = true;
+  updateSelection();
 }).catch(() => { $('carregamento').textContent = 'A arena não carregou. Recarregue a página.'; });
 requestAnimationFrame(frame);

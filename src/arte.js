@@ -64,7 +64,7 @@ export function drawFighter(ctx, profile, x, y, facing, pose = {}) {
   const strike = pose.strike ?? 0;
   const step = pose.walk ? Math.sin(phase * 1.4) * 11 : 0;
   const hop = pose.air ? 9 : 0;
-  const kick = !mayor || pose.air;
+  const kick = profile.estadoNormal.endsWith('Kick') || pose.air;
   const bob = pose.crouch ? 18 : pose.walk ? Math.abs(step) * 0.17 : Math.sin(phase) * 1.4;
   ctx.save();
   ctx.translate(x, y);
@@ -106,9 +106,21 @@ export function drawFighter(ctx, profile, x, y, facing, pose = {}) {
   oval(ctx,-1,-71,5,5,profile.skin,ink);
   shape(ctx,[[-10,-84],[-6,-93],[4,-96],[13,-90],[13,-83],[16,-79],[13,-77],[12,-71],[3,-69],[-5,-73],[-10,-78]],profile.skin);
   shape(ctx,[[-7,-84],[-2,-90],[9,-89],[12,-84],[13,-91],[8,-96],[-2,-97],[-9,-93],[-12,-87],[-10,-78]],mayor?'#392732':'#2e3543');
-  if (!mayor) {
+  if (profile.id === 'pagodeiro') {
     shape(ctx,[[-13,-87],[-12,-94],[-5,-100],[5,-101],[14,-94],[16,-90],[23,-88],[21,-85],[10,-87],[-9,-85]],'#328779');
     line(ctx,[[-9,-93],[-3,-97],[7,-97]],'#83c4ac',1.1);
+  } else if (profile.acessorio === 'capacete') {
+    shape(ctx,[[-13,-79],[-14,-91],[-7,-100],[7,-102],[16,-96],[19,-85],[12,-77]],profile.color);
+    shape(ctx,[[1,-91],[17,-92],[19,-85],[4,-84]],'#b6deea');
+  } else if (profile.acessorio === 'lenco' || profile.acessorio === 'faixa') {
+    shape(ctx,[[-13,-89],[-8,-94],[10,-94],[15,-89],[12,-85],[-10,-85]],profile.shine);
+    shape(ctx,[[-11,-90],[-19,-90],[-15,-83],[-10,-86]],profile.color);
+  } else if (profile.acessorio === 'fone') {
+    line(ctx,[[-10,-80],[-11,-92],[-4,-99],[8,-99],[14,-91]],profile.shine,3);
+    oval(ctx,-9,-82,4,6,profile.deep,ink);
+  } else if (profile.acessorio === 'oculos') {
+    line(ctx,[[-4,-83],[14,-83]],ink,2);
+    oval(ctx,10,-82,4,3,'#55404a',ink);
   }
   line(ctx,[[6,-83],[11,-83]],ink,1.5);
   line(ctx,[[7,-74],[11,-74]],'#713b39',1);
@@ -119,7 +131,7 @@ export function drawFighter(ctx, profile, x, y, facing, pose = {}) {
   limb(ctx, [[9,-64],[16+reach*0.45,-54],hand],profile.deep,profile.color,9);
   oval(ctx,...hand,5,4.3,profile.skin,ink);
   line(ctx,[[hand[0]+1,hand[1]-2],[hand[0]+4,hand[1]-1]],'#efb082',1);
-  if (pose.special && !mayor) cavaco(ctx, phase % 2);
+  if (pose.special && profile.id === 'pagodeiro') cavaco(ctx, phase % 2);
   if (pose.special && mayor) {
     shape(ctx,[[8,-50],[21,-52],[24,-40],[11,-38]],'#f6db9e','#6b4841');
     line(ctx,[[12,-47],[20,-48],[13,-44],[20,-45]],'#a97555',0.9);

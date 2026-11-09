@@ -4,7 +4,7 @@ Jogo de luta em 2D inspirado em rivalidades e personagens fictícios de cada cid
 
 ## Jogar localmente
 
-Na pasta do projeto, execute `node serve.mjs` e abra [o jogo local](http://127.0.0.1:8765/). Escolha separadamente o seu lutador e o adversário da máquina e selecione **Começar duelo**.
+Na pasta do projeto, execute `node serve.mjs` e abra [o jogo local](http://127.0.0.1:8765/). Selecione seu lutador na primeira tela, confirme e escolha o adversário da máquina na segunda. A grade tem sete personagens jogáveis e duas vagas para expansão.
 
 - **← / →** movem, **↑** pula e **↓** defende.
 - **Z** ataca e **X** ativa o especial.
