@@ -31,9 +31,20 @@ export function drawPackPortrait(ctx, profile, width, height) {
   if (!image) return false;
   ctx.save();
   ctx.imageSmoothingEnabled = false;
-  const scale = Math.min(width / image.width, height / image.height) * 1.02;
-  const w = image.width * scale, h = image.height * scale;
-  rect(ctx,image,(width-w)/2,(height-h)/2,w,h);
+  // Algumas imagens exportadas tinham miniaturas extras nas laterais/rodapé.
+  // Mostrar exclusivamente o retrato principal aprovado.
+  const crop = {
+    oaa: [0, 0, 226, 225],
+    periquito: [0, 0, 320, 277],
+    prefeito: [0, 0, 300, 290],
+    gladiador: [0, 0, 305, 301],
+    patinho: [0, 0, 256, 253],
+    pagodeiro: [0, 0, 320, 214],
+  }[profile.id] || [0, 0, image.width, image.height];
+  const [sx,sy,sw,sh]=crop;
+  const scale=Math.min(width/sw,height/sh)*1.04;
+  const w=sw*scale,h=sh*scale;
+  ctx.drawImage(image,sx,sy,sw,sh,(width-w)/2,(height-h)/2,w,h);
   ctx.restore();
   return true;
 }
