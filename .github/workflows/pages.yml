@@ -1,0 +1,50 @@
+name: Publicar Pancadaria Municipal no GitHub Pages
+
+on:
+  push:
+    branches: [motor-combate]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: Checkout motor-combate
+        uses: actions/checkout@v4
+      - name: Verificar arquivos do jogo
+        run: |
+          test -f index.html
+          test -f estilo.css
+          test -f src/municipal.js
+          test -f src/elenco.js
+          test -f design/logo.svg
+          node --check src/municipal.js
+          node --check src/arte-pacotes.js
+      - name: Preparar arquivos estáticos
+        run: |
+          mkdir -p _site
+          cp index.html estilo.css matriz.svg _site/
+          cp -R src design _site/
+          if [ -d assets ]; then cp -R assets _site/; fi
+          : > _site/.nojekyll
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Enviar artefato
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - name: Publicar GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
