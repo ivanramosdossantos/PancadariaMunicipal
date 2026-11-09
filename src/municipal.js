@@ -4,8 +4,8 @@ import { FRAME_TIME } from './constants/game.js';
 import { SCENE_WIDTH, SCENE_HEIGHT } from './constants/stage.js';
 import { elenco } from './elenco.js';
 import { arenas } from './arenas.js';
-import { drawFighter } from './arte.js';
-import { drawPackPortrait, drawPackSelection, artDiagnostics } from './arte-pacotes.js';
+import { drawFighter } from './arte.js?v=restaurado-2';
+import { drawPackPortrait, drawPackSelection, artDiagnostics } from './arte-pacotes.js?v=restaurado-2';
 
 const $ = id => document.getElementById(id);
 const selection = [null, null];
