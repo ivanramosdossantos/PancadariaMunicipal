@@ -16,7 +16,7 @@ const movementKeys = new Map([
   ['ArrowLeft', Control.LEFT], ['ArrowRight', Control.RIGHT],
   ['ArrowUp', Control.UP], ['ArrowDown', Control.DOWN],
 ]);
-const actionKeys = new Map([['KeyZ', 'normal'], ['KeyX', 'special']]);
+const actionKeys = new Map([['KeyZ', 'normal'], ['KeyX', 'special'], ['Sweep', 'sweep']]);
 const canvas = document.querySelector('.arena canvas');
 const context = canvas.getContext('2d');
 context.setTransform(canvas.width / SCENE_WIDTH, 0, 0, canvas.height / SCENE_HEIGHT, 0, 0);
@@ -177,6 +177,10 @@ function showSelection(step, focus = true) {
   $('resumo-selecao').textContent = step === 2 ? selection[0].nome + ' × ' + selection[1].nome
     : step === 1 ? 'Você joga com ' + selection[0].nome : 'Pato Branco · Edição 01';
   $('selecao').dataset.step = String(step);
+  for (const label of document.querySelectorAll('[data-step-label]')) {
+    if (Number(label.dataset.stepLabel) === step) label.setAttribute('aria-current', 'step');
+    else label.removeAttribute('aria-current');
+  }
   updateSelection();
   if (focus) $('titulo-selecao').focus();
 }
@@ -252,7 +256,8 @@ function frame(timestamp) {
 }
 
 function queue(code) {
-  if (actionKeys.has(code)) action = actionKeys.get(code);
+  if (code === 'KeyZ' && (keyboard.has('ArrowDown') || [...touches.values()].includes('ArrowDown'))) action = 'sweep';
+  else if (actionKeys.has(code)) action = actionKeys.get(code);
   if (code === 'ArrowUp') jumpTap = true;
 }
 
@@ -267,6 +272,9 @@ window.addEventListener('keyup', event => keyboard.delete(event.code));
 window.addEventListener('blur', resetInput);
 
 for (const button of document.querySelectorAll('[data-key]')) {
+  button.addEventListener('click', event => {
+    if (event.detail === 0 && battle && battle.result === null && actionKeys.has(button.dataset.key)) queue(button.dataset.key);
+  });
   button.addEventListener('pointerdown', event => {
     if (!battle || battle.result !== null) return;
     event.preventDefault();

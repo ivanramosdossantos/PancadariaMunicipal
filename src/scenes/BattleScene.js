@@ -1,6 +1,6 @@
 import { Control } from '../constants/controls.js';
 import {
-  FighterAttackBaseData, FighterAttackStrength, FighterState,
+  FighterAttackBaseData, FighterAttackStrength, FighterAttackType, FighterHurtStates, FighterState, FrameDelay,
 } from '../constants/fighter.js';
 import { SCENE_HEIGHT, SCENE_WIDTH, STAGE_FLOOR, STAGE_MID_POINT, STAGE_PADDING } from '../constants/stage.js';
 import { Camera } from '../engine/Camera.js';
@@ -12,6 +12,7 @@ import { hitArea } from '../especiais.js';
 
 const specialState = FighterState.SPECIAL_1_HEAVY;
 const groundedActions = [FighterState.IDLE, FighterState.WALK_FORWARD, FighterState.WALK_BACKWARD];
+const sweepFrom = [...groundedActions, FighterState.CROUCH_DOWN, FighterState.CROUCH, FighterState.CROUCH_UP, FighterState.CROUCH_TURN];
 const airborne = [FighterState.JUMP_UP, FighterState.JUMP_FORWARD, FighterState.JUMP_BACKWARD];
 const normalStates = [FighterState.LIGHT_PUNCH, FighterState.MEDIUM_PUNCH, FighterState.HEAVY_PUNCH,
   FighterState.LIGHT_KICK, FighterState.MEDIUM_KICK, FighterState.HEAVY_KICK];
@@ -20,6 +21,31 @@ const animationRates = Object.fromEntries(Object.values(FighterState).map(state 
 const airContact = 65;
 const airRecovery = 200;
 const clamp = value => Math.max(0, Math.min(1, value));
+
+function installSweep(fighter) {
+  const [crouch] = fighter.animations[FighterState.CROUCH][0];
+  const [idle] = fighter.animations[FighterState.IDLE][0];
+  const [sprite, push, hurt] = fighter.frames.get(crouch);
+  fighter.frames.set('sweep-contact', [sprite, push, hurt, [10, -19, 53, 17]]);
+  fighter.frames.set('sweep-down', [sprite, [-19, -18, 38, 18]]);
+  fighter.animations[FighterState.SWEEP] = [
+    [crouch, 5], ['sweep-contact', 4], [crouch, 12], [crouch, FrameDelay.TRANSITION],
+  ];
+  fighter.animations[FighterState.KNOCKDOWN] = [
+    ['sweep-down', 6], ['sweep-down', 23], ['sweep-down', 10], [idle, FrameDelay.TRANSITION],
+  ];
+  const recover = time => {
+    if (fighter.isAnimationCompleted()) fighter.changeState(FighterState.IDLE, time);
+  };
+  fighter.states[FighterState.SWEEP] = {
+    init: fighter.resetVelocities, update: recover, validFrom: sweepFrom,
+    attackType: FighterAttackType.KICK, attackStrength: FighterAttackStrength.LIGHT,
+  };
+  fighter.states[FighterState.KNOCKDOWN] = {
+    init: fighter.resetVelocities, update: recover, validFrom: FighterHurtStates,
+  };
+  fighter.states[FighterState.IDLE].validFrom.push(FighterState.SWEEP, FighterState.KNOCKDOWN);
+}
 
 function attackMotion(fighter, frame) {
   const animation = fighter.animations[fighter.currentState];
@@ -55,6 +81,7 @@ export class BattleScene {
       const fighter = new profile.base(id, this.onHit, this.entities);
       fighter.profile = profile;
       fighter.specialMoves = [];
+      installSweep(fighter);
       fighter.animationRates = animationRates;
       fighter.initialVelocity.jump *= 1.05;
       fighter.gravity *= 1.12;
@@ -155,7 +182,15 @@ export class BattleScene {
       fighter.updateHurtShake(time, this.freezeUntil);
       return;
     }
-    if (fighter.queued && !fighter.guarding) {
+    const sweep = fighter.queued?.action === 'sweep' || (fighter.queued?.action === 'normal' && movement.has(Control.DOWN));
+    if (sweep && sweepFrom.includes(fighter.currentState) && fighter.position.y >= STAGE_FLOOR) {
+      fighter.guarding = false;
+      fighter.direction = fighter.getDirection();
+      fighter.attackStruck = false;
+      fighter.changeState(FighterState.SWEEP, time);
+      fighter.queued = null;
+      this.sound('swing');
+    } else if (fighter.queued && !sweep && !fighter.guarding) {
       const command = fighter.queued.action;
       if (groundedActions.includes(fighter.currentState) && !movement.has(Control.UP)) {
         const state = command === 'normal' ? fighter.profile.estadoNormal : specialState;
@@ -223,7 +258,8 @@ export class BattleScene {
       const frame = fighter.animationFrame + (frameLength > 0 ? clamp((poseTime - fighter.animationStarted) / frameLength) : 0);
       const airAge = fighter.airStrike ? poseTime - fighter.airStrike.start : Infinity;
       const airStrike = airAge < airRecovery;
-      const motion = normalStates.includes(state) ? attackMotion(fighter, frame) : { strike: 0, windup: 0 };
+      const sweeping = state === FighterState.SWEEP;
+      const motion = sweeping || normalStates.includes(state) ? attackMotion(fighter, frame) : { strike: 0, windup: 0 };
       if (airStrike) {
         motion.strike = airAge < airContact ? clamp(airAge / airContact) : 1 - clamp((airAge - 115) / (airRecovery - 115));
         motion.windup = Math.sin(Math.PI * clamp(airAge / airContact));
@@ -235,11 +271,13 @@ export class BattleScene {
         backward: state === FighterState.WALK_BACKWARD,
         air: airborne.includes(state),
         airLift: clamp(-fighter.velocity.y / 420),
-        crouch: state === FighterState.CROUCH_DOWN ? clamp((frame + 1) / 2)
+        crouch: sweeping ? 1 : state === FighterState.CROUCH_DOWN ? clamp((frame + 1) / 2)
           : state === FighterState.CROUCH_UP ? 1 - clamp(frame / 2)
           : state === FighterState.JUMP_START || state === FighterState.JUMP_LAND ? 0.55
           : fighter.guarding || state === FighterState.CROUCH || state === FighterState.CROUCH_TURN ? 1 : 0,
         guard: fighter.guarding,
+        sweep: sweeping,
+        fall: state === FighterState.KNOCKDOWN ? frame < 1 ? frame : 1 - clamp(frame - 2) : 0,
         ...motion,
         special: state === specialState,
         dash: state === specialState && fighter.specialDashing,

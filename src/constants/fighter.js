@@ -61,6 +61,8 @@ export const FighterState = {
 	LIGHT_KICK: 'lightKick',
 	MEDIUM_KICK: 'mediumKick',
 	HEAVY_KICK: 'heavyKick',
+	SWEEP: 'sweep',
+	KNOCKDOWN: 'knockdown',
 	HURT_HEAD_LIGHT: 'hurtHeadLight',
 	HURT_HEAD_MEDIUM: 'hurtHeadMedium',
 	HURT_HEAD_HEAVY: 'hurtHeadHeavy',
@@ -196,6 +198,7 @@ export const FighterHurtStates = [
 	FighterState.LIGHT_KICK,
 	FighterState.MEDIUM_KICK,
 	FighterState.HEAVY_KICK,
+	FighterState.SWEEP,
 	FighterState.HURT_HEAD_LIGHT,
 	FighterState.HURT_HEAD_MEDIUM,
 	FighterState.HURT_HEAD_HEAVY,
@@ -208,4 +211,5 @@ export const FighterHurtStates = [
 	FighterState.CROUCH,
 	FighterState.CROUCH_UP,
 	FighterState.CROUCH_DOWN,
+	FighterState.CROUCH_TURN,
 ];

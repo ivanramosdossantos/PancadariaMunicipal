@@ -10,6 +10,7 @@ Na pasta do projeto, execute `node serve.mjs` e abra [o jogo local](http://127.0
 - **Z** ataca e **X** ativa o especial.
 - Para saltar por cima do rival, aproxime-se, segure a direção dele e aperte **↑**.
 - Use **Z** no ar para atacar na descida.
+- Segure **↓** e aperte **Z** para a rasteira. Ela derruba um rival no chão se ele estiver sem defesa.
 
 | Lutador | Golpe normal | Especial |
 | --- | --- | --- |

@@ -740,7 +740,10 @@ export class Fighter {
 
 		playSound(this.soundHits[attackStrength][attackType]);
 		if (!impact) this.opponent.attackStruck = true;
-		if (!blocked && this.states[newState].validFrom.includes(this.currentState)) this.changeState(newState, time);
+		if (!blocked && this.states[newState].validFrom.includes(this.currentState)) {
+			const sweep = !impact && this.opponent.currentState === FighterState.SWEEP;
+			this.changeState(sweep ? FighterState.KNOCKDOWN : newState, time);
+		}
 		this.onAttackHit(
 			time,
 			this.opponent.playerId,
@@ -827,6 +830,8 @@ export class Fighter {
 
 	updateAttackBoxCollided = (time) => {
 		if (!this.states[this.currentState].attackType || this.attackStruck) return;
+		if (!this.boxes.hit.width || !this.boxes.hit.height) return;
+		if (this.currentState === FighterState.SWEEP && this.opponent.position.y < STAGE_FLOOR) return;
 
 		const actualHitBox = getActualBoxDimensions(
 			this.position,
@@ -839,13 +844,14 @@ export class Fighter {
 		)) {
 			if (this.attackStruck) return;
 			const [x, y, width, height] = hurtBox;
+			if (!width || !height) continue;
 			const actualOpponentHurtBox = getActualBoxDimensions(
 				this.opponent.position,
 				this.opponent.direction,
 				{ x, y, width, height }
 			);
 
-			if (!boxOverlap(actualHitBox, actualOpponentHurtBox)) return;
+			if (!boxOverlap(actualHitBox, actualOpponentHurtBox)) continue;
 
 			const { attackStrength, attackType } = this.states[this.currentState];
 

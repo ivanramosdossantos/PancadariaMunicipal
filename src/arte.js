@@ -70,7 +70,7 @@ export function drawFighter(ctx, profile, x, y, facing, pose = {}) {
   const stride = pose.walk ? Math.sin(phase * 1.6) * (pose.backward ? -1 : 1) : 0;
   const step = stride * 12;
   const hop = pose.air ? 5 + (pose.airLift ?? 0) * 8 : 0;
-  const kick = (!pose.special && profile.estadoNormal.endsWith('Kick')) || pose.air;
+  const kick = pose.sweep || (!pose.special && profile.estadoNormal.endsWith('Kick')) || pose.air;
   const crouch = pose.crouch ?? 0;
   const hurt = pose.hurt ?? 0;
   const bob = crouch * 18 + (pose.walk ? Math.abs(step) * 0.18 : Math.sin(phase) * 1.4) + windup * 4;
@@ -80,6 +80,9 @@ export function drawFighter(ctx, profile, x, y, facing, pose = {}) {
   if (pose.ko) {
     ctx.translate(-17, -9);
     ctx.rotate(-1.35);
+  } else if (pose.fall) {
+    ctx.translate(-17 * pose.fall, -9 * pose.fall);
+    ctx.rotate(-1.35 * pose.fall);
   } else if (pose.hurt) {
     ctx.rotate(-hurt * 0.17);
   }
@@ -89,8 +92,8 @@ export function drawFighter(ctx, profile, x, y, facing, pose = {}) {
   const rearFoot = [-14 + step - crouch * 4, -3 - hop - Math.max(0, stride) * 7];
   limb(ctx, [[-7,torsoY],[-13+step*0.5,-21+hop+bob*0.4],rearFoot], '#252b39', '#555362', 10);
   boot(...rearFoot,'#362d32');
-  const kickX = (kick ? strike * 29 + windup * 4 : 0) + (pose.feint ?? 0) * 5;
-  const kickY = (kick ? strike * 38 + windup * 14 : 0) + (pose.feint ?? 0) * 17;
+  const kickX = (kick ? strike * (pose.sweep ? 43 : 29) + windup * 4 : 0) + (pose.feint ?? 0) * 5;
+  const kickY = (kick ? strike * (pose.sweep ? 7 : 38) + windup * 14 : 0) + (pose.feint ?? 0) * 17;
   const frontFoot = [13-step+kickX+crouch*5,-3-hop-kickY-Math.max(0,-stride)*7];
   limb(ctx, [[7,torsoY],[11-step*0.5+kickX*0.54,-22-hop-kickY*0.66+bob*0.42],frontFoot], '#343847', '#656778', 10.5);
   boot(...frontFoot,mayor ? '#453037' : '#d8c4aa');
