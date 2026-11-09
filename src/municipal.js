@@ -156,7 +156,7 @@ function start() {
 }
 
 function render() {
-  battle.draw(context, elapsed);
+  battle.draw(context, elapsed + accumulator);
   for (const [id, side] of sides.entries()) {
     const { profile, specialReady } = battle.fighters[id];
     side.name.textContent = (id === 0 ? 'Você · ' : 'CPU · ') + profile.nome;

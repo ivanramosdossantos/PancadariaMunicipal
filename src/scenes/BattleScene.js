@@ -13,6 +13,28 @@ import { hitArea } from '../especiais.js';
 const specialState = FighterState.SPECIAL_1_HEAVY;
 const groundedActions = [FighterState.IDLE, FighterState.WALK_FORWARD, FighterState.WALK_BACKWARD];
 const airborne = [FighterState.JUMP_UP, FighterState.JUMP_FORWARD, FighterState.JUMP_BACKWARD];
+const normalStates = [FighterState.LIGHT_PUNCH, FighterState.MEDIUM_PUNCH, FighterState.HEAVY_PUNCH,
+  FighterState.LIGHT_KICK, FighterState.MEDIUM_KICK, FighterState.HEAVY_KICK];
+const animationRates = Object.fromEntries(Object.values(FighterState).map(state => [state,
+  normalStates.includes(state) ? 1.23 : state.startsWith('hurt') ? 1.4 : state === specialState ? 1.13 : 1.1]));
+const airContact = 65;
+const airRecovery = 200;
+const clamp = value => Math.max(0, Math.min(1, value));
+
+function attackMotion(fighter, frame) {
+  const animation = fighter.animations[fighter.currentState];
+  const activeFrames = animation.map(([key], index) => fighter.frames.get(key)?.[3]?.[2] > 0 ? index : -1)
+    .filter(index => index >= 0);
+  if (!activeFrames.length) return { strike: 0, windup: 0 };
+  const first = activeFrames[0];
+  const last = activeFrames.at(-1);
+  if (frame < first) {
+    const progress = frame / first;
+    return { strike: clamp((progress - 0.72) / 0.28), windup: Math.sin(Math.PI * progress) };
+  }
+  if (frame < last + 1) return { strike: 1, windup: 0 };
+  return { strike: 1 - clamp((frame - last - 1) / Math.max(1, animation.length - last - 2)), windup: 0 };
+}
 
 export class BattleScene {
   constructor(profiles, background, sound = () => {}) {
@@ -23,6 +45,7 @@ export class BattleScene {
     this.effects = [];
     this.remaining = 60;
     this.freezeUntil = 0;
+    this.impactTime = 0;
     this.caption = { text: 'Valendo!', until: 750 };
     this.drawOrder = [0, 1];
     this.cpu = { decision: 0, movement: new Set(), action: null };
@@ -31,6 +54,10 @@ export class BattleScene {
       const fighter = new profile.base(id, this.onHit, this.entities);
       fighter.profile = profile;
       fighter.specialMoves = [];
+      fighter.animationRates = animationRates;
+      fighter.initialVelocity.jump *= 1.05;
+      fighter.gravity *= 1.12;
+      for (const state of Object.keys(fighter.initialVelocity.x)) fighter.initialVelocity.x[state] *= 1.12;
       fighter.specialReady = 0;
       fighter.queued = null;
       fighter.airStrike = null;
@@ -64,7 +91,8 @@ export class BattleScene {
     this.drawOrder = [target, source];
     if (!airborne.includes(defender.currentState)) defender.direction = -impact.direction;
     defender.flashUntil = time.previous + 155;
-    this.freezeUntil = time.previous + (impact.blocked ? 35 : strength === FighterAttackStrength.HEAVY ? 88 : 57);
+    this.impactTime = time.previous;
+    this.freezeUntil = time.previous + (impact.blocked ? 25 : strength === FighterAttackStrength.HEAVY ? 68 : 39);
     if (position) this.effects.push({ ...position, blocked: impact.blocked, start: time.previous });
     this.sound(impact.blocked ? 'block' : 'hit');
     if (this.health[target] === 0) this.finish(source, time);
@@ -93,7 +121,7 @@ export class BattleScene {
     const distance = Math.abs(player.position.x - cpu.position.x);
     const towards = player.position.x < cpu.position.x ? Control.LEFT : Control.RIGHT;
     const movement = new Set();
-    this.cpu.decision = time.previous + 105 + Math.random() * 145;
+    this.cpu.decision = time.previous + 90 + Math.random() * 115;
     this.cpu.action = null;
     if (distance > 75) movement.add(towards);
     if (time.previous > 1100) {
@@ -116,7 +144,7 @@ export class BattleScene {
     setVirtualMovement(fighter.playerId, movement);
     fighter.guarding = movement.has(Control.DOWN) && fighter.position.y >= STAGE_FLOOR
       && (groundedActions.includes(fighter.currentState) || fighter.currentState.startsWith('crouch'));
-    if (action) fighter.queued = { action, until: now + 150 };
+    if (action) fighter.queued = { action, until: now + 175 };
     if (fighter.queued?.until < now) fighter.queued = null;
     if (now < this.freezeUntil) {
       fighter.updateHurtShake(time, this.freezeUntil);
@@ -146,7 +174,7 @@ export class BattleScene {
     }
     fighter.update(time, this.camera);
     if (!airborne.includes(fighter.currentState)) fighter.airStrike = null;
-    if (fighter.airStrike && !fighter.airStrike.hit && now - fighter.airStrike.start >= 75 && now - fighter.airStrike.start < 225) {
+    if (fighter.airStrike && !fighter.airStrike.hit && now - fighter.airStrike.start >= airContact && now - fighter.airStrike.start < 150) {
       const direction = Math.sign(fighter.opponent.position.x - fighter.position.x) || fighter.direction;
       const box = getActualBoxDimensions(fighter.position, direction, { x: 12, y: -36, width: 40, height: 42 });
       fighter.airStrike.hit = hitArea(fighter.opponent, box, time, FighterAttackStrength.LIGHT, 13, direction);
@@ -183,18 +211,31 @@ export class BattleScene {
     for (const id of this.drawOrder) {
       const fighter = this.fighters[id];
       const state = fighter.currentState;
-      const box = fighter.boxes.hit;
-      const normal = Boolean(fighter.states[state].attackType);
-      const airStrike = fighter.airStrike && now - fighter.airStrike.start < 225;
+      const poseTime = now < this.freezeUntil ? this.impactTime : now;
+      const frameLength = fighter.animationTimer - fighter.animationStarted;
+      const frame = fighter.animationFrame + (frameLength > 0 ? clamp((poseTime - fighter.animationStarted) / frameLength) : 0);
+      const airAge = fighter.airStrike ? poseTime - fighter.airStrike.start : Infinity;
+      const airStrike = airAge < airRecovery;
+      const motion = normalStates.includes(state) ? attackMotion(fighter, frame) : { strike: 0, windup: 0 };
+      if (airStrike) {
+        motion.strike = airAge < airContact ? clamp(airAge / airContact) : 1 - clamp((airAge - 115) / (airRecovery - 115));
+        motion.windup = Math.sin(Math.PI * clamp(airAge / airContact));
+      }
       const facing = airStrike ? Math.sign(fighter.opponent.position.x - fighter.position.x) || fighter.direction : fighter.direction;
       const pose = {
-        phase: state === specialState ? (now / 65) % 2 : fighter.animationFrame,
+        phase: poseTime / 100,
         walk: state.startsWith('walk'),
+        backward: state === FighterState.WALK_BACKWARD,
         air: airborne.includes(state),
-        crouch: fighter.guarding || state.startsWith('crouch'),
-        strike: airStrike ? 1 : normal && box.width > 0 ? 1 : normal ? 0.18 : 0,
+        airLift: clamp(-fighter.velocity.y / 420),
+        crouch: state === FighterState.CROUCH_DOWN ? clamp((frame + 1) / 2)
+          : state === FighterState.CROUCH_UP ? 1 - clamp(frame / 2)
+          : state === FighterState.JUMP_START || state === FighterState.JUMP_LAND ? 0.55
+          : fighter.guarding || state === FighterState.CROUCH || state === FighterState.CROUCH_TURN ? 1 : 0,
+        guard: fighter.guarding,
+        ...motion,
         special: state === specialState,
-        hurt: fighter.flashUntil > now,
+        hurt: clamp(((fighter.flashUntil ?? 0) - poseTime) / 155),
         ko: state === FighterState.KO,
       };
       drawFighter(context, fighter.profile, fighter.position.x - x - (pose.hurt ? fighter.hurtShake : 0),

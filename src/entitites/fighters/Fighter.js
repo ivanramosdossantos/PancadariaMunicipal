@@ -810,14 +810,16 @@ export class Fighter {
 
 		const [frameKey, frameDelay] = animation[this.animationFrame];
 		this.boxes = this.getBoxes(frameKey);
-		this.animationTimer = time.previous + frameDelay * FRAME_TIME;
+		this.animationStarted = time.previous;
+		const rate = this.animationRates?.[this.currentState] ?? 1;
+		this.animationTimer = time.previous + frameDelay * FRAME_TIME / rate;
 	};
 
 	updateAnimation = (time) => {
 		const animation = this.animations[this.currentState];
 		if (
 			animation[this.animationFrame][1] <= FrameDelay.FREEZE ||
-			time.previous <= this.animationTimer
+			time.previous < this.animationTimer - 0.001
 		)
 			return;
 		this.setAnimationFrame(this.animationFrame + 1, time);

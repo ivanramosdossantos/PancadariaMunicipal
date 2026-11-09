@@ -62,10 +62,14 @@ export function drawFighter(ctx, profile, x, y, facing, pose = {}) {
   const mayor = profile.id === 'prefeito';
   const phase = pose.phase ?? 0;
   const strike = pose.strike ?? 0;
-  const step = pose.walk ? Math.sin(phase * 1.4) * 11 : 0;
-  const hop = pose.air ? 9 : 0;
+  const windup = pose.windup ?? 0;
+  const stride = pose.walk ? Math.sin(phase * 1.6) * (pose.backward ? -1 : 1) : 0;
+  const step = stride * 12;
+  const hop = pose.air ? 5 + (pose.airLift ?? 0) * 8 : 0;
   const kick = profile.estadoNormal.endsWith('Kick') || pose.air;
-  const bob = pose.crouch ? 18 : pose.walk ? Math.abs(step) * 0.17 : Math.sin(phase) * 1.4;
+  const crouch = pose.crouch ?? 0;
+  const hurt = pose.hurt ?? 0;
+  const bob = crouch * 18 + (pose.walk ? Math.abs(step) * 0.18 : Math.sin(phase) * 1.4) + windup * 4;
   ctx.save();
   ctx.translate(x, y);
   ctx.scale(facing, 1);
@@ -73,21 +77,28 @@ export function drawFighter(ctx, profile, x, y, facing, pose = {}) {
     ctx.translate(-17, -9);
     ctx.rotate(-1.35);
   } else if (pose.hurt) {
-    ctx.rotate(-0.11);
+    ctx.rotate(-hurt * 0.17);
   }
   const torsoY = -43 + bob;
   const boot = (footX, footY, color) =>
     shape(ctx, [[footX-5,footY-5],[footX+4,footY-5],[footX+8,footY-1],[footX+8,footY+2],[footX-6,footY+2]], color);
-  limb(ctx, [[-7,torsoY],[-13+step,-21+hop],[-14+step,-4-hop]], '#252b39', '#555362', 10);
-  boot(-14+step,-3-hop,'#362d32');
-  const kickX = kick ? strike * 26 : 0;
-  const kickY = kick ? strike * 37 : 0;
-  limb(ctx, [[7,torsoY],[11-step+kickX*0.52,-22-hop-kickY*0.7],[13-step+kickX,-4-hop-kickY]], '#343847', '#656778', 10.5);
-  boot(13-step+kickX,-3-hop-kickY,mayor ? '#453037' : '#d8c4aa');
+  const rearFoot = [-14 + step - crouch * 4, -3 - hop - Math.max(0, stride) * 7];
+  limb(ctx, [[-7,torsoY],[-13+step*0.5,-21+hop+bob*0.4],rearFoot], '#252b39', '#555362', 10);
+  boot(...rearFoot,'#362d32');
+  const kickX = kick ? strike * 29 + windup * 4 : 0;
+  const kickY = kick ? strike * 38 + windup * 14 : 0;
+  const frontFoot = [13-step+kickX+crouch*5,-3-hop-kickY-Math.max(0,-stride)*7];
+  limb(ctx, [[7,torsoY],[11-step*0.5+kickX*0.54,-22-hop-kickY*0.66+bob*0.42],frontFoot], '#343847', '#656778', 10.5);
+  boot(...frontFoot,mayor ? '#453037' : '#d8c4aa');
+  if (kick && strike > 0.55) {
+    line(ctx, [[frontFoot[0]-18,frontFoot[1]+6],[frontFoot[0]+2,frontFoot[1]+4],[frontFoot[0]+10,frontFoot[1]-1]], '#ffdd9b90', 1.5);
+  }
 
-  ctx.translate(0,bob);
-  limb(ctx, [[-11,-66],[-21,-54],[-14,-45]], profile.deep, profile.color, 9);
-  oval(ctx,-14,-45,4.4,4.7,profile.skin,ink);
+  ctx.translate(strike * (kick ? -3 : 7) - windup * 6 + stride * 2,bob);
+  ctx.rotate(strike * (kick ? -0.08 : 0.12) - windup * 0.1);
+  const rearHand = pose.guard ? [1,-74] : [-14-step*0.4-strike*6,-45-hop*0.52-windup*5];
+  limb(ctx, [[-11,-66],[-21-step*0.24,-54],rearHand], profile.deep, profile.color, 9);
+  oval(ctx,...rearHand,4.4,4.7,profile.skin,ink);
   const jacket = ctx.createLinearGradient(-17,-67,16,-38);
   jacket.addColorStop(0, profile.shine);
   jacket.addColorStop(0.43, profile.color);
@@ -127,11 +138,14 @@ export function drawFighter(ctx, profile, x, y, facing, pose = {}) {
   oval(ctx,-7,-79,2.3,2.9,profile.skin,'#7d483e');
   if (!mayor) oval(ctx,-8,-75,1.2,1.4,'#ffce65');
   const reach = kick ? 0 : strike * 31;
-  const hand = [20 + reach, -57 + strike * 4];
-  limb(ctx, [[9,-64],[16+reach*0.45,-54],hand],profile.deep,profile.color,9);
+  const hand = pose.guard ? [19,-76] : [20+reach+step*0.6-windup*12,-57-hop*0.45-strike*4+windup*9];
+  limb(ctx, [[9,-64],[16+reach*0.45+step*0.22,-54-windup*3],hand],profile.deep,profile.color,9);
   oval(ctx,...hand,5,4.3,profile.skin,ink);
   line(ctx,[[hand[0]+1,hand[1]-2],[hand[0]+4,hand[1]-1]],'#efb082',1);
-  if (pose.special && profile.id === 'pagodeiro') cavaco(ctx, phase % 2);
+  if (!kick && strike > 0.55) {
+    line(ctx, [[hand[0]-24,hand[1]+6],[hand[0]-10,hand[1]+4],[hand[0]-3,hand[1]+1]], '#ffdd9b90', 1.5);
+  }
+  if (pose.special && profile.id === 'pagodeiro') cavaco(ctx, (Math.sin(phase * 2.4) + 1) / 2);
   if (pose.special && mayor) {
     shape(ctx,[[8,-50],[21,-52],[24,-40],[11,-38]],'#f6db9e','#6b4841');
     line(ctx,[[12,-47],[20,-48],[13,-44],[20,-45]],'#a97555',0.9);
