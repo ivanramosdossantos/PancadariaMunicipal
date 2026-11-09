@@ -1,4 +1,4 @@
-import { drawRig } from './arte-articulada.js';
+import { drawPackFighter } from './arte-pacotes.js';
 const ink = '#241a23';
 
 function shape(ctx, points, fill, outline = ink, width = 1.45) {
@@ -60,7 +60,7 @@ function cavaco(ctx, strum) {
 }
 
 export function drawFighter(ctx, profile, x, y, facing, pose = {}) {
-  if (drawRig(ctx, profile, x, y, facing, pose)) return;
+  if (drawPackFighter(ctx, profile, x, y, facing, pose)) return;
   const mayor = profile.id === 'prefeito';
   const periquito = profile.id === 'periquito';
   const gladiador = profile.id === 'gladiador';

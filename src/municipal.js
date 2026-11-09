@@ -5,7 +5,7 @@ import { SCENE_WIDTH, SCENE_HEIGHT } from './constants/stage.js';
 import { elenco } from './elenco.js';
 import { arenas } from './arenas.js';
 import { drawFighter } from './arte.js';
-import { drawPackPortrait, artDiagnostics } from './arte-pacotes.js';
+import { drawPackPortrait, drawPackSelection, artDiagnostics } from './arte-pacotes.js';
 
 const $ = id => document.getElementById(id);
 const selection = [null, null];
@@ -121,8 +121,10 @@ function updateSelection() {
   portrait.clearRect(0, 0, art.width, art.height);
   if (selected) {
     portrait.scale(3, 3);
-    drawFighter(portrait, selected, 68, 101, selectionStep ? -1 : 1,
-      { special: selected.id === 'pagodeiro', phase: 0 });
+    if (!drawPackSelection(portrait, selected, 68, 101, selectionStep ? -1 : 1)) {
+      drawFighter(portrait, selected, 68, 101, selectionStep ? -1 : 1,
+        { special: selected.id === 'pagodeiro' });
+    }
   }
   art.classList.toggle('vazio', !selected);
   $('nome-ficha').textContent = selected?.nome ?? 'Escolha na grade';
