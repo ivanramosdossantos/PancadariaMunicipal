@@ -7,7 +7,7 @@ import { Camera } from '../engine/Camera.js';
 import { EntityList } from '../engine/EntityList.js';
 import { setVirtualMovement } from '../engine/InputHandler.js';
 import { getActualBoxDimensions } from '../utils/collisions.js';
-import { drawFighter, oval } from '../arte.js?v=restaurado-2';
+import { drawFighter, oval } from '../arte.js?v=pixel-real-v3';
 import { hitArea } from '../especiais.js';
 
 const specialState = FighterState.SPECIAL_1_HEAVY;
