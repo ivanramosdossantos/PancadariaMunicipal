@@ -1,4 +1,4 @@
-import { drawPackFighter } from './arte-pacotes.js';
+import { drawPackFighter } from './arte-pacotes.js?v=restaurado-2';
 const ink = '#241a23';
 
 function shape(ctx, points, fill, outline = ink, width = 1.45) {
