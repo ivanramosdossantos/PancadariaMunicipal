@@ -1,0 +1,32 @@
+@font-face {
+  font-family: Silkscreen;
+  src: url("fontes/Silkscreen-Bold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  src: url("fontes/IBM-Plex-Sans.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+:root {
+  --pm-ink: #101827;
+  --pm-panel: #18243B;
+  --pm-line: #667C99;
+  --pm-cream: #FFF1D0;
+  --pm-muted: #BAC8DD;
+  --pm-action: #FFCE57;
+  --pm-player: #74D8FF;
+  --pm-cpu: #FF8E80;
+  --pm-display: Silkscreen, "Courier New", monospace;
+  --pm-text: "IBM Plex Sans", system-ui, sans-serif;
+  --pm-space: 4px;
+  --pm-cut: 8px;
+  --pm-motion-fast: 120ms;
+  --pm-motion-confirm: 180ms;
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pancadaria Municipal · Arenas"
+  short_description: "Cria arenas em pixel art a partir de lugares reais"
+  default_prompt: "Use $pancadaria-arena para criar uma arena a partir deste lugar e das minhas referências."

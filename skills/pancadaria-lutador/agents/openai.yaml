@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pancadaria Municipal · Lutadores"
+  short_description: "Cria lutadores, golpes e sprites para o jogo"
+  default_prompt: "Use $pancadaria-lutador para criar um lutador a partir desta ficha e das minhas referências."

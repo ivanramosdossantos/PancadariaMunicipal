@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101827">
+<title>Pancadaria Municipal — Design system</title>
+<link rel="icon" href="simbolo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="prancha.css">
+</head>
+<body>
+<main>
+  <header class="topo">
+    <a href="#marca" class="assinatura"><img src="simbolo.svg" alt="" width="32" height="30"> Pancadaria Municipal</a>
+    <nav aria-label="Seções do guia"><a href="#marca">Marca</a><a href="#cores">Cores</a><a href="#tipografia">Tipo</a><a href="#componentes">Interface</a></nav>
+  </header>
+
+  <section class="hero" id="marca" aria-labelledby="titulo">
+    <div class="hero-top"><span>IDENTIDADE VISUAL</span><span>PROPOSTA / 01</span></div>
+    <img class="hero-logo" src="logo.svg" alt="Logo Pancadaria Municipal. Torre amarela dentro de um selo pixelado, ao lado de um letreiro angular.">
+    <div class="hero-base">
+      <div><h1 id="titulo">Fliperama de praça</h1><p>Arcade de fim dos anos 80, com sotaque de cada cidade.</p></div>
+      <span class="etiqueta">EDIÇÃO 01 / PATO BRANCO</span>
+    </div>
+  </section>
+
+  <section class="secao" aria-labelledby="titulo-marca">
+    <div class="cabeca"><span class="indice">01 / MARCA</span><h2 id="titulo-marca">Logo e símbolo</h2></div>
+    <div class="duas marca-grid">
+      <div class="placa placa-logo"><img src="logo.svg" alt="Assinatura horizontal"><span>ASSINATURA PRINCIPAL</span></div>
+      <div class="placa placa-simbolo"><img src="simbolo.svg" alt="Símbolo da torre e do raio"><span>SÍMBOLO COMPACTO</span></div>
+    </div>
+    <p class="nota">A torre remete à Matriz de Pato Branco. O raio e as linhas de movimento trazem o combate para a marca. Use o letreiro na abertura sobre Noite ou Gabinete, com pelo menos 300 px de largura. Abaixo disso, use o selo, com pelo menos 24 px.</p>
+  </section>
+
+  <section class="secao" id="cores" aria-labelledby="titulo-cores">
+    <div class="cabeca"><span class="indice">02 / PALETA</span><h2 id="titulo-cores">Noite de praça</h2></div>
+    <div class="paleta">
+      <div class="amostra" style="--cor:var(--pm-ink)"><span aria-hidden="true"></span><strong>Noite</strong><code>#101827</code><small>Fundo principal</small></div>
+      <div class="amostra" style="--cor:var(--pm-panel)"><span aria-hidden="true"></span><strong>Gabinete</strong><code>#18243B</code><small>Painéis e fichas</small></div>
+      <div class="amostra" style="--cor:var(--pm-line)"><span aria-hidden="true"></span><strong>Aço</strong><code>#667C99</code><small>Bordas e divisórias</small></div>
+      <div class="amostra" style="--cor:var(--pm-cream)"><span aria-hidden="true"></span><strong>Marfim</strong><code>#FFF1D0</code><small>Texto principal</small></div>
+      <div class="amostra" style="--cor:var(--pm-action)"><span aria-hidden="true"></span><strong>Poste</strong><code>#FFCE57</code><small>Ação e tempo</small></div>
+      <div class="amostra" style="--cor:var(--pm-player)"><span aria-hidden="true"></span><strong>Ficha azul</strong><code>#74D8FF</code><small>Identifica o jogador</small></div>
+      <div class="amostra" style="--cor:var(--pm-cpu)"><span aria-hidden="true"></span><strong>Ficha coral</strong><code>#FF8E80</code><small>Identifica a CPU</small></div>
+    </div>
+    <p class="nota">Marfim para o texto principal e cinza-claro <code>#BAC8DD</code> para apoio. Botão amarelo com texto Noite. Azul e coral aparecem acompanhados de <strong>P1</strong> e <strong>CPU</strong>.</p>
+  </section>
+
+  <section class="secao" id="tipografia" aria-labelledby="titulo-tipo">
+    <div class="cabeca"><span class="indice">03 / TIPOGRAFIA</span><h2 id="titulo-tipo">Duas vozes</h2></div>
+    <div class="duas">
+      <div class="placa tipo">
+        <span class="legenda">SILKSCREEN BOLD · 700</span>
+        <div class="tipo-pixel">Escolha<br>seu lutador</div>
+        <p>Títulos, cronômetro e chamadas curtas. 32–48 px em títulos e 16–24 px em chamadas.</p>
+      </div>
+      <div class="placa tipo">
+        <span class="legenda">IBM PLEX SANS · 400 / 600</span>
+        <div class="tipo-texto">Asfalto<br>Superfaturado</div>
+        <p>Menus, perfis, botões e instruções. 16 px para texto e controles, 14 px para apoio.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao" id="componentes" aria-labelledby="titulo-interface">
+    <div class="cabeca"><span class="indice">04 / INTERFACE</span><h2 id="titulo-interface">Peças do jogo</h2></div>
+    <div class="duas">
+      <div class="placa componente">
+        <span class="legenda">SELEÇÃO · ESTADOS</span>
+        <div class="acoes">
+          <span class="acao" aria-label="Exemplo de ação principal">Confirmar lutador →</span>
+          <span class="acao secundaria" aria-label="Exemplo de ação secundária">← Voltar</span>
+        </div>
+        <div class="estados">
+          <div class="cartao ativo"><span>P1 · SELECIONADO</span><strong>Pagodeiro Maluco</strong></div>
+          <div class="cartao cpu"><span>CPU · SELECIONADO</span><strong>Prefeito da Maquete</strong></div>
+          <div class="cartao bloqueado"><span>VAGA</span><strong>Em breve</strong></div>
+        </div>
+        <p>Grade 3 × 3. A borda e o rótulo mostram quem foi escolhido. A ficha mantém o nome e os golpes visíveis.</p>
+      </div>
+      <div class="placa componente">
+        <span class="legenda">DUELO · PLACAR</span>
+        <div class="placar" aria-label="Exemplo de placar. P1 com 84 de vida. CPU com 62 de vida. 58 segundos restantes.">
+          <div class="lado lado-p1"><span>P1</span><div class="vida"><i style="width:84%"></i></div><small>Especial pronto</small></div>
+          <span class="tempo">58</span>
+          <div class="lado lado-cpu"><span>CPU</span><div class="vida"><i style="width:62%"></i></div><small>Especial em recarga</small></div>
+        </div>
+        <p>Vida nas pontas, tempo no centro e estado do especial abaixo. Durante a luta, os efeitos de impacto ficam na arena.</p>
+      </div>
+    </div>
+    <p class="nota">Espaçamento em múltiplos de 4 px. Molduras recortadas em passos de 8 px. Resposta de foco em 120 ms e confirmação em 180 ms. Com movimento reduzido, a troca visual é imediata.</p>
+  </section>
+
+  <section class="secao arte" aria-labelledby="titulo-arte">
+    <div class="cabeca"><span class="indice">05 / DIREÇÃO DE ARTE</span><h2 id="titulo-arte">Da cidade para a arena</h2></div>
+    <div class="duas">
+      <div class="placa tipo"><span class="legenda">LUTADORES</span><h3>Silhueta primeiro</h3><p>Retrato fechado na grade, pose de corpo inteiro na ficha e animações em pixel art na luta. Roupa, postura e adereço devem identificar o personagem à distância. Preparação, contato e recuperação são poses distintas.</p></div>
+      <div class="placa tipo"><span class="legenda">ARENAS</span><h3>O lugar tem que aparecer</h3><p>Um ponto reconhecível por cenário, como a fachada e a torre da Matriz. Separe fundo, arquitetura e piso de luta. Deixe contraste e detalhes mais fortes para os lutadores e seus golpes.</p></div>
+    </div>
+  </section>
+
+  <footer><span>PANCADARIA MUNICIPAL / GUIA VISUAL V0.1</span><a href="logo.svg">Logo SVG</a><a href="simbolo.svg">Símbolo SVG</a><a href="tokens.css">Tokens</a></footer>
+</main>
+</body>
+</html>
