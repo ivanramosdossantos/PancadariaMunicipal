@@ -5,6 +5,7 @@ import { SCENE_WIDTH, SCENE_HEIGHT } from './constants/stage.js';
 import { elenco } from './elenco.js';
 import { arenas } from './arenas.js';
 import { drawFighter } from './arte.js';
+import { drawPackPortrait, drawPackSelection } from './arte-pacotes.js';
 
 const $ = id => document.getElementById(id);
 const selection = [null, null];
@@ -73,7 +74,7 @@ function makeCards(container) {
     art.setAttribute('aria-hidden', 'true');
     const portrait = art.getContext('2d');
     portrait.scale(2, 2);
-    drawFighter(portrait, profile, 48, 105, 1);
+    if (!drawPackPortrait(portrait, profile, 105, 56)) drawFighter(portrait, profile, 48, 105, 1);
     name.textContent = profile.nome;
     button.append(art, name);
     button.addEventListener('click', () => {
@@ -120,8 +121,10 @@ function updateSelection() {
   portrait.clearRect(0, 0, art.width, art.height);
   if (selected) {
     portrait.scale(3, 3);
-    drawFighter(portrait, selected, 68, 101, selectionStep ? -1 : 1,
-      { special: selected.id === 'pagodeiro' });
+    if (!drawPackSelection(portrait, selected, 68, 101, selectionStep ? -1 : 1)) {
+      drawFighter(portrait, selected, 68, 101, selectionStep ? -1 : 1,
+        { special: selected.id === 'pagodeiro' });
+    }
   }
   art.classList.toggle('vazio', !selected);
   $('nome-ficha').textContent = selected?.nome ?? 'Escolha na grade';
@@ -287,6 +290,20 @@ for (const button of document.querySelectorAll('[data-key]')) {
   }
 }
 
+function refreshCards() {
+  for (const button of cards) {
+    const profile = elenco.find(item => item.id === button.dataset.id);
+    if (!profile) continue;
+    const art = button.querySelector('canvas');
+    const portrait = art.getContext('2d');
+    portrait.setTransform(1, 0, 0, 1, 0, 0);
+    portrait.clearRect(0, 0, art.width, art.height);
+    portrait.scale(2, 2);
+    if (!drawPackPortrait(portrait, profile, 105, 56)) drawFighter(portrait, profile, 48, 105, 1);
+  }
+  updateSelection();
+}
+window.addEventListener('pancadaria:arte-carregada', refreshCards);
 makeCards($('elenco'));
 makeArenaCards($('escolhas-arenas'));
 showSelection(0, false);
