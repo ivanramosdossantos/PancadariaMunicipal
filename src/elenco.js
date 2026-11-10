@@ -14,7 +14,7 @@ export const elenco = [
     id: 'pagodeiro', nome: 'Pagodeiro Maluco', normal: 'Chute do Compasso',
     estadoNormal: FighterState.LIGHT_KICK, especial: 'Cavaco da Morte',
     descricao: 'Três batidas de cavaco lançam três ondas que acertam separadamente.',
-    base: Ken, efeito: WaveSpecial, recarga: 2900,
+    base: Ken, efeito: WaveSpecial, recarga: 2900, pacoteArte: true,
     color: '#47988a', deep: '#27545c', shine: '#8cd6ae', skin: '#ba764e',
     alternativa: { color: '#a65e8b', deep: '#663c63', shine: '#e9a8bf' },
   },

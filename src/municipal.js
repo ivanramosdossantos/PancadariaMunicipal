@@ -5,6 +5,7 @@ import { SCENE_WIDTH, SCENE_HEIGHT } from './constants/stage.js';
 import { elenco } from './elenco.js';
 import { arenas } from './arenas.js';
 import { drawFighter } from './arte.js';
+import { carregarArteLutador, desenharArteSelecao } from './arte-lutador.js';
 
 const $ = id => document.getElementById(id);
 const selection = [null, null];
@@ -72,8 +73,10 @@ function makeCards(container) {
     art.height = 112;
     art.setAttribute('aria-hidden', 'true');
     const portrait = art.getContext('2d');
-    portrait.scale(2, 2);
-    drawFighter(portrait, profile, 48, 105, 1);
+    if (!desenharArteSelecao(portrait, profile, 'retrato', art.width, art.height)) {
+      portrait.scale(2, 2);
+      drawFighter(portrait, profile, 48, 105, 1);
+    }
     name.textContent = profile.nome;
     button.append(art, name);
     button.addEventListener('click', () => {
@@ -119,9 +122,11 @@ function updateSelection() {
   portrait.setTransform(1, 0, 0, 1, 0, 0);
   portrait.clearRect(0, 0, art.width, art.height);
   if (selected) {
-    portrait.scale(3, 3);
-    drawFighter(portrait, selected, 68, 101, selectionStep ? -1 : 1,
-      { special: selected.id === 'pagodeiro' });
+    const direcao = selectionStep ? -1 : 1;
+    if (!desenharArteSelecao(portrait, selected, 'pose', art.width, art.height, direcao)) {
+      portrait.scale(3, 3);
+      drawFighter(portrait, selected, 68, 101, direcao, { special: selected.id === 'pagodeiro' });
+    }
   }
   art.classList.toggle('vazio', !selected);
   $('nome-ficha').textContent = selected?.nome ?? 'Escolha na grade';
@@ -201,7 +206,7 @@ function start() {
   last = null;
   const [player, opponent] = selection;
   const alternative = opponent.alternativa ?? { color: '#ac657d', deep: '#63304d', shine: '#f3c7b8' };
-  const cpu = player === opponent ? { ...opponent, ...alternative } : opponent;
+  const cpu = player === opponent ? { ...opponent, ...alternative, espelhoCpu: true } : opponent;
   battle = new BattleScene([player, cpu], selectedArena.image, playSound);
   $('edicao-duelo').textContent = 'Arena · ' + selectedArena.arena.cidade;
   $('arena-duelo').textContent = selectedArena.arena.nome;
@@ -287,6 +292,7 @@ for (const button of document.querySelectorAll('[data-key]')) {
   }
 }
 
+await Promise.all(elenco.filter(perfil => perfil.pacoteArte).map(carregarArteLutador));
 makeCards($('elenco'));
 makeArenaCards($('escolhas-arenas'));
 showSelection(0, false);

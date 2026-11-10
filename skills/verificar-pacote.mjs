@@ -52,8 +52,10 @@ function verifyFighter(folder, info) {
   const pose = readPng(folder, 'pose.png');
   const atlas = readPng(folder, 'sprites.png');
   requireValue(pose.transparent && atlas.transparent, 'Pose e atlas devem oferecer transparência.');
-  for (const state of states) {
-    const frames = info.animacoes?.[state];
+  const animations = info.animacoes;
+  requireValue(animations && typeof animations === 'object' && !Array.isArray(animations), 'Informe as animações do lutador.');
+  for (const state of new Set([...states, ...Object.keys(animations)])) {
+    const frames = animations[state];
     requireValue(Array.isArray(frames) && frames.length > 0, 'Faltam quadros em ' + state + '.');
     for (const [index, frame] of frames.entries()) {
       const label = state + ', quadro ' + (index + 1);
@@ -65,7 +67,7 @@ function verifyFighter(folder, info) {
         label + ' tem pivô inválido.');
       requireValue(isInteger(frame.duracaoMs, 1), label + ' deve ter duração positiva em milissegundos.');
     }
-    if (state === 'normal' || state === 'especial') {
+    if (['normal', 'especial', 'rasteira', 'aereo'].includes(state)) {
       requireValue(frames.some(frame => frame.contato === true), state + ' precisa de um quadro de contato.');
     }
   }

@@ -8,6 +8,7 @@ import { EntityList } from '../engine/EntityList.js';
 import { setVirtualMovement } from '../engine/InputHandler.js';
 import { getActualBoxDimensions } from '../utils/collisions.js';
 import { drawFighter, oval } from '../arte.js';
+import { desenharSprite } from '../arte-lutador.js';
 import { hitArea } from '../especiais.js';
 
 const specialState = FighterState.SPECIAL_1_HEAVY;
@@ -56,10 +57,39 @@ function attackMotion(fighter, frame) {
   const last = activeFrames.at(-1);
   if (frame < first) {
     const progress = frame / first;
-    return { strike: clamp((progress - 0.72) / 0.28), windup: Math.sin(Math.PI * progress) };
+    return { strike: clamp((progress - 0.72) / 0.28), windup: Math.sin(Math.PI * progress),
+      fase: 'preparo', progresso: progress };
   }
-  if (frame < last + 1) return { strike: 1, windup: 0 };
-  return { strike: 1 - clamp((frame - last - 1) / Math.max(1, animation.length - last - 2)), windup: 0 };
+  if (frame < last + 1) return { strike: 1, windup: 0, fase: 'contato', progresso: (frame - first) / (last - first + 1) };
+  const progress = clamp((frame - last - 1) / Math.max(1, animation.length - last - 2));
+  return { strike: 1 - progress, windup: 0, fase: 'retorno', progresso: progress };
+}
+
+function animacaoDoSprite(fighter, frame, pose, tempo, airAge) {
+  const state = fighter.currentState;
+  const ultimoQuadro = Math.max(1, fighter.animations[state].length - 1);
+  const progresso = frame / ultimoQuadro;
+  if (state === FighterState.KO) return { estado: 'nocaute', progresso: 1 };
+  if (state === FighterState.KNOCKDOWN) return { estado: 'queda', fallback: 'nocaute', progresso };
+  if (state === FighterState.VICTORY) return { estado: 'vitoria', progresso: 1 };
+  if (state.startsWith('hurt')) return { estado: 'atingido', progresso };
+  if (pose.special) {
+    const fase = frame < 3 ? 'preparo' : frame < 4 ? 'contato' : 'retorno';
+    const segmento = frame < 3 ? frame / 3 : frame < 4 ? frame - 3 : (frame - 4) / Math.max(1, ultimoQuadro - 4);
+    return { estado: 'especial', fase, progresso: segmento };
+  }
+  if (pose.sweep || normalStates.includes(state)) {
+    return { estado: pose.sweep ? 'rasteira' : 'normal', fallback: 'defender', fase: pose.fase, progresso: pose.progresso ?? progresso };
+  }
+  if (airAge < airRecovery) {
+    const fase = airAge < airContact ? 'preparo' : airAge < 150 ? 'contato' : 'retorno';
+    const segmento = airAge < airContact ? airAge / airContact : airAge < 150
+      ? (airAge - airContact) / (150 - airContact) : (airAge - 150) / (airRecovery - 150);
+    return { estado: 'aereo', fallback: 'pular', fase, progresso: segmento };
+  }
+  if (pose.air || state === FighterState.JUMP_START || state === FighterState.JUMP_LAND) return { estado: 'pular', progresso };
+  if (pose.crouch) return { estado: 'defender', progresso: pose.crouch };
+  return { estado: pose.walk ? 'andar' : 'parado', loop: true, tempo };
 }
 
 export class BattleScene {
@@ -285,8 +315,12 @@ export class BattleScene {
         hurt: clamp(((fighter.flashUntil ?? 0) - poseTime) / 155),
         ko: state === FighterState.KO,
       };
-      drawFighter(context, fighter.profile, fighter.position.x - x - (pose.hurt ? fighter.hurtShake : 0),
-        fighter.position.y - y, facing, pose);
+      const fighterX = fighter.position.x - x - (pose.hurt ? fighter.hurtShake : 0);
+      const fighterY = fighter.position.y - y;
+      if (!fighter.profile.arte || !desenharSprite(context, fighter.profile, fighterX, fighterY, facing,
+        animacaoDoSprite(fighter, frame, pose, poseTime, airAge))) {
+        drawFighter(context, fighter.profile, fighterX, fighterY, facing, pose);
+      }
     }
     this.entities.draw(context, this.camera);
     for (const effect of this.effects) {
