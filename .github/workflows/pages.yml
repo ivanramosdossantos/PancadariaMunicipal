@@ -43,6 +43,7 @@ jobs:
               }
             done
           done
+          node --check src/apoio-pix.js
           node --check src/municipal.js
           node --check src/arte-pacotes.js
           node --check src/scenes/BattleScene.js
