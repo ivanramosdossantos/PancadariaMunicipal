@@ -30,7 +30,7 @@ function paintQR() {
   rows.forEach((hex,y) => {
     const bits = BigInt('0x'+hex);
     for (let x=0; x<size; x++) {
-      if ((bits >> BigInt(63-x)) & 1n) ctx.fillRect(x*scale,y*scale,scale,scale);
+      if ((bits >> BigInt(60-x)) & 1n) ctx.fillRect(x*scale,y*scale,scale,scale);
     }
   });
 }
