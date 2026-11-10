@@ -1,4 +1,4 @@
-import { codigoPix } from './pix/codigo.js';
+import { codigoPix, copiarPix } from './pix/codigo.js?v=arcade-mobile-v1';
 
 const DESTINO = 'https://script.google.com/macros/s/AKfycbzg_vyxjOI59Rpb0ktjjowAkDwO-tmz1wO4r6UeNus7gcfT7riivB_0fs9ghfn28ImG/exec';
 
@@ -8,7 +8,7 @@ export function configurarIndicacoes(formulario, botao, status, painelPix, desti
   const { lutador, cidade, golpe, protocolo, origem } = formulario.elements;
   const campos = [lutador, cidade, golpe];
   const aviso = painelPix.querySelector('#aviso-pix-indicacao');
-  const copiarPix = painelPix.querySelector('[data-copiar-pix]');
+  const botaoPix = painelPix.querySelector('[data-copiar-pix]');
   const copiarReferencia = painelPix.querySelector('[data-copiar-referencia]');
   const campoManual = painelPix.querySelector('[data-pix-manual]');
   const feedbackPix = painelPix.querySelector('[data-pix-feedback]');
@@ -22,22 +22,8 @@ export function configurarIndicacoes(formulario, botao, status, painelPix, desti
   const instrucaoInicial = 'Antes de pagar, envie sua indicação. O número para colocar na descrição do Pix aparece aqui.';
   aviso.textContent = instrucaoInicial;
 
-  async function copiar(texto, mensagem) {
-    campoManual.hidden = true;
-    try {
-      await navigator.clipboard.writeText(texto);
-      feedbackPix.textContent = mensagem;
-    } catch {
-      campoManual.value = texto;
-      campoManual.hidden = false;
-      campoManual.focus();
-      campoManual.select();
-      feedbackPix.textContent = 'Toque e segure no campo para copiar o texto.';
-    }
-  }
-
-  copiarPix.addEventListener('click', () => copiar(codigoPix, 'Código Pix copiado.'));
-  copiarReferencia.addEventListener('click', () => copiar(String(numeroPix), 'Referência copiada.'));
+  botaoPix.addEventListener('click', () => copiarPix(codigoPix, campoManual, feedbackPix, 'Código Pix copiado.'));
+  copiarReferencia.addEventListener('click', () => copiarPix(String(numeroPix), campoManual, feedbackPix, 'Referência copiada.'));
 
   function terminar(mensagem) {
     clearTimeout(prazo);

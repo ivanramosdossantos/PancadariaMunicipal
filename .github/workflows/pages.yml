@@ -36,6 +36,10 @@ jobs:
           test -f src/elenco.js
           test -f design/logo.svg
           for id in periquito pagodeiro prefeito gladiador oaa patinho; do
+            node skills/verificar-pacote.mjs lutador "src/lutadores/$id"
+            for voz in selecao especial vitoria; do
+              test -s "src/lutadores/$id/vozes/$voz.mp3"
+            done
             for asset in retrato pose sprites; do
               test -s "assets/lutadores/$id/$asset.png" || {
                 echo "::error::Arte ausente: assets/lutadores/$id/$asset.png"
@@ -51,7 +55,11 @@ jobs:
           node --check src/municipal.js
           node --check src/arte-pacotes.js
           node --check src/scenes/BattleScene.js
-          node skills/verificar-pacote.mjs lutador src/lutadores/pagodeiro
+          node --check src/musica.js
+          node --check src/vozes.js
+          for faixa in src/audio/largada-de-praca.mp3 src/arenas/audio/{prefeitura.mp3,bobodromo.mp3,matriz.m4a}; do
+            test -s "$faixa"
+          done
       - name: Preparar arquivos estáticos
         run: |
           mkdir -p _site

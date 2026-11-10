@@ -1,4 +1,5 @@
 import { Control } from '../constants/controls.js';
+import { VICTORY_MS } from '../constants/game.js?v=arcade-v1';
 import {
   FighterAttackBaseData, FighterAttackStrength, FighterAttackType, FighterHurtStates, FighterState, FrameDelay,
 } from '../constants/fighter.js';
@@ -71,12 +72,28 @@ function animacaoDoSprite(fighter, frame, pose, tempo, airAge) {
   const progresso = frame / ultimoQuadro;
   if (state === FighterState.KO) return { estado: 'nocaute', progresso: 1 };
   if (state === FighterState.KNOCKDOWN) return { estado: 'queda', fallback: 'nocaute', progresso };
-  if (state === FighterState.VICTORY) return { estado: 'vitoria', progresso: 1 };
+  if (state === FighterState.VICTORY) {
+    return { estado: 'vitoria', progresso: clamp((tempo - fighter.animationStarted) / VICTORY_MS) };
+  }
   if (state.startsWith('hurt')) return { estado: 'atingido', progresso };
   if (pose.special) {
-    const fase = frame < 3 ? 'preparo' : frame < 4 ? 'contato' : 'retorno';
-    const segmento = frame < 3 ? frame / 3 : frame < 4 ? frame - 3 : (frame - 4) / Math.max(1, ultimoQuadro - 4);
-    return { estado: 'especial', fase, progresso: segmento };
+    const investida = fighter.profile.investida;
+    const atraso = (investida?.delay ?? 0) * 1000;
+    const contato = investida ? investida.duration * 1000 : fighter.profile.id === 'pagodeiro' ? 370 : 160;
+    if (frame < 3) {
+      return { estado: 'especial', fase: 'preparo', progresso: (frame / 3) * (atraso ? 0.8 : 1) };
+    }
+    if (frame >= 4) return { estado: 'especial', fase: 'retorno', progresso: 1 };
+    const desdeDisparo = Math.max(0, tempo - fighter.animationStarted);
+    if (desdeDisparo < atraso) {
+      return { estado: 'especial', fase: 'preparo', progresso: 0.8 + 0.2 * desdeDisparo / atraso };
+    }
+    const desdeContato = desdeDisparo - atraso;
+    if (desdeContato < contato) {
+      return { estado: 'especial', fase: 'contato', progresso: desdeContato / contato };
+    }
+    const retorno = fighter.animationTimer - fighter.animationStarted - atraso - contato;
+    return { estado: 'especial', fase: 'retorno', progresso: clamp((desdeContato - contato) / Math.max(1, retorno)) };
   }
   if (pose.sweep || normalStates.includes(state)) {
     return { estado: pose.sweep ? 'rasteira' : 'normal', fallback: 'defender', fase: pose.fase, progresso: pose.progresso ?? progresso };
@@ -103,7 +120,7 @@ export class BattleScene {
     this.freezeUntil = 0;
     this.impactTime = 0;
     this.shakeUntil = 0;
-    this.caption = { text: 'Valendo!', until: 750 };
+    this.caption = { text: '', until: 0 };
     this.drawOrder = [0, 1];
     this.cpu = { decision: 0, movement: new Set(), action: null };
     this.result = null;
@@ -128,7 +145,7 @@ export class BattleScene {
         if (fighter.animationFrame >= 3 && !fighter.effectSpawned) {
           fighter.effectSpawned = true;
           this.entities.add(profile.efeito, fighter, time);
-          this.sound(profile.id);
+          this.sound(profile.id, profile);
           if (profile.id === 'oaa' && !globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
             this.shakeUntil = time.previous + 150;
           }
@@ -329,17 +346,19 @@ export class BattleScene {
       context.save();
       context.translate(effect.x - x, effect.y - y);
       context.globalAlpha = 1 - age;
-      context.strokeStyle = effect.blocked ? '#a9e7ff' : '#ffbd5d';
-      context.lineWidth = 1.8;
-      for (let i = 0; i < 9; i++) {
-        const angle = i * Math.PI * 2 / 9 + age;
-        const r = 5 + age * 17;
-        context.beginPath();
-        context.moveTo(Math.cos(angle) * r / 2, Math.sin(angle) * r / 2);
-        context.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
-        context.stroke();
+      context.fillStyle = effect.blocked ? '#a9e7ff' : '#ffbd5d';
+      const rays = effect.blocked ? 4 : 8;
+      for (let i = 0; i < rays; i++) {
+        const angle = i * Math.PI * 2 / rays;
+        const r = 5 + age * 19;
+        const px = Math.round(Math.cos(angle) * r);
+        const py = Math.round(Math.sin(angle) * r);
+        context.fillRect(px, py, 3, 3);
+        if (!effect.blocked) context.fillRect(Math.round(px * .6), Math.round(py * .6), 2, 2);
       }
-      oval(context, 0, 0, 4 + age * 6, 4 + age * 6, '#fff1ba');
+      context.fillStyle = effect.blocked ? '#ebfaff' : '#fff1ba';
+      context.fillRect(-1, -4, 3, 9);
+      context.fillRect(-4, -1, 9, 3);
       context.restore();
     }
     context.restore();
