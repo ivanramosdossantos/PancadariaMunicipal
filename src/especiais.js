@@ -1,7 +1,7 @@
 import { FIGHTER_DEFAULT_WIDTH, FighterAttackStrength, FighterAttackType, FighterHurtArea, FighterState } from './constants/fighter.js';
 import { SCENE_WIDTH, STAGE_FLOOR } from './constants/stage.js';
 import { boxOverlap, getActualBoxDimensions } from './utils/collisions.js';
-import { drawParkingCart, drawRoller } from './arte.js';
+import { drawParkingCart, drawRoller } from './arte.js?v=pixel-real-v3';
 
 export function hitArea(fighter, box, time, strength, damage, direction) {
   for (const [area, [x, y, width, height]] of Object.entries(fighter.boxes.hurt)) {

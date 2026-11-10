@@ -86,3 +86,7 @@ time{align-self:start;border:1px solid var(--pm-line);padding:3px 6px;background
   .card-arena span{font-size:12px}
 }
 @media(pointer:coarse){.comandos button{min-width:44px;min-height:44px}}
+
+#status-artes{margin:0 0 8px;padding:6px 9px;border-left:3px solid var(--pm-player);background:var(--pm-panel);color:var(--pm-muted);font-size:12px}
+#status-artes[data-state="ready"]{border-left-color:#68cba4;color:#d5f5e6}
+#status-artes[data-state="error"]{border-left-color:#ff897d;color:#ffbdb5}

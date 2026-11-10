@@ -7,9 +7,9 @@ import { Camera } from '../engine/Camera.js';
 import { EntityList } from '../engine/EntityList.js';
 import { setVirtualMovement } from '../engine/InputHandler.js';
 import { getActualBoxDimensions } from '../utils/collisions.js';
-import { drawFighter, oval } from '../arte.js';
+import { drawFighter, oval } from '../arte.js?v=pixel-real-v3';
 import { desenharSprite } from '../arte-lutador.js';
-import { hitArea } from '../especiais.js';
+import { hitArea } from '../especiais.js?v=piloto-v1';
 
 const specialState = FighterState.SPECIAL_1_HEAVY;
 const groundedActions = [FighterState.IDLE, FighterState.WALK_FORWARD, FighterState.WALK_BACKWARD];

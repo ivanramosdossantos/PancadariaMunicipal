@@ -15,12 +15,12 @@ createServer((request, response) => {
   catch { response.writeHead(400).end(); return; }
   const file = resolve(root, pathname === '/' ? 'index.html' : '.' + pathname);
   const type = types[extname(file)];
-  const allowed = file.startsWith(resolve(root) + sep) && (file.startsWith(resolve(root, 'src') + sep) ||
+  const allowed = file.startsWith(resolve(root) + sep) && (file.startsWith(resolve(root, 'src') + sep) || file.startsWith(resolve(root, 'assets', 'lutadores') + sep) ||
     publicFiles.has(file));
   if (!allowed || !type || !statSync(file, { throwIfNoEntry: false })?.isFile()) {
     response.writeHead(404).end();
     return;
   }
-  response.writeHead(200, { 'Content-Type': type, 'Cache-Control': 'no-store' });
+  response.writeHead(200, { 'Content-Type': type + (type.startsWith('image/') ? '' : '; charset=utf-8'), 'Cache-Control': 'no-store' });
   createReadStream(file).pipe(response);
 }).listen(port, '127.0.0.1', () => console.log('http://127.0.0.1:' + port));

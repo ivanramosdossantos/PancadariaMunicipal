@@ -1,11 +1,12 @@
-import { BattleScene } from './scenes/BattleScene.js';
+import { BattleScene } from './scenes/BattleScene.js?v=piloto-v1';
 import { Control } from './constants/controls.js';
 import { FRAME_TIME } from './constants/game.js';
 import { SCENE_WIDTH, SCENE_HEIGHT } from './constants/stage.js';
-import { elenco } from './elenco.js';
+import { elenco } from './elenco.js?v=piloto-v1';
 import { arenas } from './arenas.js';
-import { drawFighter } from './arte.js';
 import { carregarArteLutador, desenharArteSelecao } from './arte-lutador.js';
+import { drawFighter } from './arte.js?v=pixel-real-v3';
+import { drawPackPortrait, drawPackSelection, artDiagnostics } from './arte-pacotes.js?v=pixel-real-v3';
 
 const $ = id => document.getElementById(id);
 const selection = [null, null];
@@ -61,6 +62,15 @@ function playSound(kind) {
   }
 }
 
+function drawCardPortrait(art, profile) {
+  const portrait = art.getContext('2d');
+  portrait.setTransform(1, 0, 0, 1, 0, 0);
+  portrait.clearRect(0, 0, art.width, art.height);
+  if (desenharArteSelecao(portrait, profile, 'retrato', art.width, art.height)) return;
+  portrait.scale(2, 2);
+  if (!drawPackPortrait(portrait, profile, 105, 56)) drawFighter(portrait, profile, 48, 105, 1);
+}
+
 function makeCards(container) {
   for (const [index, profile] of elenco.entries()) {
     const button = document.createElement('button');
@@ -72,11 +82,7 @@ function makeCards(container) {
     art.width = 210;
     art.height = 112;
     art.setAttribute('aria-hidden', 'true');
-    const portrait = art.getContext('2d');
-    if (!desenharArteSelecao(portrait, profile, 'retrato', art.width, art.height)) {
-      portrait.scale(2, 2);
-      drawFighter(portrait, profile, 48, 105, 1);
-    }
+    drawCardPortrait(art, profile);
     name.textContent = profile.nome;
     button.append(art, name);
     button.addEventListener('click', () => {
@@ -125,7 +131,9 @@ function updateSelection() {
     const direcao = selectionStep ? -1 : 1;
     if (!desenharArteSelecao(portrait, selected, 'pose', art.width, art.height, direcao)) {
       portrait.scale(3, 3);
-      drawFighter(portrait, selected, 68, 101, direcao, { special: selected.id === 'pagodeiro' });
+      if (!drawPackSelection(portrait, selected, 68, 101, direcao)) {
+        drawFighter(portrait, selected, 68, 101, direcao, { special: selected.id === 'pagodeiro' });
+      }
     }
   }
   art.classList.toggle('vazio', !selected);
@@ -292,10 +300,33 @@ for (const button of document.querySelectorAll('[data-key]')) {
   }
 }
 
+function reportArtStatus() {
+  const status = $('status-artes');
+  if (!status) return;
+  const {loaded, failed, requested, failures} = artDiagnostics;
+  status.hidden = false;
+  status.textContent = failed
+    ? 'Erro no carregamento de ' + failed + ' imagens: ' + failures.slice(0,3).join(', ')
+    : loaded === requested
+      ? 'Artes atualizadas: 6 personagens carregados.'
+      : 'Carregando artes dos personagens: ' + loaded + '/' + requested;
+  status.dataset.state = failed ? 'error' : loaded === requested ? 'ready' : 'loading';
+}
+function refreshCards() {
+  reportArtStatus();
+  for (const button of cards) {
+    const profile = elenco.find(item => item.id === button.dataset.id);
+    if (!profile) continue;
+    drawCardPortrait(button.querySelector('canvas'), profile);
+  }
+  updateSelection();
+}
 await Promise.all(elenco.filter(perfil => perfil.pacoteArte).map(carregarArteLutador));
+window.addEventListener('pancadaria:arte-carregada', refreshCards);
 makeCards($('elenco'));
 makeArenaCards($('escolhas-arenas'));
 showSelection(0, false);
+reportArtStatus();
 $('avancar').addEventListener('click', () => selectionStep < 2 ? showSelection(selectionStep + 1) : start());
 $('voltar-etapa').addEventListener('click', () => showSelection(selectionStep - 1));
 $('revanche').addEventListener('click', start);
