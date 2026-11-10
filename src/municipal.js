@@ -8,6 +8,8 @@ import { carregarArteLutador, desenharArteSelecao } from './arte-lutador.js';
 import { drawFighter } from './arte.js?v=pixel-real-v3';
 import { drawPackPortrait, drawPackSelection, artDiagnostics } from './arte-pacotes.js?v=pixel-real-v3';
 
+import { configurarIndicacoes } from './indicacoes.js?v=pix-v3';
+
 const $ = id => document.getElementById(id);
 const selection = [null, null];
 const cards = [];
@@ -321,6 +323,19 @@ function refreshCards() {
   }
   updateSelection();
 }
+function abrirMenu(id) {
+  for (const menu of ['capa', 'indicacao']) $(menu).hidden = menu !== id;
+  $('selecao').hidden = id !== 'selecao';
+  if (id === 'selecao') showSelection(0);
+  else $('titulo-' + id).focus();
+}
+
+for (const button of document.querySelectorAll('[data-menu]')) {
+  button.addEventListener('click', () => abrirMenu(button.dataset.menu));
+}
+$('iniciar').addEventListener('click', () => abrirMenu('selecao'));
+configurarIndicacoes($('form-indicacao'), $('enviar-indicacao'), $('status-indicacao'), $('aviso-pix-indicacao'));
+
 await Promise.all(elenco.filter(perfil => perfil.pacoteArte).map(carregarArteLutador));
 window.addEventListener('pancadaria:arte-carregada', refreshCards);
 makeCards($('elenco'));
