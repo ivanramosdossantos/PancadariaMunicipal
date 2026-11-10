@@ -45,6 +45,7 @@ jobs:
           done
           test -s src/pix/qr-code.png
           node --check src/indicacoes.js
+          node --check src/pix/codigo.js
           node --check < integracoes/google-sheets/Code.gs
           node --check src/apoio-pix.js
           node --check src/municipal.js

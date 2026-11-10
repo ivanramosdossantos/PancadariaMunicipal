@@ -8,7 +8,7 @@ import { carregarArteLutador, desenharArteSelecao } from './arte-lutador.js';
 import { drawFighter } from './arte.js?v=pixel-real-v3';
 import { drawPackPortrait, drawPackSelection, artDiagnostics } from './arte-pacotes.js?v=pixel-real-v3';
 
-import { configurarIndicacoes } from './indicacoes.js?v=pix-v3';
+import { configurarIndicacoes } from './indicacoes.js?v=mobile-v1';
 
 const $ = id => document.getElementById(id);
 const selection = [null, null];
@@ -16,6 +16,7 @@ const cards = [];
 const arenaCards = [];
 const keyboard = new Set();
 const touches = new Map();
+const controlButtons = document.querySelectorAll('[data-key]');
 const movementKeys = new Map([
   ['ArrowLeft', Control.LEFT], ['ArrowRight', Control.RIGHT],
   ['ArrowUp', Control.UP], ['ArrowDown', Control.DOWN],
@@ -203,6 +204,7 @@ function showSelection(step, focus = true) {
 function resetInput() {
   keyboard.clear();
   touches.clear();
+  for (const button of controlButtons) delete button.dataset.pressionado;
   action = null;
   jumpTap = false;
 }
@@ -224,7 +226,7 @@ function start() {
   $('selecao').hidden = true;
   $('duelo').hidden = false;
   $('fim').hidden = true;
-  $('voltar').focus();
+  $('voltar').focus({ preventScroll: true });
   render();
 }
 
@@ -243,13 +245,14 @@ function render() {
   if (battle.result !== null && $('fim').hidden) {
     $('resultado').textContent = ['Você venceu!', 'A máquina venceu!'][battle.result] ?? 'Empate!';
     $('fim').hidden = false;
-    $('revanche').focus();
+    resetInput();
+    $('revanche').focus({ preventScroll: true });
   }
 }
 
 function frame(timestamp) {
   requestAnimationFrame(frame);
-  if (!battle) return;
+  if (!battle || document.hidden) return;
   const dt = last === null ? 0 : Math.min(100, timestamp - last);
   last = timestamp;
   accumulator += dt;
@@ -285,8 +288,12 @@ window.addEventListener('keydown', event => {
 });
 window.addEventListener('keyup', event => keyboard.delete(event.code));
 window.addEventListener('blur', resetInput);
+document.addEventListener('visibilitychange', () => {
+  resetInput();
+  last = null;
+});
 
-for (const button of document.querySelectorAll('[data-key]')) {
+for (const button of controlButtons) {
   button.addEventListener('click', event => {
     if (event.detail === 0 && battle && battle.result === null && actionKeys.has(button.dataset.key)) queue(button.dataset.key);
   });
@@ -295,10 +302,14 @@ for (const button of document.querySelectorAll('[data-key]')) {
     event.preventDefault();
     button.setPointerCapture(event.pointerId);
     touches.set(event.pointerId, button.dataset.key);
+    button.dataset.pressionado = '';
     queue(button.dataset.key);
   });
   for (const event of ['pointerup', 'pointercancel', 'lostpointercapture']) {
-    button.addEventListener(event, ({ pointerId }) => touches.delete(pointerId));
+    button.addEventListener(event, ({ pointerId }) => {
+      touches.delete(pointerId);
+      if (![...touches.values()].includes(button.dataset.key)) delete button.dataset.pressionado;
+    });
   }
 }
 
@@ -334,7 +345,7 @@ for (const button of document.querySelectorAll('[data-menu]')) {
   button.addEventListener('click', () => abrirMenu(button.dataset.menu));
 }
 $('iniciar').addEventListener('click', () => abrirMenu('selecao'));
-configurarIndicacoes($('form-indicacao'), $('enviar-indicacao'), $('status-indicacao'), $('aviso-pix-indicacao'));
+configurarIndicacoes($('form-indicacao'), $('enviar-indicacao'), $('status-indicacao'), $('pix-indicacao'));
 
 await Promise.all(elenco.filter(perfil => perfil.pacoteArte).map(carregarArteLutador));
 window.addEventListener('pancadaria:arte-carregada', refreshCards);

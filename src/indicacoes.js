@@ -1,10 +1,18 @@
+import { codigoPix } from './pix/codigo.js';
+
 const DESTINO = 'https://script.google.com/macros/s/AKfycbzg_vyxjOI59Rpb0ktjjowAkDwO-tmz1wO4r6UeNus7gcfT7riivB_0fs9ghfn28ImG/exec';
 
-export function configurarIndicacoes(formulario, botao, status, aviso, destino = DESTINO) {
+export function configurarIndicacoes(formulario, botao, status, painelPix, destino = DESTINO) {
   if (!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(destino)) return;
 
   const { lutador, cidade, golpe, protocolo, origem } = formulario.elements;
   const campos = [lutador, cidade, golpe];
+  const aviso = painelPix.querySelector('#aviso-pix-indicacao');
+  const copiarPix = painelPix.querySelector('[data-copiar-pix]');
+  const copiarReferencia = painelPix.querySelector('[data-copiar-referencia]');
+  const campoManual = painelPix.querySelector('[data-pix-manual]');
+  const feedbackPix = painelPix.querySelector('[data-pix-feedback]');
+  let numeroPix;
   let envio;
   let prazo;
   let aguardando = false;
@@ -13,6 +21,23 @@ export function configurarIndicacoes(formulario, botao, status, aviso, destino =
   status.textContent = 'Os dados serão registrados na planilha de indicações.';
   const instrucaoInicial = 'Antes de pagar, envie sua indicação. O número para colocar na descrição do Pix aparece aqui.';
   aviso.textContent = instrucaoInicial;
+
+  async function copiar(texto, mensagem) {
+    campoManual.hidden = true;
+    try {
+      await navigator.clipboard.writeText(texto);
+      feedbackPix.textContent = mensagem;
+    } catch {
+      campoManual.value = texto;
+      campoManual.hidden = false;
+      campoManual.focus();
+      campoManual.select();
+      feedbackPix.textContent = 'Toque e segure no campo para copiar o texto.';
+    }
+  }
+
+  copiarPix.addEventListener('click', () => copiar(codigoPix, 'Código Pix copiado.'));
+  copiarReferencia.addEventListener('click', () => copiar(String(numeroPix), 'Referência copiada.'));
 
   function terminar(mensagem) {
     clearTimeout(prazo);
@@ -36,6 +61,9 @@ export function configurarIndicacoes(formulario, botao, status, aviso, destino =
     botao.disabled = true;
     campos.forEach(campo => { campo.readOnly = true; });
     aviso.textContent = instrucaoInicial;
+    copiarReferencia.hidden = true;
+    campoManual.hidden = true;
+    feedbackPix.textContent = '';
     status.textContent = 'Enviando indicação…';
     prazo = setTimeout(() => terminar('Ainda não recebemos a confirmação. Você pode tentar novamente.'), 15000);
   });
@@ -51,6 +79,8 @@ export function configurarIndicacoes(formulario, botao, status, aviso, destino =
         return;
       }
       if (envio.dados === JSON.stringify(campos.map(campo => campo.value.trim()))) formulario.reset();
+      numeroPix = numero;
+      copiarReferencia.hidden = false;
       const destaque = document.createElement('strong');
       destaque.textContent = numero;
       aviso.replaceChildren('Na descrição ou mensagem do Pix, digite somente ', destaque, '. Assim podemos localizar sua indicação.');

@@ -1,7 +1,7 @@
 // Pix estático do Pancadaria Municipal, fornecido pelo responsável do jogo.
 // Sem valor fixo: o jogador escolhe o valor no aplicativo do banco.
 // O QR é desenhado localmente, sem biblioteca externa nem envio a terceiros.
-const pix = '00020126820014br.gov.bcb.pix013617a117cc-2168-437b-8b38-4cba4ebc61580220Pancadaria Municipal5204000053039865802BR5922I RAMOS SANTOS CONSULT6011Pato Branco62290525IRAMOSCO00000740555785ASA63041D5C';
+import { codigoPix } from './pix/codigo.js';
 const rows = [
 "0000000000000000","0000000000000000","0000000000000000","0000000000000000",
 "01fc59113626c7f0","0104192b986fe410","0175daf125fb25d0","017590ab8482d5d0",
@@ -66,11 +66,11 @@ document.addEventListener('keydown',e=>{
 });
 copy.addEventListener('click',async()=>{
   try{
-    await navigator.clipboard.writeText(pix);
+    await navigator.clipboard.writeText(codigoPix);
     feedback.textContent='Pix copiado! Cole no aplicativo do seu banco.';
   }catch{
     const input=document.getElementById('apoio-codigo');
-    input.value=pix;input.hidden=false;input.focus();input.select();
+    input.value=codigoPix;input.hidden=false;input.focus();input.select();
     feedback.textContent='Selecione e copie o código Pix abaixo.';
   }
 });

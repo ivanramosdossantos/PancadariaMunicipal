@@ -51,6 +51,10 @@ main:has(#duelo:not([hidden])) .marca img{width:min(65%,245px)}
 .pix-qr img{display:block;width:min(100%,248px);height:auto;padding:14px;background:#fff;image-rendering:pixelated}
 .pix-qr figcaption{color:var(--pm-muted);font-size:14px}
 .pix-qr strong{color:var(--pm-action)}
+.pix-acoes{display:flex;flex-wrap:wrap;gap:6px}
+.pix-acoes button{min-height:44px}
+[data-pix-manual]{width:100%;min-width:0;padding:8px;font:inherit}
+[data-pix-feedback]:empty{display:none}
 .pix-aviso{padding:8px;border-left:3px solid var(--pm-action);color:var(--pm-cream);background:#293348;font-size:13px}
 .etapas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;list-style:none;padding:0;margin:10px 0 0}
 .etapas li{min-width:0;padding:6px 8px;border:1px solid #465976;background:var(--pm-panel);color:var(--pm-muted);font-size:13px;font-weight:600}
@@ -104,9 +108,11 @@ time{align-self:start;border:1px solid var(--pm-line);padding:3px 6px;background
 .fim{position:absolute;inset:0;display:grid;place-items:center;background:#101827a8;text-align:center}
 .fim>div{padding:16px 22px;border:1px solid var(--pm-line);background:var(--pm-panel)}
 .fim button{margin-top:12px}
-.comandos>div{display:flex;gap:4px;flex-wrap:wrap}
+.comandos-toque,.comandos-movimento,.comandos-acoes{display:flex;gap:4px;flex-wrap:wrap}
+.comandos-movimento span{display:none}
 .comandos strong{color:var(--pm-action)}
-.comandos button{touch-action:none;padding:6px 8px;min-width:36px;min-height:40px}
+.comandos button{touch-action:none;user-select:none;-webkit-user-select:none;padding:6px 8px;min-width:36px;min-height:40px}
+.comandos button[data-pressionado]{border-color:var(--pm-action);background:var(--pm-action);color:var(--pm-ink)}
 @media(max-width:620px){
   main{padding:10px}
   .marca{padding:6px 8px;gap:6px}.marca img{width:min(65%,245px)}.marca span{font-size:9px}.marca strong{font-size:9px}
@@ -153,3 +159,39 @@ time{align-self:start;border:1px solid var(--pm-line);padding:3px 6px;background
   .menu-painel{grid-template-columns:1fr}
 }
 @media(prefers-reduced-motion:reduce){.capa-cidade,.capa-nuvens,.capa-vento{animation:none}}
+
+@media(max-width:760px),(pointer:coarse) and (max-height:550px){
+  main{
+    padding-left:max(10px,env(safe-area-inset-left));
+    padding-right:max(10px,env(safe-area-inset-right));
+  }
+  main:has(#duelo:not([hidden])){
+    height:100vh;
+    height:100svh;
+    padding-top:max(6px,env(safe-area-inset-top));
+    padding-bottom:max(6px,env(safe-area-inset-bottom));
+  }
+  main:has(#duelo:not([hidden])) > :is(.marca,.apoio-faixa){display:none}
+  #duelo{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:6px}
+  #duelo .combate{padding:0;gap:4px 8px}
+  #duelo .combate h1{font-size:clamp(13px,3.3vw,19px)}
+  #duelo .combate .eyebrow{display:none}
+  #voltar{min-height:36px;padding:4px 7px;font-size:12px}
+  .duelo-tabuleiro{display:grid;place-items:center;min-height:0;container-type:size}
+  .arena{width:100%;width:min(100cqw,calc((100cqh - 4px) * 1146 / 672 + 4px));max-width:none;margin:0}
+  .fim{overflow:auto}
+  .fim>div{max-width:100%;padding:6px 12px}
+  .fim button{margin-top:5px;padding:5px 8px}
+  .comandos{display:block;margin:0}
+  .comandos-teclado{display:none}
+  .comandos-toque{justify-content:space-between;gap:6px}
+  .comandos-movimento,.comandos-acoes{display:grid;grid-template-columns:repeat(2,minmax(44px,1fr))}
+  .comandos-movimento span{display:inline}
+  .comandos button{min-height:44px;min-width:44px;padding:4px;font-size:12px}
+  .comandos-acoes [data-key="Sweep"]{grid-column:span 2}
+}
+
+@media(orientation:landscape) and (max-height:550px) and (pointer:coarse){
+  .comandos-movimento,.comandos-acoes{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(44px,auto)}
+  .comandos-acoes [data-key="Sweep"]{grid-column:auto}
+}
