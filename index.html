@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="design/tokens.css">
 <link rel="stylesheet" href="estilo.css">
 <script type="module" src="src/municipal.js?v=piloto-v1"></script>
+<script type="module" src="src/apoio-pix.js?v=1"></script>
 </head>
 <body>
 <main>
@@ -16,6 +17,7 @@
     <img src="design/logo.svg" width="840" height="224" alt="Pancadaria Municipal">
     <div><span>FLIPERAMA DE PRAÇA</span><strong>EDIÇÃO 01 · PATO BRANCO</strong></div>
   </header>
+  <div class="apoio-faixa"><span>Curtiu a pancadaria? Ajude a manter o jogo gratuito!</span><button type="button" data-abrir-apoio class="apoio-chamada">♥ APOIAR O JOGO · PIX</button></div>
   <section id="selecao">
     <ol class="etapas" aria-label="Etapas do duelo">
       <li data-step-label="0"><b>01</b> Seu lutador</li><li data-step-label="1"><b>02</b> Adversário</li><li data-step-label="2"><b>03</b> Arena</li>
@@ -44,12 +46,26 @@
         <div class="lado direita"><strong id="nome1"></strong><progress id="vida1" aria-label="Vida da máquina" max="100" value="100"></progress><small id="especial1"></small></div>
       </div>
       <div id="chamada" class="chamada" aria-live="polite"></div>
-      <div id="fim" class="fim" hidden><div><p class="eyebrow">FIM DO DUELO</p><h2 id="resultado"></h2><button id="revanche" class="principal">Revanche</button></div></div>
+      <div id="fim" class="fim" hidden><div><p class="eyebrow">FIM DO DUELO</p><h2 id="resultado"></h2><button id="revanche" class="principal">Revanche</button><button type="button" data-abrir-apoio class="apoio-chamada apoio-fim">♥ Apoiar o jogo via Pix</button></div></div>
     </div>
     <div class="rodape comandos"><p>← → Mover · ↑ Pular · ↓ Defender · Z Golpe · X Especial · <strong>↓ + Z Rasteira</strong></p><div aria-label="Controles na tela">
       <button data-key="ArrowLeft" aria-label="Esquerda">←</button><button data-key="ArrowRight" aria-label="Direita">→</button><button data-key="ArrowUp" aria-label="Pular">↑</button><button data-key="ArrowDown" aria-label="Defender">↓</button><button data-key="KeyZ">Golpe</button><button data-key="KeyX">Especial</button><button data-key="Sweep">Rasteira</button>
     </div></div>
   </section>
+  <div id="apoio-modal" class="apoio-modal" role="dialog" aria-modal="true" aria-labelledby="apoio-titulo" hidden>
+    <section class="apoio-quadro">
+      <button id="apoio-fechar" type="button" data-fechar-apoio class="apoio-fechar" aria-label="Fechar apoio">×</button>
+      <p class="eyebrow">CONTINUE A PANCADARIA!</p>
+      <h2 id="apoio-titulo">APOIE O JOGO</h2>
+      <p>Ajude a trazer novos lutadores, arenas e golpes especiais. O jogo continua gratuito!</p>
+      <canvas id="apoio-qr" width="305" height="305" aria-label="QR Code Pix para apoiar o Pancadaria Municipal"></canvas>
+      <p class="apoio-instrucao">Escaneie com seu banco e escolha quanto contribuir.</p>
+      <button type="button" id="apoio-copiar" class="principal">COPIAR PIX</button>
+      <input id="apoio-codigo" hidden readonly aria-label="Pix copia e cola" />
+      <p id="apoio-feedback" role="status" aria-live="polite"></p>
+      <small>Recebedor: I RAMOS SANTOS CONSULT · Pix voluntário, sem valor fixo.</small>
+    </section>
+  </div>
 </main>
 </body>
 </html>
