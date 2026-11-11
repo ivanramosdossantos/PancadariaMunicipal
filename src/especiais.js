@@ -22,6 +22,95 @@ const vehicles = {
   fiscalizacao: { speed: 335, height: 28, reach: 24, damage: 23, life: 1.45, draw: drawParkingCart },
 };
 
+export class GravelCandySpecial {
+  constructor(owner, time, entities) {
+    this.entities = entities;
+    this.target = owner.opponent;
+    this.direction = owner.direction;
+    this.origin = { x: owner.position.x + 34 * this.direction, y: owner.position.y - 62 };
+    this.move = owner.profile.arremesso;
+    this.age = 0;
+    this.candies = this.move.delays.map(delay => ({ delay, impact: null }));
+    const head = this.target.boxes.hurt[FighterHurtArea.HEAD];
+    const targetY = this.target.position.y + (head ? head[1] + head[3] / 2 : -65);
+    const distance = Math.max(30, Math.min(210, (this.target.position.x - this.origin.x) * this.direction));
+    const flightTime = distance / this.move.speed;
+    this.velocityY = (targetY - this.origin.y - this.move.gravity * flightTime ** 2 / 2) / flightTime;
+  }
+
+  position(elapsed) {
+    return {
+      x: this.origin.x + this.direction * this.move.speed * elapsed,
+      y: this.origin.y + this.velocityY * elapsed + this.move.gravity * elapsed ** 2 / 2,
+    };
+  }
+
+  update(time) {
+    this.age += time.secondsPassed;
+    for (const candy of this.candies) {
+      const elapsed = this.age - candy.delay;
+      if (elapsed < 0 || elapsed > this.move.duration || candy.impact) continue;
+      const point = this.position(elapsed);
+      const previous = this.position(Math.max(0, elapsed - time.secondsPassed));
+      const box = {
+        x: Math.min(previous.x, point.x) - 4,
+        y: Math.min(previous.y, point.y) - 4,
+        width: Math.abs(point.x - previous.x) + 8,
+        height: Math.abs(point.y - previous.y) + 8,
+      };
+      const hit = hitArea(this.target, box, time, FighterAttackStrength.LIGHT, this.move.damage, this.direction);
+      if (hit || point.y >= STAGE_FLOOR) {
+        candy.impact = { x: point.x, y: Math.min(point.y, STAGE_FLOOR), start: this.age };
+      }
+    }
+    if (this.age > this.move.duration + this.move.delays.at(-1) + 0.2) this.entities.remove(this);
+  }
+
+  draw(context, camera) {
+    for (const candy of this.candies) {
+      const elapsed = this.age - candy.delay;
+      if (elapsed < 0) continue;
+      if (candy.impact) {
+        const age = this.age - candy.impact.start;
+        if (age > 0.18) continue;
+        const x = Math.round(candy.impact.x - camera.position.x);
+        const y = Math.round(candy.impact.y - camera.position.y);
+        context.save();
+        context.globalAlpha = 1 - age / 0.18;
+        context.fillStyle = '#dce6ee';
+        for (const direction of [-1, 1]) {
+          context.fillRect(x + direction * Math.round(3 + age * 48), y - Math.round(4 + age * 32), 3, 3);
+          context.fillRect(x + direction * Math.round(2 + age * 30), y + Math.round(age * 25), 2, 2);
+        }
+        context.restore();
+        continue;
+      }
+      if (elapsed > this.move.duration) continue;
+      const point = this.position(elapsed);
+      context.save();
+      context.translate(Math.round(point.x - camera.position.x), Math.round(point.y - camera.position.y));
+      context.fillStyle = '#4c5568';
+      context.fillRect(-8, -2, 3, 4);
+      context.fillRect(5, -2, 3, 4);
+      context.fillStyle = '#adb7c4';
+      context.strokeStyle = '#202b3c';
+      context.lineWidth = 1;
+      context.beginPath();
+      context.moveTo(-4, -2);
+      context.lineTo(0, -4);
+      context.lineTo(5, -1);
+      context.lineTo(3, 4);
+      context.lineTo(-3, 3);
+      context.closePath();
+      context.fill();
+      context.stroke();
+      context.fillStyle = '#edf4fa';
+      context.fillRect(-2, -2, 3, 2);
+      context.restore();
+    }
+  }
+}
+
 export class GroundVehicle {
   constructor(owner, time, entities) {
     this.entities = entities;
