@@ -7,8 +7,8 @@
 <title>Pancadaria Municipal · Pato Branco</title>
 <link rel="icon" href="design/simbolo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="design/tokens.css">
-<link rel="stylesheet" href="estilo.css?v=arcade-mobile-v1">
-<script type="module" src="src/municipal.js?v=arcade-mobile-v1"></script>
+<link rel="stylesheet" href="estilo.css?v=desastroso-v1">
+<script type="module" src="src/municipal.js?v=desastroso-v1"></script>
 <script type="module" src="src/apoio-pix.js?v=arcade-mobile-v1"></script>
 </head>
 <body>
@@ -33,6 +33,7 @@
       <button class="capa-atalho" type="button" data-menu="indicacao"><span aria-hidden="true">+</span><strong>Indicar lutador</strong><small>Quem falta na pancadaria?</small></button>
       <button class="capa-atalho" type="button" data-menu="apoio"><span aria-hidden="true">♥</span><strong>Apoiar o projeto</strong><small>Ajude o fliperama a continuar.</small></button>
     </nav>
+    <p class="capa-nota">Pancadaria Municipal é um jogo de ficção feito para divertir, sem cunho político ou intenção de ofender ou denegrir a imagem de ninguém da cidade.</p>
   </section>
   <section id="indicacao" class="menu-extra" aria-labelledby="titulo-indicacao" hidden>
     <button class="menu-voltar" type="button" data-menu="capa">← Voltar à capa</button>
@@ -88,12 +89,13 @@
       <aside class="menu-resumo">
         <p class="eyebrow">CONTRIBUIÇÃO VOLUNTÁRIA</p>
         <p>Seu apoio vai para a produção de novos cenários e para a manutenção do jogo.</p>
+        <p class="pix-aviso">Digite <strong id="valor-apoio-pix" aria-live="polite">R$ 2</strong> no app do banco ou informe o valor que preferir.</p>
         <div class="pix-acoes"><button type="button" data-copiar-pix>Copiar código Pix</button></div>
         <input data-pix-manual type="text" aria-label="Código Pix para copiar" readonly hidden>
         <small data-pix-feedback role="status"></small>
         <figure class="pix-qr">
           <img src="src/pix/qr-code.png" width="450" height="450" alt="QR Code Pix para apoiar o jogo">
-          <figcaption>Escaneie no app do banco e digite <strong id="valor-apoio-pix" aria-live="polite">R$ 2</strong> ou o valor que preferir.</figcaption>
+          <figcaption>Ou escaneie o QR Code no app do banco.</figcaption>
         </figure>
         <small>O Pix é feito no app do banco. O jogo ainda não confirma pagamentos.</small>
       </aside>
@@ -139,18 +141,18 @@
     </div>
     <div class="duelo-tabuleiro">
       <div class="arena">
-        <canvas width="1146" height="672" aria-label="Arena de combate"></canvas>
         <div class="placar">
           <div class="lado"><strong id="nome0"></strong><progress id="vida0" aria-label="Vida do jogador" max="100" value="100"></progress><small id="especial0"></small></div>
           <time id="tempo">60</time>
           <div class="lado direita"><strong id="nome1"></strong><progress id="vida1" aria-label="Vida da máquina" max="100" value="100"></progress><small id="especial1"></small></div>
         </div>
+        <canvas width="1146" height="672" aria-label="Arena de combate"></canvas>
         <div id="chamada" class="chamada" aria-live="polite"></div>
-        <div id="largada" class="largada" role="status" aria-atomic="true" hidden></div>
+        <div id="largada" class="largada" hidden><span id="contagem" role="status" aria-atomic="true"></span><p id="dica-largada" class="dica-largada" hidden><span class="dica-teclado">← → Mover · ↓ Defender · Z Golpe · X Especial</span><span class="dica-toque">Use as setas para mover e toque em Defender, Golpe ou Especial.</span></p></div>
         <div id="cortina-arena" class="cortina-arena" aria-hidden="true" hidden>
           <span></span><span></span><span></span><span></span><span></span><span></span>
         </div>
-        <div id="fim" class="fim" hidden><div><p class="eyebrow">FIM DO DUELO</p><h2 id="resultado"></h2><button id="revanche" class="principal">Revanche</button></div></div>
+        <div id="fim" class="fim" hidden><div><p class="eyebrow">FIM DO DUELO</p><h2 id="resultado"></h2><div class="fim-acoes"><button id="revanche" class="principal" type="button">Revanche</button><button id="novo-confronto" type="button">Novo confronto</button></div></div></div>
       </div>
     </div>
     <div class="rodape comandos">

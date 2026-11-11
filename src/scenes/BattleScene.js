@@ -22,6 +22,7 @@ const animationRates = Object.fromEntries(Object.values(FighterState).map(state 
   normalStates.includes(state) ? 1.23 : state.startsWith('hurt') ? 1.4 : state === specialState ? 1.13 : 1.1]));
 const airContact = 65;
 const airRecovery = 200;
+const DUEL_DAMAGE_SCALE = 0.12;
 const clamp = value => Math.max(0, Math.min(1, value));
 
 function installSweep(fighter) {
@@ -165,8 +166,10 @@ export class BattleScene {
   onHit = (time, source, target, position, strength, impact) => {
     if (this.result !== null) return;
     const defender = this.fighters[target];
-    const damage = impact.damage ?? FighterAttackBaseData[strength].damage;
-    this.health[target] = Math.max(0, this.health[target] - (impact.blocked ? Math.ceil(damage * 0.2) : damage));
+    const baseDamage = impact.damage ?? FighterAttackBaseData[strength].damage;
+    const guardScale = impact.blocked ? 0.2 : 1;
+    const damage = baseDamage * DUEL_DAMAGE_SCALE * guardScale;
+    this.health[target] = Math.max(0, Math.round((this.health[target] - damage) * 10) / 10);
     this.drawOrder = [target, source];
     if (!airborne.includes(defender.currentState)) defender.direction = -impact.direction;
     defender.flashUntil = time.previous + 155;

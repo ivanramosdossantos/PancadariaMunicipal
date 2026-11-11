@@ -50,4 +50,13 @@ export const elenco = [
     investida: { delay: 0.08, speed: 275, duration: 0.26, damage: 26, tint: '#b8dfff' },
     color: '#427ecb', deep: '#28467a', shine: '#8ec6ff', skin: '#f5be53',
   },
+  {
+    id: 'desastroso', nome: 'O Desastroso', normal: 'Tapão Sem Querer',
+    estadoNormal: FighterState.MEDIUM_PUNCH, especial: 'Tropeço da Sorte',
+    descricao: 'Tropeça e avança de barriga. Defenda ou pule a investida e aproveite a recuperação.',
+    base: Ryu, efeito: LungeSpecial, recarga: 3400, pacoteArte: true, voz: false,
+    investida: { delay: 0.24, speed: 340, duration: 0.28, damage: 28, tint: '#e9e3a3' },
+    color: '#706c88', deep: '#484459', shine: '#c7d2d4', skin: '#e4aeb5',
+    alternativa: { color: '#8f9dba', deep: '#414d6b', shine: '#e8edff' },
+  },
 ];
