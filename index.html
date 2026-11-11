@@ -7,11 +7,23 @@
 <title>Pancadaria Municipal · Pato Branco</title>
 <link rel="icon" href="design/simbolo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="design/tokens.css">
-<link rel="stylesheet" href="estilo.css?v=desastroso-v1">
-<script type="module" src="src/municipal.js?v=ocultar-patinho-v1"></script>
+<link rel="stylesheet" href="estilo.css?v=patrocinios-v1">
+<link rel="stylesheet" href="src/patrocinios.css?v=patrocinios-v1">
+<script type="module" src="src/municipal.js?v=patrocinios-v1"></script>
 <script type="module" src="src/apoio-pix.js?v=arcade-mobile-v1"></script>
+<script type="module" src="src/patrocinios.js?v=patrocinios-v1"></script>
 </head>
-<body>
+<body class="com-patrocinios">
+  <aside class="patrocinios patrocinio-esquerda" aria-label="Patrocínios da lateral esquerda">
+    <p class="eyebrow">PATROCÍNIO LOCAL</p>
+    <button class="patrocinio-banner" type="button" data-patrocinar>
+      <span class="patrocinio-simbolo" aria-hidden="true">+</span>
+      <strong>Sua empresa aqui</strong>
+      <span>Patrocine a edição de <b data-cidade-patrocinio>Pato Branco</b>.</span>
+      <span class="patrocinio-preco">A partir de <b>R$ 300</b> por 30 dias</span>
+      <span class="patrocinio-chamada">Quero anunciar →</span>
+    </button>
+  </aside>
 <main>
   <header class="marca">
     <img src="design/logo.svg" width="840" height="224" alt="Pancadaria Municipal">
@@ -173,5 +185,34 @@
     </div>
   </section>
 </main>
+  <aside class="patrocinios patrocinio-direita" aria-label="Patrocínios da lateral direita">
+    <p class="eyebrow">PATROCÍNIO LOCAL</p>
+    <button class="patrocinio-banner" type="button" data-patrocinar>
+      <span class="patrocinio-simbolo" aria-hidden="true">+</span>
+      <strong>Sua empresa aqui</strong>
+      <span>Patrocine a edição de <b data-cidade-patrocinio>Pato Branco</b>.</span>
+      <span class="patrocinio-preco">A partir de <b>R$ 300</b> por 30 dias</span>
+      <span class="patrocinio-chamada">Quero anunciar →</span>
+    </button>
+  </aside>
+  <dialog id="patrocinar" class="patrocinio-dialogo" aria-labelledby="titulo-patrocinio">
+    <button id="fechar-patrocinio" class="patrocinio-fechar" type="button" autofocus>Fechar ×</button>
+    <p class="eyebrow">SUA MARCA NO FLIPERAMA DA CIDADE</p>
+    <h2 id="titulo-patrocinio">Anuncie em Pato Branco</h2>
+    <p>Mostre seu negócio para quem joga a edição de <strong data-cidade-patrocinio>Pato Branco</strong>. Escolha um plano e converse com a gente por e-mail.</p>
+    <div class="patrocinio-planos">
+      <article><h3>Banner local</h3><p class="patrocinio-valor">R$ 300 <small>/ 30 dias</small></p><p>Espaço lateral abaixo dos destaques, com a marca e informações do seu negócio.</p></article>
+      <article><h3>Destaque local</h3><p class="patrocinio-valor">R$ 500 <small>/ 30 dias</small></p><p>Primeiro espaço de uma das laterais, com a marca e informações do seu negócio.</p></article>
+    </div>
+    <p class="patrocinio-nota">No celular, os banners aparecem abaixo da área principal, com os destaques primeiro. São até seis vagas por cidade, sujeitas à disponibilidade.</p>
+    <label class="patrocinio-escolha" for="plano-patrocinio">Plano de interesse
+      <select id="plano-patrocinio"><option value="local">Banner local · R$ 300 por 30 dias</option><option value="destaque">Destaque local · R$ 500 por 30 dias</option></select>
+    </label>
+    <div class="patrocinio-contato">
+      <a id="email-patrocinio" class="principal" href="mailto:pancadariamunicipal@gmail.com">Escrever por e-mail</a>
+      <a id="gmail-patrocinio" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=pancadariamunicipal%40gmail.com" target="_blank" rel="noopener noreferrer">Abrir no Gmail ↗</a>
+    </div>
+    <p class="patrocinio-nota">A proposta abre no seu aplicativo de e-mail para você completar e enviar. Você também pode escrever para <strong>pancadariamunicipal@gmail.com</strong>.</p>
+  </dialog>
 </body>
 </html>

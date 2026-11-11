@@ -411,7 +411,11 @@ function render() {
 
 function frame(timestamp) {
   requestAnimationFrame(frame);
-  if (document.hidden) return;
+  if (document.hidden || $('patrocinar').open) {
+    resetInput();
+    last = null;
+    return;
+  }
   if (!battle) {
     if (versusUntil !== null) {
       if (selectedArena.status === 'error') returnToArena();
@@ -472,6 +476,7 @@ function queue(code) {
 }
 
 window.addEventListener('keydown', event => {
+  if ($('patrocinar').open) return;
   if (!battle || battle.result !== null || event.altKey || event.ctrlKey || event.metaKey) return;
   if (!movementKeys.has(event.code) && !actionKeys.has(event.code)) return;
   event.preventDefault();
