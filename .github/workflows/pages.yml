@@ -54,6 +54,7 @@ jobs:
           node --check src/apoio-pix.js
           node skills/verificar-pacote.mjs lutador src/lutadores/desastroso
           node --check src/municipal.js
+          node --check src/patrocinios.js
           node --check src/arte-pacotes.js
           node --check src/scenes/BattleScene.js
           node --check src/musica.js
