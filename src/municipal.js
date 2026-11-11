@@ -2,7 +2,7 @@ import { BattleScene } from './scenes/BattleScene.js?v=desastroso-v1';
 import { Control } from './constants/controls.js';
 import { FRAME_TIME, VICTORY_MS } from './constants/game.js?v=arcade-v1';
 import { SCENE_WIDTH, SCENE_HEIGHT } from './constants/stage.js';
-import { elenco } from './elenco.js?v=desastroso-v1';
+import { elenco } from './elenco.js?v=ocultar-patinho-v1';
 import { arenas } from './arenas.js?v=desastroso-v1';
 import { carregarArteLutador, desenharArteSelecao, desenharSprite } from './arte-lutador.js';
 import { drawFighter } from './arte.js?v=pixel-real-v3';
