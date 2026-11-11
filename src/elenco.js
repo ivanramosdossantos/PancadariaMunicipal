@@ -43,7 +43,7 @@ export const elenco = [
     color: '#8b668e', deep: '#4b3658', shine: '#ceabd0', skin: '#c18b64',
   },
   {
-    id: 'patinho', nome: 'Patinho Futsal', normal: 'Chute de Bico',
+    id: 'patinho', oculto: true, nome: 'Patinho Futsal', normal: 'Chute de Bico',
     estadoNormal: FighterState.LIGHT_KICK, especial: 'Bicada Mortal',
     descricao: 'Finge que vai chutar e avança de bico. A finta avisa a hora de defender.',
     base: Ken, efeito: LungeSpecial, recarga: 3000, pacoteArte: true, voz: true,
@@ -59,4 +59,4 @@ export const elenco = [
     color: '#706c88', deep: '#484459', shine: '#c7d2d4', skin: '#e4aeb5',
     alternativa: { color: '#8f9dba', deep: '#414d6b', shine: '#e8edff' },
   },
-];
+].filter(perfil => !perfil.oculto);
