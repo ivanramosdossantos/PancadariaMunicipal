@@ -3,7 +3,7 @@
   "id": "desastroso",
   "nome": "O Desastroso",
   "cidade": "Pato Branco",
-  "descricao": "Gato de olhar debochado que transforma tropeços em golpes de sorte.",
+  "descricao": "Gato de olhar debochado que arremessa balinhas de brita na cabeça do rival.",
   "bordao": "Foi sem querer... querendo!",
   "escala": 0.37,
   "paleta": [
@@ -22,15 +22,16 @@
     "impactos": 1
   },
   "especial": {
-    "nome": "Tropeço da Sorte",
-    "efeito": "Perde o equilíbrio, abre os braços e avança de barriga contra o rival.",
-    "contraJogo": "Defenda para reduzir o dano, pule sobre a investida ou recue durante o tropeço. Se errar, ele fica exposto ao se recompor.",
-    "dano": 3.4,
-    "unidade": "pontos de vida",
+    "nome": "Balinha de Brita",
+    "efeito": "Puxa a pata junto à cabeça e arremessa três britas em arco. Cada brita se desfaz em fragmentos ao atingir o rival ou o chão.",
+    "contraJogo": "Defenda para reduzir o dano, pule sobre as britas ou recue para fora do alcance. A trajetória é definida no arremesso.",
+    "dano": 3.3,
+    "unidade": "pontos de vida no total",
+    "danoPorImpacto": 1.1,
+    "impactos": 3,
     "recargaMs": 3400,
-    "alcance": 95.2,
-    "unidadeAlcance": "unidades do Canvas lógico",
-    "impactos": 1
+    "alcance": 250,
+    "unidadeAlcance": "unidades do Canvas lógico"
   },
   "animacoes": {
     "parado": [
@@ -127,32 +128,38 @@
     ],
     "especial": [
       {
-        "x": 313,
-        "y": 627,
-        "largura": 314,
-        "altura": 313,
-        "pivoX": 156,
-        "pivoY": 297,
-        "duracaoMs": 260
+        "arquivo": "especial-brita.png",
+        "x": 0,
+        "y": 0,
+        "largura": 724,
+        "altura": 724,
+        "pivoX": 352,
+        "pivoY": 668,
+        "escala": 0.16,
+        "duracaoMs": 280
       },
       {
-        "x": 627,
-        "y": 627,
-        "largura": 313,
-        "altura": 313,
-        "pivoX": 156,
-        "pivoY": 298,
-        "duracaoMs": 280,
+        "arquivo": "especial-brita.png",
+        "x": 724,
+        "y": 0,
+        "largura": 724,
+        "altura": 724,
+        "pivoX": 352,
+        "pivoY": 668,
+        "escala": 0.16,
+        "duracaoMs": 300,
         "contato": true
       },
       {
-        "x": 940,
-        "y": 627,
-        "largura": 314,
-        "altura": 313,
-        "pivoX": 156,
-        "pivoY": 299,
-        "duracaoMs": 220
+        "arquivo": "especial-brita.png",
+        "x": 1448,
+        "y": 0,
+        "largura": 724,
+        "altura": 724,
+        "pivoX": 352,
+        "pivoY": 668,
+        "escala": 0.16,
+        "duracaoMs": 260
       }
     ],
     "atingido": [

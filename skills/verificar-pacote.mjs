@@ -51,6 +51,7 @@ function verifyFighter(folder, info) {
   readPng(folder, 'retrato.png');
   const pose = readPng(folder, 'pose.png');
   const atlas = readPng(folder, 'sprites.png');
+  const atlases = new Map([['sprites.png', atlas]]);
   requireValue(pose.transparent && atlas.transparent, 'Pose e atlas devem oferecer transparência.');
   const animations = info.animacoes;
   requireValue(animations && typeof animations === 'object' && !Array.isArray(animations), 'Informe as animações do lutador.');
@@ -59,9 +60,15 @@ function verifyFighter(folder, info) {
     requireValue(Array.isArray(frames) && frames.length > 0, 'Faltam quadros em ' + state + '.');
     for (const [index, frame] of frames.entries()) {
       const label = state + ', quadro ' + (index + 1);
+      const arquivo = frame?.arquivo ?? 'sprites.png';
+      if (!atlases.has(arquivo)) atlases.set(arquivo, readPng(folder, arquivo));
+      const atlasDoQuadro = atlases.get(arquivo);
+      requireValue(atlasDoQuadro.transparent, label + ' deve usar atlas transparente.');
+      requireValue(frame?.escala === undefined || Number.isFinite(frame.escala) && frame.escala > 0,
+        label + ' tem escala inválida.');
       requireValue(frame && isInteger(frame.x, 0) && isInteger(frame.y, 0) &&
         isInteger(frame.largura, 1) && isInteger(frame.altura, 1) &&
-        frame.x + frame.largura <= atlas.width && frame.y + frame.altura <= atlas.height,
+        frame.x + frame.largura <= atlasDoQuadro.width && frame.y + frame.altura <= atlasDoQuadro.height,
       label + ' está fora do atlas ou tem dimensões inválidas.');
       requireValue(isInteger(frame.pivoX, 0, frame.largura) && isInteger(frame.pivoY, 0, frame.altura),
         label + ' tem pivô inválido.');

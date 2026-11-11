@@ -1,6 +1,6 @@
 import { FighterState } from './constants/fighter.js';
 import { Ken, Ryu } from './entitites/fighters/index.js';
-import { GroundVehicle, LungeSpecial, WaveSpecial } from './especiais.js?v=piloto-v1';
+import { GroundVehicle, LungeSpecial, WaveSpecial, GravelCandySpecial } from './especiais.js?v=brita-v1';
 
 export const elenco = [
   {
@@ -52,10 +52,10 @@ export const elenco = [
   },
   {
     id: 'desastroso', nome: 'O Desastroso', normal: 'Tapão Sem Querer',
-    estadoNormal: FighterState.MEDIUM_PUNCH, especial: 'Tropeço da Sorte',
-    descricao: 'Tropeça e avança de barriga. Defenda ou pule a investida e aproveite a recuperação.',
-    base: Ryu, efeito: LungeSpecial, recarga: 3400, pacoteArte: true, voz: false,
-    investida: { delay: 0.24, speed: 340, duration: 0.28, damage: 28, tint: '#e9e3a3' },
+    estadoNormal: FighterState.MEDIUM_PUNCH, especial: 'Balinha de Brita',
+    descricao: 'Arremessa três balinhas de brita em arco na direção da cabeça do rival. Defenda ou pule para escapar.',
+    base: Ryu, efeito: GravelCandySpecial, recarga: 3400, pacoteArte: true, voz: false,
+    arremesso: { delays: [0, 0.09, 0.18], damage: 9, speed: 270, gravity: 420, duration: 0.8 },
     color: '#706c88', deep: '#484459', shine: '#c7d2d4', skin: '#e4aeb5',
     alternativa: { color: '#8f9dba', deep: '#414d6b', shine: '#e8edff' },
   },

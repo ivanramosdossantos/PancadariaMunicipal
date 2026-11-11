@@ -1,10 +1,10 @@
-import { BattleScene } from './scenes/BattleScene.js?v=desastroso-v1';
+import { BattleScene } from './scenes/BattleScene.js?v=brita-v1';
 import { Control } from './constants/controls.js';
 import { FRAME_TIME, VICTORY_MS } from './constants/game.js?v=arcade-v1';
 import { SCENE_WIDTH, SCENE_HEIGHT } from './constants/stage.js';
-import { elenco } from './elenco.js?v=ocultar-patinho-v1';
+import { elenco } from './elenco.js?v=brita-v1';
 import { arenas } from './arenas.js?v=desastroso-v1';
-import { carregarArteLutador, desenharArteSelecao, desenharSprite } from './arte-lutador.js';
+import { carregarArteLutador, desenharArteSelecao, desenharSprite } from './arte-lutador.js?v=brita-v1';
 import { drawFighter } from './arte.js?v=pixel-real-v3';
 import { drawPackPortrait, drawPackSelection, artDiagnostics } from './arte-pacotes.js?v=pixel-real-v3';
 import { criarMusicaDeArena } from './musica.js?v=vozes-v1';

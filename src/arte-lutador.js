@@ -10,9 +10,11 @@ async function carregarImagem(url) {
 export async function carregarArteLutador(perfil) {
   if (!perfil.pacoteArte) return;
   const pasta = new URL(perfil.id + '/', assetRoot);
+  const fichaUrl = new URL('ficha.json', pasta);
+  fichaUrl.search = new URL(import.meta.url).search;
   try {
     const [resposta, retrato, pose, atlas] = await Promise.all([
-      fetch(new URL('ficha.json', pasta)),
+      fetch(fichaUrl),
       carregarImagem(new URL('retrato.png', pasta)),
       carregarImagem(new URL('pose.png', pasta)),
       carregarImagem(new URL('sprites.png', pasta)),
@@ -23,7 +25,13 @@ export async function carregarArteLutador(perfil) {
     if (ficha.versao !== 1 || ficha.id !== perfil.id || !(escala > 0 && Number.isFinite(escala)) || !ficha.animacoes?.parado?.length) {
       throw new Error('Ficha de arte incompatível.');
     }
-    perfil.arte = { retrato, pose, atlas, escala, animacoes: ficha.animacoes };
+    const atlases = new Map([['sprites.png', atlas]]);
+    const arquivos = new Set(Object.values(ficha.animacoes).flat().map(quadro => quadro.arquivo).filter(Boolean));
+    await Promise.all([...arquivos].map(async arquivo => {
+      if (!/^[a-z0-9]+(?:[-_][a-z0-9]+)*\.png$/.test(arquivo)) throw new Error('Nome de atlas inválido.');
+      atlases.set(arquivo, await carregarImagem(new URL(arquivo, pasta)));
+    }));
+    perfil.arte = { retrato, pose, atlas, atlases, escala, animacoes: ficha.animacoes };
   } catch (error) {
     console.warn('Arte de ' + perfil.id + ': ' + error.message);
   }
@@ -78,13 +86,14 @@ export function desenharSprite(context, perfil, x, y, direcao, animacao) {
   const quadro = animacao.loop ? quadroPorTempo(quadros, animacao.tempo, true)
     : quadroDeAtaque(quadros, animacao.fase, animacao.progresso);
   const { largura, altura, pivoX, pivoY } = quadro;
-  const escala = arte.escala;
+  const escala = quadro.escala ?? arte.escala;
+  const atlas = arte.atlases?.get(quadro.arquivo ?? 'sprites.png') ?? arte.atlas;
   context.save();
   context.imageSmoothingEnabled = false;
   if (perfil.espelhoCpu) context.filter = 'brightness(0.82) saturate(1.35)';
   context.translate(Math.round(x), Math.round(y));
   context.scale(direcao, 1);
-  context.drawImage(arte.atlas, quadro.x, quadro.y, largura, altura,
+  context.drawImage(atlas, quadro.x, quadro.y, largura, altura,
     -pivoX * escala, -pivoY * escala, largura * escala, altura * escala);
   context.restore();
   return true;

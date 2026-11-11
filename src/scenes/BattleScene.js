@@ -9,8 +9,8 @@ import { EntityList } from '../engine/EntityList.js';
 import { setVirtualMovement } from '../engine/InputHandler.js';
 import { getActualBoxDimensions } from '../utils/collisions.js';
 import { drawFighter, oval } from '../arte.js?v=pixel-real-v3';
-import { desenharSprite } from '../arte-lutador.js';
-import { hitArea } from '../especiais.js?v=piloto-v1';
+import { desenharSprite } from '../arte-lutador.js?v=brita-v1';
+import { hitArea } from '../especiais.js?v=brita-v1';
 
 const specialState = FighterState.SPECIAL_1_HEAVY;
 const groundedActions = [FighterState.IDLE, FighterState.WALK_FORWARD, FighterState.WALK_BACKWARD];
@@ -80,7 +80,8 @@ function animacaoDoSprite(fighter, frame, pose, tempo, airAge) {
   if (pose.special) {
     const investida = fighter.profile.investida;
     const atraso = (investida?.delay ?? 0) * 1000;
-    const contato = investida ? investida.duration * 1000 : fighter.profile.id === 'pagodeiro' ? 370 : 160;
+    const contato = investida ? investida.duration * 1000 : fighter.profile.arremesso
+      ? (fighter.profile.arremesso.delays.at(-1) + 0.12) * 1000 : fighter.profile.id === 'pagodeiro' ? 370 : 160;
     if (frame < 3) {
       return { estado: 'especial', fase: 'preparo', progresso: (frame / 3) * (atraso ? 0.8 : 1) };
     }
