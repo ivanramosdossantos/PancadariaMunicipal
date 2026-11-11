@@ -1,0 +1,261 @@
+{
+  "versao": 1,
+  "id": "desastroso",
+  "nome": "O Desastroso",
+  "cidade": "Pato Branco",
+  "descricao": "Gato de olhar debochado que transforma tropeços em golpes de sorte.",
+  "bordao": "Foi sem querer... querendo!",
+  "escala": 0.37,
+  "paleta": [
+    "#706c88",
+    "#484459",
+    "#c7d2d4",
+    "#ffffff",
+    "#e4aeb5",
+    "#e9e3a3"
+  ],
+  "normal": {
+    "nome": "Tapão Sem Querer",
+    "efeito": "Puxa a pata para trás, estica um tapão para a frente e recolhe a mão.",
+    "dano": 2.4,
+    "unidade": "pontos de vida",
+    "impactos": 1
+  },
+  "especial": {
+    "nome": "Tropeço da Sorte",
+    "efeito": "Perde o equilíbrio, abre os braços e avança de barriga contra o rival.",
+    "contraJogo": "Defenda para reduzir o dano, pule sobre a investida ou recue durante o tropeço. Se errar, ele fica exposto ao se recompor.",
+    "dano": 3.4,
+    "unidade": "pontos de vida",
+    "recargaMs": 3400,
+    "alcance": 95.2,
+    "unidadeAlcance": "unidades do Canvas lógico",
+    "impactos": 1
+  },
+  "animacoes": {
+    "parado": [
+      {
+        "x": 0,
+        "y": 0,
+        "largura": 313,
+        "altura": 313,
+        "pivoX": 156,
+        "pivoY": 298,
+        "duracaoMs": 300
+      },
+      {
+        "x": 313,
+        "y": 0,
+        "largura": 314,
+        "altura": 313,
+        "pivoX": 156,
+        "pivoY": 298,
+        "duracaoMs": 300
+      }
+    ],
+    "andar": [
+      {
+        "x": 627,
+        "y": 0,
+        "largura": 313,
+        "altura": 313,
+        "pivoX": 156,
+        "pivoY": 298,
+        "duracaoMs": 150
+      },
+      {
+        "x": 940,
+        "y": 0,
+        "largura": 314,
+        "altura": 313,
+        "pivoX": 156,
+        "pivoY": 298,
+        "duracaoMs": 150
+      }
+    ],
+    "pular": [
+      {
+        "x": 0,
+        "y": 313,
+        "largura": 313,
+        "altura": 314,
+        "pivoX": 156,
+        "pivoY": 298,
+        "duracaoMs": 300
+      }
+    ],
+    "defender": [
+      {
+        "x": 313,
+        "y": 313,
+        "largura": 314,
+        "altura": 314,
+        "pivoX": 156,
+        "pivoY": 300,
+        "duracaoMs": 160
+      }
+    ],
+    "normal": [
+      {
+        "x": 627,
+        "y": 313,
+        "largura": 313,
+        "altura": 314,
+        "pivoX": 156,
+        "pivoY": 300,
+        "duracaoMs": 110
+      },
+      {
+        "x": 940,
+        "y": 313,
+        "largura": 314,
+        "altura": 314,
+        "pivoX": 156,
+        "pivoY": 300,
+        "duracaoMs": 100,
+        "contato": true
+      },
+      {
+        "x": 0,
+        "y": 627,
+        "largura": 313,
+        "altura": 313,
+        "pivoX": 156,
+        "pivoY": 297,
+        "duracaoMs": 160
+      }
+    ],
+    "especial": [
+      {
+        "x": 313,
+        "y": 627,
+        "largura": 314,
+        "altura": 313,
+        "pivoX": 156,
+        "pivoY": 297,
+        "duracaoMs": 260
+      },
+      {
+        "x": 627,
+        "y": 627,
+        "largura": 313,
+        "altura": 313,
+        "pivoX": 156,
+        "pivoY": 298,
+        "duracaoMs": 280,
+        "contato": true
+      },
+      {
+        "x": 940,
+        "y": 627,
+        "largura": 314,
+        "altura": 313,
+        "pivoX": 156,
+        "pivoY": 299,
+        "duracaoMs": 220
+      }
+    ],
+    "atingido": [
+      {
+        "x": 0,
+        "y": 940,
+        "largura": 313,
+        "altura": 314,
+        "pivoX": 156,
+        "pivoY": 292,
+        "duracaoMs": 180
+      }
+    ],
+    "nocaute": [
+      {
+        "x": 313,
+        "y": 940,
+        "largura": 314,
+        "altura": 314,
+        "pivoX": 156,
+        "pivoY": 284,
+        "duracaoMs": 500
+      }
+    ],
+    "vitoria": [
+      {
+        "x": 627,
+        "y": 940,
+        "largura": 313,
+        "altura": 314,
+        "pivoX": 156,
+        "pivoY": 292,
+        "duracaoMs": 280
+      },
+      {
+        "x": 940,
+        "y": 940,
+        "largura": 314,
+        "altura": 314,
+        "pivoX": 156,
+        "pivoY": 292,
+        "duracaoMs": 280
+      }
+    ],
+    "rasteira": [
+      {
+        "x": 313,
+        "y": 313,
+        "largura": 314,
+        "altura": 314,
+        "pivoX": 156,
+        "pivoY": 300,
+        "duracaoMs": 110
+      },
+      {
+        "x": 627,
+        "y": 627,
+        "largura": 313,
+        "altura": 313,
+        "pivoX": 156,
+        "pivoY": 298,
+        "duracaoMs": 120,
+        "contato": true
+      },
+      {
+        "x": 0,
+        "y": 627,
+        "largura": 313,
+        "altura": 313,
+        "pivoX": 156,
+        "pivoY": 297,
+        "duracaoMs": 160
+      }
+    ],
+    "aereo": [
+      {
+        "x": 0,
+        "y": 313,
+        "largura": 313,
+        "altura": 314,
+        "pivoX": 156,
+        "pivoY": 298,
+        "duracaoMs": 65
+      },
+      {
+        "x": 940,
+        "y": 313,
+        "largura": 314,
+        "altura": 314,
+        "pivoX": 156,
+        "pivoY": 300,
+        "duracaoMs": 85,
+        "contato": true
+      },
+      {
+        "x": 0,
+        "y": 313,
+        "largura": 313,
+        "altura": 314,
+        "pivoX": 156,
+        "pivoY": 298,
+        "duracaoMs": 50
+      }
+    ]
+  }
+}

@@ -19,7 +19,7 @@ export function configurarIndicacoes(formulario, botao, status, painelPix, desti
   formulario.action = destino;
   botao.disabled = false;
   status.textContent = 'Os dados serão registrados na planilha de indicações.';
-  const instrucaoInicial = 'Antes de pagar, envie sua indicação. O número para colocar na descrição do Pix aparece aqui.';
+  const instrucaoInicial = 'Para vincular o Pix a um lutador, envie a indicação e informe o número recebido na descrição do pagamento.';
   aviso.textContent = instrucaoInicial;
 
   botaoPix.addEventListener('click', () => copiarPix(codigoPix, campoManual, feedbackPix, 'Código Pix copiado.'));

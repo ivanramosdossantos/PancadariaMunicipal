@@ -1,15 +1,15 @@
-import { BattleScene } from './scenes/BattleScene.js?v=vozes-v1';
+import { BattleScene } from './scenes/BattleScene.js?v=desastroso-v1';
 import { Control } from './constants/controls.js';
 import { FRAME_TIME, VICTORY_MS } from './constants/game.js?v=arcade-v1';
 import { SCENE_WIDTH, SCENE_HEIGHT } from './constants/stage.js';
-import { elenco } from './elenco.js?v=elenco-vozes-v1';
-import { arenas } from './arenas.js?v=memes-v3';
+import { elenco } from './elenco.js?v=desastroso-v1';
+import { arenas } from './arenas.js?v=desastroso-v1';
 import { carregarArteLutador, desenharArteSelecao, desenharSprite } from './arte-lutador.js';
 import { drawFighter } from './arte.js?v=pixel-real-v3';
 import { drawPackPortrait, drawPackSelection, artDiagnostics } from './arte-pacotes.js?v=pixel-real-v3';
 import { criarMusicaDeArena } from './musica.js?v=vozes-v1';
 import { criarVozes } from './vozes.js?v=selecao-arcade-v1';
-import { configurarIndicacoes } from './indicacoes.js?v=arcade-mobile-v1';
+import { configurarIndicacoes } from './indicacoes.js?v=desastroso-v1';
 
 const $ = id => document.getElementById(id);
 const selection = [null, null];
@@ -255,13 +255,16 @@ function makeArenaCards(container) {
     image.alt = '';
     const name = document.createElement('strong');
     name.textContent = arena.nome;
+    const referencia = document.createElement('span');
+    referencia.className = 'referencia-arena';
+    referencia.textContent = arena.referencia;
     const description = document.createElement('span');
     description.textContent = arena.descricao;
     const item = { arena, button, image, status: 'loading' };
     image.src = arena.imagem;
     image.decode().then(() => { item.status = 'ready'; }, () => { item.status = 'error'; })
       .then(() => { if (selectionStep === 2) updateSelection(); });
-    button.append(image, name, description);
+    button.append(image, name, referencia, description);
     button.addEventListener('click', () => {
       if (selectedArena === item) return;
       unlockAudio();
@@ -339,16 +342,17 @@ function returnToArena() {
 
 function showStartCue(text) {
   const cue = $('largada');
-  if (cue.textContent === text) return;
+  if ($('contagem').textContent === text) return;
   const label = document.createElement('span');
   label.textContent = text;
   cue.hidden = false;
   cue.dataset.go = String(text === 'VALENDO!');
-  cue.replaceChildren(label);
+  $('contagem').replaceChildren(label);
+  if (text === 'VALENDO!') $('dica-largada').hidden = true;
   playSound(text === 'VALENDO!' ? 'go' : 'count' + text);
 }
 
-function start() {
+function start(mostrarDica = true) {
   if (!selection[0] || !selection[1] || selectedArena?.status !== 'ready') return;
   unlockAudio();
   if (battle) vozes?.parar();
@@ -374,7 +378,8 @@ function start() {
   for (const button of controlButtons) button.disabled = true;
   $('cortina-arena').hidden = curtainLeft === 0;
   $('largada').hidden = true;
-  $('largada').textContent = '';
+  $('contagem').textContent = '';
+  $('dica-largada').hidden = !mostrarDica;
   if (curtainLeft === 0) showStartCue('3');
   $('voltar').focus({ preventScroll: true });
   render();
@@ -580,8 +585,8 @@ $('avancar').addEventListener('click', () => {
 });
 $('voltar-etapa').addEventListener('click', () => showSelection(selectionStep - 1));
 $('cancelar-versus').addEventListener('click', returnToArena);
-$('revanche').addEventListener('click', start);
-$('voltar').addEventListener('click', () => {
+$('revanche').addEventListener('click', () => start(false));
+function voltarParaSelecao() {
   vozes?.parar();
   musica?.tocar(TEMA_DO_JOGO);
   battle = null;
@@ -589,5 +594,7 @@ $('voltar').addEventListener('click', () => {
   $('duelo').hidden = true;
   $('selecao').hidden = false;
   showSelection(0);
-});
+}
+$('voltar').addEventListener('click', voltarParaSelecao);
+$('novo-confronto').addEventListener('click', voltarParaSelecao);
 requestAnimationFrame(frame);

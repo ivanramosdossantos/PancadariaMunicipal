@@ -39,6 +39,8 @@ main:has(#duelo:not([hidden])) .marca img{width:min(65%,245px)}
 .capa-atalho:last-child{box-shadow:inset 3px 0 var(--pm-cpu)}
 .capa-atalho span{grid-row:span 2;color:var(--pm-action);font:700 20px var(--pm-display)}
 .capa-atalho small,.menu-resumo small,.menu-doacoes small{color:var(--pm-muted)}
+.capa-nota{max-width:65ch;margin:auto;padding:8px 12px;background:#101827ed;color:var(--pm-cream);font-size:13px}
+.card-arena .referencia-arena{color:var(--pm-player);font-weight:700}
 .menu-extra{padding:clamp(14px,4vw,35px);border-top:3px solid var(--pm-player);background:radial-gradient(ellipse at 84% 6%,#31496a,transparent 70%),var(--pm-panel)}
 #apoio{border-top-color:var(--pm-cpu)}
 .menu-voltar{margin-bottom:20px}
@@ -141,7 +143,11 @@ time{align-self:start;border:1px solid var(--pm-line);padding:3px 6px;background
 .chamada{position:absolute;bottom:7%;width:100%;text-align:center;pointer-events:none;color:var(--pm-action);font:700 clamp(12px,2.8vw,24px)/1.2 var(--pm-display);text-shadow:2px 2px var(--pm-ink),0 0 5px var(--pm-ink)}
 .largada{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;color:var(--pm-action);font:700 clamp(38px,10vw,96px)/1 var(--pm-display);text-shadow:4px 4px #141a29,7px 7px #713f50}
 .largada[data-go="true"]{font-size:clamp(23px,6.5vw,62px)}
-.largada span{animation:placa-pixel .16s steps(3,end)}
+#contagem>span{display:block;animation:placa-pixel .16s steps(3,end)}
+.largada{place-content:center;justify-items:center;gap:10px;text-align:center}
+.dica-largada{max-width:calc(100% - 20px);padding:8px 10px;border:1px solid var(--pm-line);background:var(--pm-ink);color:var(--pm-cream);font:700 clamp(13px,2vw,16px)/1.25 var(--pm-text);text-shadow:none}
+.dica-toque{display:none}
+.fim-acoes{display:flex;justify-content:center;flex-wrap:wrap;gap:6px}
 @keyframes placa-pixel{from{transform:scale(1.16)}}
 .cortina-arena{position:absolute;inset:0;display:grid;grid-template-rows:repeat(6,1fr);pointer-events:none}
 .cortina-arena span{background:repeating-linear-gradient(0deg,#192a42 0 3px,#152438 3px 6px);border-right:8px solid var(--pm-player);transform-origin:left;animation:abrir-cortina .22s steps(8,end) forwards}
@@ -172,7 +178,7 @@ time{align-self:start;border:1px solid var(--pm-line);padding:3px 6px;background
 @media(max-width:540px){
   .elenco-arenas{grid-template-columns:1fr}
   .card-arena{grid-template-columns:minmax(94px,34%) 1fr;gap:4px 8px;padding:6px}
-  .card-arena img{grid-row:1 / span 2}.card-arena strong{min-height:0;font-size:15px}
+  .card-arena img{grid-row:1 / span 3}.card-arena strong{min-height:0;font-size:15px}
   .card-arena span{font-size:12px}
 }
 @media(pointer:coarse){.comandos button{min-width:44px;min-height:44px}}
@@ -202,7 +208,15 @@ time{align-self:start;border:1px solid var(--pm-line);padding:3px 6px;background
   .musica-combate{display:inline-block;padding:4px 7px;font-size:12px}
   #voltar{min-height:36px;padding:4px 7px;font-size:12px}
   .duelo-tabuleiro{display:grid;place-items:center;min-height:0;container-type:size}
-  .arena{width:100%;width:min(100cqw,calc((100cqh - 4px) * 1146 / 672 + 4px));max-width:none;margin:0}
+  .arena{width:100%;width:min(100cqw,calc((100cqh - 84px) * 1146 / 672 + 4px));max-width:none;margin:0}
+  .placar{position:static;gap:3px 6px;padding:6px 8px;background:var(--pm-panel)}
+  .lado{display:grid;grid-row:span 3;grid-template-rows:subgrid;font-size:13px;line-height:1.2}
+  .lado strong{align-self:end}
+  .lado progress{margin:0}
+  .lado small{font-size:12px}
+  .placar time{grid-row:span 3}
+  .dica-teclado{display:none}
+  .dica-toque{display:inline}
   .fim{overflow:auto}
   .fim>div{max-width:100%;padding:6px 12px}
   .fim button{margin-top:5px;padding:5px 8px}
