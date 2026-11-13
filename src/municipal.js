@@ -24,6 +24,33 @@ const movementKeys = new Map([
 const actionKeys = new Map([['KeyZ', 'normal'], ['KeyX', 'special'], ['Sweep', 'sweep']]);
 const controlButtons = document.querySelectorAll('[data-key]');
 const musicButtons = document.querySelectorAll('[data-musica]');
+const fullscreenButton = $('mobile-fullscreen');
+const mobilePointer = window.matchMedia('(pointer: coarse)');
+function feedbackToque(code) {
+  if (!mobilePointer.matches || !navigator.vibrate) return;
+  if (code === 'KeyZ' || code === 'KeyX' || code === 'ArrowUp') {
+    try { navigator.vibrate(code === 'KeyX' ? 18 : 9); } catch { /* vibracao indisponivel */ }
+  }
+}
+function atualizarTelaCheia() {
+  if (!fullscreenButton) return;
+  const ativo = !!document.fullscreenElement;
+  fullscreenButton.setAttribute('aria-pressed', String(ativo));
+  fullscreenButton.querySelector('span').textContent = ativo ? 'Sair da tela cheia' : 'Tela cheia';
+}
+if (fullscreenButton) {
+  fullscreenButton.addEventListener('click', async () => {
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else if ($('duelo').requestFullscreen) await $('duelo').requestFullscreen({navigationUI:'hide'});
+    } catch {
+      fullscreenButton.title = 'Tela cheia indisponível neste navegador; gire o celular para jogar em paisagem.';
+    }
+    atualizarTelaCheia();
+  });
+  document.addEventListener('fullscreenchange', atualizarTelaCheia);
+}
+
 const menusIniciais = ['capa', 'indicacao', 'apoio'];
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const COUNTDOWN_MS = 3000;
@@ -502,6 +529,7 @@ for (const button of controlButtons) {
     touches.set(event.pointerId, button.dataset.key);
     button.dataset.pressionado = '';
     queue(button.dataset.key);
+    feedbackToque(button.dataset.key);
   });
   for (const event of ['pointerup', 'pointercancel', 'lostpointercapture']) {
     button.addEventListener(event, ({ pointerId }) => {
