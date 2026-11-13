@@ -2,7 +2,7 @@ import { BattleScene } from './scenes/BattleScene.js?v=brita-v1';
 import { Control } from './constants/controls.js';
 import { FRAME_TIME, VICTORY_MS } from './constants/game.js?v=arcade-v1';
 import { SCENE_WIDTH, SCENE_HEIGHT } from './constants/stage.js';
-import { elenco } from './elenco.js?v=patinho-retorno-v1';
+import { elenco } from './elenco.js?v=pato-mil-grau-v1';
 import { arenas } from './arenas.js?v=desastroso-v1';
 import { carregarArteLutador, desenharArteSelecao, desenharSprite } from './arte-lutador.js?v=brita-v1';
 import { drawFighter } from './arte.js?v=pixel-real-v3';
@@ -127,7 +127,7 @@ function playSound(kind, perfil) {
   if (perfil) vozes.tocar(perfil, 'especial');
   const tones = {
     prefeito: [150, 113, 68], pagodeiro: [392, 494, 587, 659],
-    periquito: [1300, 1040], gladiador: [105, 175], oaa: [185, 155, 112], patinho: [310, 365],
+    periquito: [1300, 1040], gladiador: [105, 175], oaa: [185, 155, 112], patinho: [310, 365], patomilgrau: [230, 320, 410],
     hit: [95], block: [270], swing: [156],
   };
   for (const [index, frequency] of (tones[kind] ?? [262, 392]).entries()) {
