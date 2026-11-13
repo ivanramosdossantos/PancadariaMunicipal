@@ -7,7 +7,7 @@
 <title>Pancadaria Municipal · Pato Branco</title>
 <link rel="icon" href="design/simbolo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="design/tokens.css">
-<link rel="stylesheet" href="estilo.css?v=apoio-v2">
+<link rel="stylesheet" href="estilo.css?v=sem-scroll-v1">
 <link rel="stylesheet" href="src/patrocinios.css?v=patrocinios-v1">
 <script type="module" src="src/municipal.js?v=apoio-v2"></script>
 <script type="module" src="src/apoio-pix.js?v=arcade-mobile-v1"></script>
@@ -52,13 +52,13 @@
     <div class="menu-intro">
       <p class="eyebrow">A CIDADE ESCOLHE</p>
       <h1 id="titulo-indicacao" tabindex="-1">Indicar lutador</h1>
-      <p>Quem merece entrar no elenco? Conte de qual cidade ele vem e imagine o golpe que faria a praça inteira parar.</p>
+      <p>Quem merece entrar no elenco? Diga de onde ele vem e invente seu golpe especial.</p>
     </div>
     <div class="menu-painel">
       <form id="form-indicacao" class="menu-campos" method="post" target="retorno-indicacao">
         <label>Nome ou codinome <input name="lutador" type="text" required maxlength="80" placeholder="Ex. Fiscal do Rolê"></label>
         <label>Cidade <input name="cidade" type="text" required maxlength="80" placeholder="Ex. Pato Branco"></label>
-        <label>Ideia de golpe especial <textarea name="golpe" rows="3" required maxlength="600" placeholder="O que acontece quando ele aperta X?"></textarea></label>
+        <label>Ideia de golpe especial <textarea name="golpe" rows="2" required maxlength="600" placeholder="O que acontece quando ele aperta X?"></textarea></label>
         <input type="hidden" name="protocolo">
         <input type="hidden" name="origem">
         <div hidden><label>Deixe este campo em branco <input name="site" type="text" tabindex="-1" autocomplete="off"></label></div>
@@ -69,7 +69,7 @@
       <aside id="pix-indicacao" class="menu-resumo">
         <p class="eyebrow">TAXA SUGERIDA POR INDICAÇÃO</p>
         <strong class="menu-valor">R$ 50</strong>
-        <p>Uma indicação ajuda a produzir a arte, a voz e os golpes de novos lutadores.</p>
+        <p>Sua indicação apoia a criação de novos lutadores.</p>
         <p id="aviso-pix-indicacao" class="pix-aviso">O envio ainda não está disponível. Combine a indicação antes de pagar.</p>
         <div class="pix-acoes">
           <button type="button" data-copiar-pix>Copiar código Pix</button>
@@ -89,14 +89,14 @@
     <div class="apoio-topo">
       <p class="eyebrow">MAIS UMA FICHA · UMA BOA CAUSA</p>
       <h1 id="titulo-apoio" tabindex="-1">APOIE O PROJETO</h1>
-      <p>Seu apoio mantém o fliperama vivo, ajuda a criar novos conteúdos e fortalece ações sociais.</p>
+      <p>Ajude a manter o jogo, criar lutadores e apoiar ações sociais.</p>
     </div>
     <div class="apoio-v2-grid">
       <div class="apoio-v2-esquerda">
         <div class="impacto-social">
           <strong>♥ AQUI A PANCADARIA TAMBÉM FAZ O BEM!</strong>
           <p><strong>10% da receita arrecadada pelo jogo</strong> serão destinados a organizações sociais, incluindo instituições de acolhimento e cuidado de pessoas idosas.</p>
-          <small>As entidades beneficiadas e os repasses serão divulgados em nossa prestação de contas.</small>
+          <small>Publicaremos as entidades beneficiadas e os repasses.</small>
         </div>
         <fieldset class="menu-doacoes apoio-v2-valores">
           <legend>ESCOLHA UMA FICHA</legend>
@@ -115,9 +115,9 @@
         <h2>ESCANEIE E APOIE</h2>
         <figure class="pix-qr">
           <img src="src/pix/qr-code.png" width="450" height="450" alt="QR Code Pix do Pancadaria Municipal para escanear no aplicativo do banco">
-          <figcaption>Abra o app do banco, escaneie o QR Code e confirme o valor.</figcaption>
+          <figcaption>Escaneie com seu banco e escolha o valor.</figcaption>
         </figure>
-        <p class="pix-aviso" id="apoio-instrucao-valor">No app do banco, informe <strong id="valor-apoio-pix" aria-live="polite">R$ 2</strong> ou qualquer outro valor.</p>
+        <p class="pix-aviso" id="apoio-instrucao-valor">Sugestão: <strong id="valor-apoio-pix" aria-live="polite">R$ 2</strong>. O valor é livre.</p>
         <div class="pix-acoes apoio-v2-acoes">
           <button type="button" class="principal" data-copiar-pix>COPIAR CÓDIGO PIX</button>
         </div>
