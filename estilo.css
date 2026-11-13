@@ -292,66 +292,92 @@ time{align-self:start;border:1px solid var(--pm-line);padding:3px 6px;background
   #apoio .apoio-v2-pix .pix-qr img{width:min(100%,165px)}
 }
 
-/* Telas de entrada: compactas em desktop, preservando rolagem quando necessária. */
+/* Layout fluido: escala com largura E altura útil, sem encolher monitores grandes.
+   Em visores baixos, a página pode rolar para manter QR e formulários acessíveis. */
 @media (min-width: 761px) {
   body:has(#capa:not([hidden])) main,
   body:has(#indicacao:not([hidden])) main,
-  body:has(#apoio:not([hidden])) main { padding-top:8px; padding-bottom:8px; }
+  body:has(#apoio:not([hidden])) main {
+    padding-top:clamp(8px,1.4vh,18px);
+    padding-bottom:clamp(8px,1.4vh,18px);
+  }
   body:has(#capa:not([hidden])) .marca,
   body:has(#indicacao:not([hidden])) .marca,
-  body:has(#apoio:not([hidden])) .marca { padding:5px 12px; }
+  body:has(#apoio:not([hidden])) .marca{
+    padding:clamp(6px,1vh,12px) clamp(10px,1.5vw,18px);
+  }
   body:has(#capa:not([hidden])) .marca img,
   body:has(#indicacao:not([hidden])) .marca img,
-  body:has(#apoio:not([hidden])) .marca img { width:min(100%,295px); }
-  #capa { min-height:0; height:auto; gap:15px; padding:clamp(16px,2.5vh,26px) 26px; }
-  #capa .capa-conteudo{gap:8px}
-  #capa h1 {width:min(100%,490px)}
-  #capa .capa-iniciar{margin:2px 0;padding:10px 18px}
-  #capa .capa-atalhos{gap:8px}
-  #capa .capa-atalho{padding:8px 11px}
-  #capa .capa-nota{padding:7px 10px;font-size:11px}
-  #indicacao.menu-extra{padding:clamp(12px,2vh,18px)}
-  #indicacao .menu-voltar{margin-bottom:10px}
-  #indicacao .menu-intro{gap:4px;margin-bottom:12px}
-  #indicacao .menu-intro h1{font-size:clamp(23px,3.4vw,36px)}
-  #indicacao .menu-intro>p{font-size:13px}
-  #indicacao .menu-painel{gap:12px}
-  #indicacao .menu-campos,#indicacao .menu-resumo{gap:8px;padding:12px}
-  #indicacao .menu-campos label{gap:3px;font-size:13px}
-  #indicacao .menu-campos input,#indicacao .menu-campos textarea{padding:6px}
-  #indicacao .menu-campos textarea{min-height:60px}
-  #indicacao #pix-indicacao .pix-qr{padding:6px;gap:4px}
-  #indicacao #pix-indicacao .pix-qr img{width:min(100%,168px);padding:7px}
-  #indicacao #pix-indicacao .pix-qr figcaption{font-size:12px}
-  #indicacao #pix-indicacao>p:not(.eyebrow){font-size:12px}
-  #indicacao #pix-indicacao .pix-aviso{padding:6px}
-  #apoio.apoio-v2{padding:12px 17px}
-  #apoio .menu-voltar{margin-bottom:8px}
-  #apoio .apoio-topo{margin:4px 0 10px}
-  #apoio .apoio-topo h1{font-size:clamp(23px,3vw,35px);margin:3px 0}
-  #apoio .apoio-topo>p:last-child{font-size:13px}
-  #apoio .apoio-v2-grid{gap:12px}
-  #apoio .apoio-v2-esquerda{gap:10px}
-  #apoio .impacto-social{padding:10px 12px}
-  #apoio .impacto-social p{font-size:12px;line-height:1.4;margin-bottom:5px}
-  #apoio .impacto-social small{font-size:11px}
-  #apoio .apoio-v2-valores{gap:7px;padding:10px}
-  #apoio .apoio-v2-valores label{min-height:53px;padding:7px}
-  #apoio .apoio-v2-objetivos{padding:10px}
-  #apoio .apoio-v2-objetivos .eyebrow{margin-bottom:7px}
-  #apoio .apoio-v2-objetivos>div{gap:6px 8px}
-  #apoio .apoio-v2-pix{gap:6px;padding:10px 13px}
-  #apoio .apoio-v2-pix .pix-qr{padding:5px}
-  #apoio .apoio-v2-pix .pix-qr img{width:min(100%,174px);padding:6px}
-  #apoio .apoio-v2-pix .pix-qr figcaption{font-size:11px}
-  #apoio .apoio-v2-confianca{gap:2px;font-size:10px}
+  body:has(#apoio:not([hidden])) .marca img{
+    width:clamp(270px, min(25vw, 35vh), 370px);
+  }
+
+  /* Capa ocupa o espaço restante; elementos crescem progressivamente. */
+  #capa {
+    min-height:min(770px,max(470px,calc(100svh - 132px)));
+    height:auto;
+    gap:clamp(12px,2.3vh,30px);
+    padding:clamp(18px,3.7vh,50px) clamp(20px,3vw,55px);
+  }
+  #capa .capa-conteudo{gap:clamp(7px,1.5vh,15px)}
+  #capa h1{width:min(100%,clamp(440px, min(52vw, 65vh), 650px))}
+  #capa .capa-iniciar{
+    margin:clamp(2px,.75vh,8px) 0;
+    padding:clamp(10px,1.7vh,16px) clamp(17px,2vw,26px);
+  }
+  #capa .capa-atalhos{gap:clamp(8px,1.2vh,14px)}
+  #capa .capa-atalho{padding:clamp(8px,1.5vh,15px) clamp(10px,1.2vw,17px)}
+  #capa .capa-nota{padding:clamp(6px,1vh,11px) 12px;font-size:clamp(12px,1.1vw,13px)}
+
+  /* Indicação: mesmo formulário, com dimensionamento proporcional ao espaço. */
+  #indicacao.menu-extra{padding:clamp(16px,2.5vh,34px)}
+  #indicacao .menu-voltar{margin-bottom:clamp(9px,1.8vh,20px)}
+  #indicacao .menu-intro{gap:clamp(5px,.8vh,10px);margin-bottom:clamp(10px,1.8vh,20px)}
+  #indicacao .menu-intro h1{font-size:clamp(28px,min(3.6vw,4.8vh),45px)}
+  #indicacao .menu-intro>p{font-size:clamp(13px,1.25vw,16px)}
+  #indicacao .menu-painel{gap:clamp(12px,1.5vw,20px)}
+  #indicacao .menu-campos,#indicacao .menu-resumo{
+    gap:clamp(8px,1.35vh,14px);
+    padding:clamp(12px,1.7vh,18px);
+  }
+  #indicacao .menu-campos label{gap:4px;font-size:clamp(13px,1.2vw,15px)}
+  #indicacao .menu-campos input,#indicacao .menu-campos textarea{padding:clamp(7px,1vh,10px)}
+  #indicacao .menu-campos textarea{min-height:65px}
+  #indicacao #pix-indicacao .pix-qr{padding:clamp(7px,1vh,13px);gap:6px}
+  #indicacao #pix-indicacao .pix-qr img{width:min(100%,clamp(165px,22vh,255px));padding:8px}
+  #indicacao #pix-indicacao .pix-qr figcaption{font-size:13px}
+  #indicacao #pix-indicacao>p:not(.eyebrow){font-size:clamp(12px,1.15vw,14px)}
+  #indicacao #pix-indicacao .pix-aviso{padding:8px}
+
+  /* Apoio: QR legível em telas grandes, controles proporcionais em telas menores. */
+  #apoio.apoio-v2{padding:clamp(16px,2.4vh,31px)}
+  #apoio .menu-voltar{margin-bottom:clamp(9px,1.6vh,18px)}
+  #apoio .apoio-topo{margin:clamp(7px,1.2vh,14px) 0 clamp(11px,2vh,21px)}
+  #apoio .apoio-topo h1{font-size:clamp(30px,min(3.9vw,5vh),46px);margin:5px 0}
+  #apoio .apoio-topo>p:last-child{font-size:clamp(13px,1.25vw,16px)}
+  #apoio .apoio-v2-grid{gap:clamp(12px,1.7vw,20px)}
+  #apoio .apoio-v2-esquerda{gap:clamp(11px,1.9vh,20px)}
+  #apoio .impacto-social{padding:clamp(12px,1.7vh,18px)}
+  #apoio .impacto-social p{font-size:clamp(13px,1.2vw,15px);line-height:1.45;margin-bottom:7px}
+  #apoio .impacto-social small{font-size:12px}
+  #apoio .apoio-v2-valores{gap:clamp(8px,1.2vh,12px);padding:clamp(10px,1.4vh,16px)}
+  #apoio .apoio-v2-valores label{min-height:clamp(60px,7.3vh,77px);padding:clamp(8px,1.2vh,13px)}
+  #apoio .apoio-v2-objetivos{padding:clamp(11px,1.5vh,16px)}
+  #apoio .apoio-v2-objetivos .eyebrow{margin-bottom:clamp(7px,1vh,12px)}
+  #apoio .apoio-v2-objetivos>div{gap:clamp(7px,1vh,11px) 10px}
+  #apoio .apoio-v2-pix{gap:clamp(7px,1.15vh,12px);padding:clamp(12px,1.7vh,18px)}
+  #apoio .apoio-v2-pix .pix-qr{padding:clamp(7px,1vh,12px)}
+  #apoio .apoio-v2-pix .pix-qr img{width:min(100%,clamp(185px,25vh,270px));padding:8px}
+  #apoio .apoio-v2-pix .pix-qr figcaption{font-size:12px}
+  #apoio .apoio-v2-confianca{gap:4px;font-size:11px}
 }
-/* Em alturas reduzidas preservamos controles legíveis e liberamos scroll normal. */
-@media (min-width:761px) and (max-height:760px){
-  #capa{gap:9px;padding:15px}
-  #capa h1{width:min(100%,410px)}
+/* Compactar apenas quando a altura é realmente restrita. Não cortar conteúdo. */
+@media (min-width:761px) and (max-height:720px){
+  #capa{min-height:0;gap:9px;padding:14px}
   #capa .capa-conteudo{gap:5px}
-  #capa .capa-atalho{padding:6px 9px}
-  #indicacao #pix-indicacao .pix-qr img{width:min(100%,145px)}
-  #apoio .apoio-v2-pix .pix-qr img{width:min(100%,150px)}
+  #capa h1{width:min(100%,400px)}
+  #capa .capa-atalho{padding:7px 10px}
+  #indicacao.menu-extra,#apoio.apoio-v2{padding:12px}
+  #indicacao #pix-indicacao .pix-qr img{width:min(100%,155px)}
+  #apoio .apoio-v2-pix .pix-qr img{width:min(100%,160px)}
 }
