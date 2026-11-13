@@ -7,9 +7,9 @@
 <title>Pancadaria Municipal · Pato Branco</title>
 <link rel="icon" href="design/simbolo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="design/tokens.css">
-<link rel="stylesheet" href="estilo.css?v=responsivo-v2">
+<link rel="stylesheet" href="estilo.css?v=mobile-lab-v1">
 <link rel="stylesheet" href="src/patrocinios.css?v=patrocinios-v1">
-<script type="module" src="src/municipal.js?v=apoio-v2"></script>
+<script type="module" src="src/municipal.js?v=mobile-lab-v1"></script>
 <script type="module" src="src/apoio-pix.js?v=arcade-mobile-v1"></script>
 <script type="module" src="src/patrocinios.js?v=patrocinios-v1"></script>
 </head>
@@ -166,7 +166,7 @@
       <div><p class="eyebrow" id="edicao-duelo"></p><h1>Duelo · <em id="arena-duelo"></em></h1></div>
       <div class="combate-acoes">
         <button class="musica-combate" data-musica type="button" aria-pressed="true" hidden>Música<span aria-hidden="true"> ligada</span></button>
-        <button id="voltar">Trocar lutadores ou arena</button>
+        <button id="voltar">Trocar lutadores ou arena</button><button id="mobile-fullscreen" type="button" aria-label="Alternar tela cheia" title="Tela cheia">⛶ <span>Tela cheia</span></button>
       </div>
     </div>
     <div class="duelo-tabuleiro">
@@ -187,17 +187,16 @@
     </div>
     <div class="rodape comandos">
       <p class="comandos-teclado">← → Mover · ↑ Pular · ↓ Defender · Z Golpe · X Especial · <strong>↓ + Z Rasteira</strong></p>
-      <div class="comandos-toque" aria-label="Controles na tela">
-        <div class="comandos-movimento" role="group" aria-label="Movimento e defesa">
-          <button type="button" data-key="ArrowLeft" aria-label="Esquerda">←</button>
-          <button type="button" data-key="ArrowRight" aria-label="Direita">→</button>
-          <button type="button" data-key="ArrowUp" aria-label="Pular">↑ <span>Pular</span></button>
-          <button type="button" data-key="ArrowDown" aria-label="Defender">↓ <span>Defender</span></button>
+      <div class="comandos-toque" aria-label="Controles de combate para os polegares">
+        <div class="comandos-movimento" role="group" aria-label="Mover, pular e defender">
+          <button type="button" data-key="ArrowLeft" aria-label="Mover para esquerda"><span aria-hidden="true">←</span></button>
+          <button type="button" data-key="ArrowRight" aria-label="Mover para direita"><span aria-hidden="true">→</span></button>
+          <button type="button" data-key="ArrowUp" aria-label="Pular"><span aria-hidden="true">↑</span><small>PULAR</small></button>
+          <button type="button" data-key="ArrowDown" aria-label="Defender"><span aria-hidden="true">⬟</span><small>DEFESA</small></button>
         </div>
-        <div class="comandos-acoes" role="group" aria-label="Ataques">
-          <button type="button" data-key="KeyZ">Golpe</button>
-          <button type="button" data-key="KeyX">Especial</button>
-          <button type="button" data-key="Sweep">Rasteira</button>
+        <div class="comandos-acoes" role="group" aria-label="Golpe e especial">
+          <button type="button" data-key="KeyZ" aria-label="Aplicar golpe"><span aria-hidden="true">✊</span><small>GOLPE</small></button>
+          <button type="button" data-key="KeyX" aria-label="Executar especial"><span aria-hidden="true">★</span><small>ESPECIAL</small></button>
         </div>
       </div>
     </div>

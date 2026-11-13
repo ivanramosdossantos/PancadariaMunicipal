@@ -1,0 +1,23 @@
+name: Mobile UX experimental checks
+on:
+  push:
+    branches: [mobile-ux-experimental]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Check JavaScript syntax
+        run: |
+          node --check src/municipal.js
+          node --check src/scenes/BattleScene.js
+          node --check qa/mobile-ux.test.mjs
+      - name: Mobile UX regression checks
+        run: node --test qa/mobile-ux.test.mjs
