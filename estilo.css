@@ -381,3 +381,89 @@ time{align-self:start;border:1px solid var(--pm-line);padding:3px 6px;background
   #indicacao #pix-indicacao .pix-qr img{width:min(100%,155px)}
   #apoio .apoio-v2-pix .pix-qr img{width:min(100%,160px)}
 }
+
+/* Laboratório de controles mobile — código isolado da produção. */
+#mobile-fullscreen{display:none}
+@media (pointer:coarse), (max-width:760px){
+  #duelo {--pm-touch-height:clamp(150px,26svh,220px);}
+  #duelo .comandos {touch-action:none;overscroll-behavior:contain}
+  #mobile-fullscreen{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:36px;white-space:nowrap}
+  #mobile-fullscreen span{font-size:11px}
+  #duelo .comandos-toque{display:flex;justify-content:space-between;gap:clamp(8px,2vw,20px);align-items:center;width:100%;padding:4px 0;touch-action:none}
+  #duelo .comandos-movimento,#duelo .comandos-acoes{display:grid;min-width:0;gap:clamp(5px,1.6vw,11px);align-items:center}
+  #duelo .comandos-movimento{grid-template-columns:repeat(2,minmax(0,1fr));width:min(48%,215px)}
+  #duelo .comandos-acoes{grid-template-columns:repeat(2,minmax(0,1fr));width:min(48%,215px)}
+  #duelo .comandos button{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+    width:100%;min-width:0;min-height:clamp(58px,8.5svh,78px);
+    padding:5px;border:2px solid #7597c0;border-radius:16px;
+    background:linear-gradient(150deg,#3a5272,#1d324d);
+    color:#f9edcb;font:800 clamp(22px,4.5vw,31px)/1 var(--pm-text);
+    text-shadow:0 2px 2px #111e35;
+    box-shadow:inset 0 -4px #15233c,0 3px 0 #0d1728;
+    -webkit-tap-highlight-color:transparent;touch-action:none;user-select:none;
+    transition:background .07s,transform .07s,box-shadow .07s;
+  }
+  #duelo .comandos button small{display:block;color:inherit;font:800 clamp(9px,1.9vw,11px)/1.2 var(--pm-text);letter-spacing:.02em}
+  #duelo .comandos button[data-key="ArrowLeft"],#duelo .comandos button[data-key="ArrowRight"]{border-radius:19px}
+  #duelo .comandos-acoes button{
+    border-radius:999px;min-height:clamp(78px,12svh,108px);
+    border-color:#eec079;
+    background:linear-gradient(150deg,#cc8f49,#92542c);
+    box-shadow:inset 0 -5px #67361d,0 3px 0 #0d1728;
+  }
+  #duelo .comandos-acoes [data-key="KeyX"]{
+    border-color:#f9a2a8;background:linear-gradient(145deg,#d4757a,#8a3d59);
+    box-shadow:inset 0 -5px #57283f,0 3px 0 #0d1728;
+  }
+  #duelo .comandos button[data-pressionado]{
+    background:#f4c97b;color:#162134;transform:translateY(3px) scale(.97);
+    box-shadow:inset 0 1px #9f7845,0 0 15px #f6ce7d75;
+    text-shadow:none;
+  }
+  #duelo .comandos button:focus-visible{outline:3px solid #fff0ac;outline-offset:3px}
+  #duelo .comandos button:disabled{opacity:.48}
+  #duelo .duelo-tabuleiro{overflow:hidden}
+  #duelo .arena{max-width:none}
+  #duelo .placar{font-size:clamp(11px,2vw,15px)}
+  #duelo .placar .lado{font-size:clamp(11px,2.5vw,15px)}
+  #duelo .placar .lado small{font-size:clamp(10px,2.1vw,12px)}
+}
+/* Retrato: HUD e arena na parte superior, comandos grandes sob os polegares. */
+@media (max-width:760px) and (orientation:portrait), (pointer:coarse) and (orientation:portrait){
+  main:has(#duelo:not([hidden])){height:100svh;overflow:hidden}
+  #duelo{height:100%;grid-template-rows:auto minmax(0,1fr) auto;gap:clamp(5px,1vh,12px)}
+  #duelo .combate{align-items:center}
+  #duelo .combate-acoes{flex-wrap:nowrap}
+  #duelo .duelo-tabuleiro{align-content:start}
+  #duelo .arena{width:min(100%,calc((100svh - 250px) * 1146 / 672));}
+  #duelo .comandos{align-self:end;padding-bottom:max(5px,env(safe-area-inset-bottom))}
+}
+/* Paisagem: a arena fica no centro e os comandos ocupam as bordas laterais,
+   sem encobrir a área da luta. A rotação continua uma escolha do jogador. */
+@media (pointer:coarse) and (orientation:landscape) and (max-height:650px){
+  main:has(#duelo:not([hidden])){height:100svh;overflow:hidden;padding:4px max(6px,env(safe-area-inset-right)) 4px max(6px,env(safe-area-inset-left))}
+  #duelo{position:relative;height:100%;display:grid;grid-template-rows:auto minmax(0,1fr);gap:3px}
+  #duelo .combate{padding:0 4px;min-height:30px}
+  #duelo .combate h1{font-size:clamp(12px,2vw,18px)}
+  #duelo #voltar,#mobile-fullscreen{min-height:28px;font-size:11px;padding:3px 7px}
+  #duelo .duelo-tabuleiro{width:100%;height:100%;min-height:0;display:grid;place-items:center}
+  #duelo .arena{width:min(calc((100svh - 64px)*1146/672),calc(100vw - 290px));max-width:calc(100% - 280px)}
+  #duelo .comandos{position:absolute;inset:38px 0 4px;margin:0;pointer-events:none;z-index:4}
+  #duelo .comandos-toque{height:100%;padding:0;align-items:end;pointer-events:none}
+  #duelo .comandos-movimento,#duelo .comandos-acoes{
+    width:clamp(122px,18vw,150px);gap:5px;
+    pointer-events:auto;align-self:end;padding-bottom:max(3px,env(safe-area-inset-bottom));
+  }
+  #duelo .comandos button{min-height:clamp(46px,13svh,63px);border-radius:12px;font-size:clamp(18px,3.2vw,26px)}
+  #duelo .comandos-acoes button{min-height:clamp(68px,19svh,88px);font-size:clamp(19px,3.1vw,28px)}
+  #duelo .comandos button small{font-size:9px}
+  #duelo .placar{padding:3px 6px}
+  #duelo .lado small{font-size:10px}
+}
+@media (max-width:360px) and (orientation:portrait){
+  #duelo .comandos button{min-height:55px}
+  #duelo .comandos-acoes button{min-height:73px}
+  #duelo .comandos-toque{gap:6px}
+}
+@media(prefers-reduced-motion:reduce){#duelo .comandos button{transition:none}}
