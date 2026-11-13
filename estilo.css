@@ -467,3 +467,84 @@ time{align-self:start;border:1px solid var(--pm-line);padding:3px 6px;background
   #duelo .comandos-toque{gap:6px}
 }
 @media(prefers-reduced-motion:reduce){#duelo .comandos button{transition:none}}
+
+/* Hotfix mobile paisagem: corrige o grid-auto-flow:column herdado do layout legado,
+   que esmagava as setas em quatro colunas, e libera espaço real para a arena. */
+@media (orientation:landscape) and (max-height:650px) and (pointer:coarse) {
+  main:has(#duelo:not([hidden])) {
+    height:100svh;
+    padding: max(3px,env(safe-area-inset-top)) max(7px,env(safe-area-inset-right)) max(3px,env(safe-area-inset-bottom)) max(7px,env(safe-area-inset-left));
+  }
+  #duelo{
+    grid-template-rows: minmax(28px,auto) minmax(0,1fr);
+    gap:2px;
+  }
+  #duelo .combate{display:flex;align-items:center;gap:6px;min-height:28px;flex-wrap:nowrap}
+  #duelo .combate h1{font-size:clamp(11px,1.7vw,16px);white-space:nowrap}
+  #duelo .combate-acoes{display:flex;flex-wrap:nowrap;gap:5px}
+  #duelo .combate-acoes button{padding:4px 6px;min-height:28px;font-size:11px;white-space:nowrap}
+  #duelo .musica-combate span{display:none}
+  #duelo #voltar{font-size:0}
+  #duelo #voltar::after{content:"Trocar";font-size:11px}
+  #duelo #mobile-fullscreen span{display:none}
+  #duelo #mobile-fullscreen{font-size:17px;min-width:36px}
+  #duelo .duelo-tabuleiro{min-height:0;min-width:0;width:100%;height:100%}
+  #duelo .arena{
+    width:min(calc((100svh - 60px) * 1146 / 672),calc(100vw - 254px));
+    max-width:calc(100% - 236px);
+    margin:auto;
+  }
+  #duelo .comandos{
+    position:absolute;
+    inset:31px 0 2px;
+    z-index:4;
+    width:100%;
+    pointer-events:none;
+    margin:0;
+  }
+  #duelo .comandos-toque{
+    width:100%;height:100%;gap:5px;
+    display:flex;align-items:end;justify-content:space-between;
+  }
+  #duelo .comandos-movimento,
+  #duelo .comandos-acoes{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    grid-template-rows:repeat(2,minmax(0,auto));
+    grid-auto-flow:row;
+    grid-auto-columns:auto;
+    gap:clamp(5px,1vw,10px);
+    width:clamp(112px,19vw,170px);
+    min-width:112px;
+    justify-content:stretch;
+    align-content:end;
+    align-self:end;
+    padding-bottom:clamp(5px,1.5vh,12px);
+    pointer-events:auto;
+  }
+  #duelo .comandos-acoes{
+    grid-template-rows:1fr;
+  }
+  #duelo .comandos-movimento button{
+    min-width:0;
+    min-height:clamp(52px,12svh,75px);
+    width:100%;
+    font-size:clamp(20px,3.1vw,29px);
+  }
+  #duelo .comandos-acoes button{
+    min-width:0;
+    min-height:clamp(78px,19svh,106px);
+    width:100%;
+    font-size:clamp(20px,3.2vw,30px);
+  }
+  #duelo .comandos button small{font-size:clamp(9px,1.2vw,11px)}
+  #duelo .placar{padding:4px 6px}
+  #duelo .placar .lado strong{font-size:clamp(10px,1.6vw,14px)}
+  #duelo .placar .lado small{font-size:10px}
+}
+@media (orientation:landscape) and (max-height:380px) and (pointer:coarse) {
+  #duelo .comandos-movimento button{min-height:48px}
+  #duelo .comandos-acoes button{min-height:66px}
+  #duelo .comandos-movimento,#duelo .comandos-acoes{width:clamp(110px,18vw,145px)}
+  #duelo .arena{width:min(calc((100svh - 49px)*1146/672),calc(100vw - 235px));max-width:calc(100% - 218px)}
+}
