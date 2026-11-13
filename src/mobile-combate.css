@@ -1,0 +1,167 @@
+/* Pancadaria Municipal — experiência de combate touch independente do desktop.
+   Preserva o motor, canvas, controles data-key e menus existentes. */
+.orientacao-mobile{display:none}
+
+/* Retrato: tela de transição, em vez de esmagar o combate e os controles. */
+@media (pointer:coarse) and (orientation:portrait) and (max-width:900px){
+  body:has(#duelo:not([hidden])){overflow:hidden}
+  body:has(#duelo:not([hidden])) .patrocinios{display:none}
+  main:has(#duelo:not([hidden])){height:100dvh!important;min-height:0;overflow:hidden}
+  #duelo:not([hidden]){position:relative;height:100%;display:block}
+  #duelo:not([hidden]) > :not(.orientacao-mobile){visibility:hidden;pointer-events:none}
+  #duelo .orientacao-mobile{
+    display:flex;position:fixed;z-index:300;inset:0;
+    flex-direction:column;align-items:center;justify-content:center;
+    gap:clamp(12px,3vh,24px);padding:calc(20px + env(safe-area-inset-top))
+      calc(20px + env(safe-area-inset-right))
+      calc(20px + env(safe-area-inset-bottom))
+      calc(20px + env(safe-area-inset-left));
+    text-align:center;background:radial-gradient(ellipse at center,#2a4164,#101827 75%);
+  }
+  .orientacao-mobile .orientacao-icone{font-size:clamp(52px,14vw,84px);line-height:1}
+  .orientacao-mobile h2{max-width:26ch;font:700 clamp(18px,6vw,28px)/1.25 var(--pm-display);color:var(--pm-action)}
+  .orientacao-mobile p{max-width:32ch;font-size:clamp(15px,4vw,18px);line-height:1.5}
+  .orientacao-mobile button{min-height:48px;padding:10px 20px}
+}
+
+/* Somente em tela touch horizontal compacta: modo arcade imersivo. */
+@media (pointer:coarse) and (orientation:landscape) and (max-height:650px){
+  html,body{width:100%;height:100%;overscroll-behavior:none}
+  body:has(#duelo:not([hidden])){overflow:hidden}
+  body:has(#duelo:not([hidden])) .patrocinios{display:none!important}
+  body:has(#duelo:not([hidden])) main{
+    width:100%;max-width:none;margin:0;
+    padding:0!important;height:100dvh!important;min-height:0;
+    overflow:hidden;
+  }
+  body:has(#duelo:not([hidden])) main > .marca{display:none}
+  #duelo:not([hidden]){
+    position:relative;isolation:isolate;
+    display:block!important;width:100%;height:100%;min-height:0;
+    padding:0;margin:0;overflow:hidden;
+  }
+  #duelo .orientacao-mobile{display:none}
+  /* Arena dimensionada pela largura e altura disponíveis (sem deformar canvas). */
+  #duelo .duelo-tabuleiro{
+    display:flex!important;align-items:center;justify-content:center;
+    width:100%;height:100%;min-height:0;container-type:normal;
+    padding:0;margin:0;overflow:hidden;
+  }
+  #duelo .arena{
+    box-sizing:border-box;position:relative;
+    width:min(100vw, calc(100dvh * 1146 / 672))!important;
+    max-width:none!important;margin:auto;
+    border:0!important;
+    aspect-ratio:1146 / 672;overflow:hidden;
+  }
+  #duelo .arena canvas{display:block;width:100%;height:auto;aspect-ratio:1146 / 672}
+  /* Placar dentro da arena, não consumindo sua altura de jogo. */
+  #duelo .placar{
+    position:absolute!important;top:0;left:0;right:0;z-index:5;
+    display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+    grid-template-rows:auto!important;align-items:start;
+    gap:clamp(4px,1.2vw,13px);padding:6px clamp(8px,2vw,24px);
+    background:linear-gradient(#101827f2,#101827a5 76%,transparent);
+    pointer-events:none;
+  }
+  #duelo .lado{
+    display:block!important;grid-row:auto!important;
+    min-width:0;font-size:clamp(10px,1.7vw,16px);line-height:1.15;
+  }
+  #duelo .lado strong{
+    display:block;max-width:100%;overflow:hidden;
+    white-space:nowrap;text-overflow:ellipsis;
+  }
+  #duelo .lado progress{
+    height:clamp(6px,1.6vh,11px);margin:2px 0 1px;
+  }
+  #duelo .lado small{font-size:clamp(9px,1.35vw,12px)}
+  #duelo .placar time{
+    grid-row:auto!important;font-size:clamp(15px,3.8vh,27px);padding:2px 5px;
+  }
+  /* Cabeçalho desktop vira duas ações discretas no canto superior direito. */
+  #duelo .intro.combate{
+    position:absolute;z-index:35;right:max(8px,env(safe-area-inset-right));
+    top:max(58px,calc(8px + env(safe-area-inset-top)));
+    display:block!important;width:auto;padding:0;margin:0;
+    border:0;background:transparent;
+  }
+  #duelo .intro.combate > div:first-child{display:none}
+  #duelo .combate-acoes{display:flex;gap:6px;flex-wrap:nowrap}
+  #duelo .combate-acoes button{
+    display:grid;place-items:center;min-width:42px;min-height:42px;
+    max-width:50px;padding:5px;border-radius:10px;
+    font-size:0!important;line-height:1;
+    background:#101827d9;border:1px solid #91a6c2;
+    box-shadow:0 3px 0 #0a1020;color:var(--pm-cream);
+  }
+  #duelo .musica-combate::before{content:"♫";font-size:22px}
+  #duelo #voltar::before{content:"☰";font-size:22px}
+  /* Controles em camada independente do jogo, com áreas touch generosas. */
+  #duelo .rodape.comandos{
+    position:absolute;z-index:30;inset:auto 0 max(8px,env(safe-area-inset-bottom));
+    margin:0!important;padding:0;
+    pointer-events:none;
+  }
+  #duelo .comandos-teclado{display:none}
+  #duelo .comandos-toque{
+    display:flex!important;align-items:flex-end;justify-content:space-between;
+    width:100%;gap:clamp(10px,6vw,60px);
+    padding-left:max(10px,env(safe-area-inset-left));
+    padding-right:max(10px,env(safe-area-inset-right));
+  }
+  #duelo .comandos-movimento{
+    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    grid-auto-flow:row!important;grid-auto-columns:auto!important;
+    align-items:end;gap:5px;
+  }
+  #duelo .comandos-acoes{
+    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    grid-auto-flow:row!important;grid-auto-columns:auto!important;
+    align-items:end;gap:5px;
+  }
+  #duelo .comandos-acoes [data-key="Sweep"]{grid-column:span 2!important}
+  #duelo .comandos button{
+    pointer-events:auto;touch-action:none;user-select:none;
+    -webkit-user-select:none;
+    min-width:clamp(44px,6.8vw,64px)!important;
+    min-height:clamp(44px,9vh,62px)!important;
+    padding:4px 8px;font-size:clamp(12px,1.8vw,16px)!important;
+    font-weight:800;line-height:1.05;border-radius:12px;
+    background:#18334dcc;border:2px solid #82b2d7;
+    color:#fff7e7;box-shadow:0 3px 0 #101827;
+    -webkit-tap-highlight-color:transparent;
+  }
+  #duelo .comandos-movimento span{
+    display:block!important;font-size:clamp(9px,1.2vw,11px);
+  }
+  #duelo .comandos-acoes [data-key="KeyZ"]{
+    background:#a16636e8;border-color:#ffd38a;
+  }
+  #duelo .comandos-acoes [data-key="KeyX"]{
+    background:#a64d70e8;border-color:#f3a3bf;
+  }
+  #duelo .comandos-acoes [data-key="Sweep"]{
+    min-height:36px!important;background:#324a67d9;
+  }
+  #duelo .comandos button[data-pressionado]{
+    transform:translateY(2px);box-shadow:none;
+    background:var(--pm-action);border-color:#fff;color:var(--pm-ink);
+  }
+  #duelo .largada{z-index:10}
+  #duelo .chamada{z-index:6}
+  #duelo .fim{z-index:40;overflow:auto;overscroll-behavior:contain}
+  #duelo .fim > div{max-width:min(90vw,510px);max-height:94dvh;overflow:auto}
+}
+
+/* Celulares mais baixos: manter acessíveis todas as áreas de toque. */
+@media (pointer:coarse) and (orientation:landscape) and (max-height:390px){
+  #duelo .comandos button{
+    min-height:44px!important;min-width:44px!important;
+    padding:2px 5px;font-size:12px!important;
+  }
+  #duelo .comandos-acoes [data-key="Sweep"]{min-height:28px!important}
+  #duelo .comandos-movimento span{font-size:9px}
+  #duelo .intro.combate{top:max(43px,env(safe-area-inset-top))}
+  #duelo .combate-acoes button{min-height:38px;min-width:38px}
+}
