@@ -1,0 +1,25 @@
+name: Validar interface mobile isolada
+on:
+  push:
+    branches: [feature/mobile-combate-dedicado]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verificar sintaxe do motor
+        run: node --check src/municipal.js
+      - name: Validar componentes mobile e controles
+        run: node --test tests/mobile-layout.test.mjs
+      - name: Verificar arquivos obrigatorios
+        run: |
+          test -s index.html
+          test -s estilo.css
+          test -s src/mobile-combate.css
+          test -s src/scenes/BattleScene.js
