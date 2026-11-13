@@ -602,4 +602,13 @@ function voltarParaSelecao() {
 }
 $('voltar').addEventListener('click', voltarParaSelecao);
 $('novo-confronto').addEventListener('click', voltarParaSelecao);
+// Ao encerrar o duelo, abrir a mesma tela de apoio Pix da capa.
+$('apoiar-apos-duelo').addEventListener('click', () => {
+  vozes?.parar();
+  musica?.tocar(TEMA_DO_JOGO);
+  battle = null;
+  resetInput();
+  $('duelo').hidden = true;
+  abrirMenu('apoio');
+});
 requestAnimationFrame(frame);
