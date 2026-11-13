@@ -1,0 +1,26 @@
+name: QA Pato Mil Grau
+on:
+  push:
+    branches: [pato-mil-grau]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validar pacote do lutador
+        run: node skills/verificar-pacote.mjs lutador src/lutadores/patomilgrau
+      - name: Verificar sintaxe dos arquivos alterados
+        run: |
+          node --check src/elenco.js
+          node --check src/municipal.js
+          node --check src/arte-pacotes.js
+          node --check qa/pato-mil-grau.test.mjs
+      - name: Testes de regressão do elenco e recursos existentes
+        run: node --test qa/pato-mil-grau.test.mjs
