@@ -295,6 +295,19 @@ export class BattleScene {
     context.fillStyle = '#344258';
     context.fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT);
     context.save();
+    // Zoom suave no retrato quando ambos lutadores cabem na imagem.
+    // Não muda hitboxes, velocidade ou a câmera do motor de combate.
+    const portrait = window.matchMedia('(pointer:coarse) and (orientation:portrait)').matches;
+    const separation = Math.abs(this.fighters[0].position.x - this.fighters[1].position.x);
+    const targetZoom = portrait ? Math.max(1, Math.min(1.16, (SCENE_WIDTH - 24) / (separation + 104))) : 1;
+    this.mobileZoom = (this.mobileZoom ?? 1) + (targetZoom - (this.mobileZoom ?? 1)) * .12;
+    if (this.mobileZoom > 1.001) {
+      const midpoint = (this.fighters[0].position.x + this.fighters[1].position.x) / 2 - x;
+      const focusX = Math.max(80, Math.min(SCENE_WIDTH - 80, midpoint));
+      context.translate(focusX, SCENE_HEIGHT * .55);
+      context.scale(this.mobileZoom, this.mobileZoom);
+      context.translate(-focusX, -SCENE_HEIGHT * .55);
+    }
     if (now < this.shakeUntil) context.translate(Math.sin(now / 8) * (this.shakeUntil - now) / 75, 0);
     context.drawImage(this.background, -pan * 105, STAGE_FLOOR - 228 - y, SCENE_WIDTH + 105, 262);
     for (const fighter of this.fighters) {
