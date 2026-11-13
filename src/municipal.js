@@ -411,7 +411,9 @@ function render() {
 
 function frame(timestamp) {
   requestAnimationFrame(frame);
-  if (document.hidden || $('patrocinar').open) {
+  // Pausa o duelo enquanto a tela de orientação retrato está visível.
+  const retratoTouch = window.matchMedia('(pointer: coarse) and (orientation: portrait) and (max-width: 900px)').matches;
+  if (document.hidden || $('patrocinar').open || (retratoTouch && !$('duelo').hidden)) {
     resetInput();
     last = null;
     return;
@@ -601,6 +603,7 @@ function voltarParaSelecao() {
   showSelection(0);
 }
 $('voltar').addEventListener('click', voltarParaSelecao);
+$('voltar-orientacao').addEventListener('click', voltarParaSelecao);
 $('novo-confronto').addEventListener('click', voltarParaSelecao);
 // Ao encerrar o duelo, abrir a mesma tela de apoio Pix da capa.
 $('apoiar-apos-duelo').addEventListener('click', () => {
