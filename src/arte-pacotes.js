@@ -1,5 +1,5 @@
 // Pacotes PNG opcionais. Se um arquivo estiver ausente ou falhar, o desenho procedural permanece ativo.
-const ids = ['periquito','pagodeiro','prefeito','gladiador','oaa','patinho'];
+const ids = ['periquito','pagodeiro','prefeito','gladiador','oaa'];
 const packages = new Map();
 export const artDiagnostics = { loaded: 0, failed: 0, requested: ids.length * 3, failures: [] };
 function notify(id, kind, success, url) {
