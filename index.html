@@ -8,6 +8,7 @@
 <link rel="icon" href="design/simbolo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="design/tokens.css">
 <link rel="stylesheet" href="estilo.css?v=responsivo-v2">
+<link rel="stylesheet" href="src/mobile-combate.css?v=mobile-layout-v1">
 <link rel="stylesheet" href="src/patrocinios.css?v=patrocinios-v1">
 <script type="module" src="src/municipal.js?v=apoio-v2"></script>
 <script type="module" src="src/apoio-pix.js?v=arcade-mobile-v1"></script>
@@ -168,6 +169,12 @@
         <button class="musica-combate" data-musica type="button" aria-pressed="true" hidden>Música<span aria-hidden="true"> ligada</span></button>
         <button id="voltar">Trocar lutadores ou arena</button>
       </div>
+    </div>
+    <div class="orientacao-mobile" role="status" aria-live="polite">
+      <span class="orientacao-icone" aria-hidden="true">↻</span>
+      <h2>Gire o celular para jogar</h2>
+      <p>O combate foi preparado para a tela horizontal, com mais espaço para a arena e controles maiores.</p>
+      <button id="voltar-orientacao" type="button">Trocar lutadores</button>
     </div>
     <div class="duelo-tabuleiro">
       <div class="arena">
