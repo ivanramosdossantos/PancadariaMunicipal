@@ -84,33 +84,51 @@
       </aside>
     </div>
   </section>
-  <section id="apoio" class="menu-extra" aria-labelledby="titulo-apoio" hidden>
+  <section id="apoio" class="menu-extra apoio-v2" aria-labelledby="titulo-apoio" hidden>
     <button class="menu-voltar" type="button" data-menu="capa">← Voltar à capa</button>
-    <div class="menu-intro">
-      <p class="eyebrow">MAIS UMA FICHA</p>
-      <h1 id="titulo-apoio" tabindex="-1">Apoiar o projeto</h1>
-      <p>Uma contribuição ajuda a manter o fliperama de praça no ar e a levar a pancadaria para mais cidades.</p>
-      <p class="impacto-social"><strong>♥ AQUI A PANCADARIA TAMBÉM FAZ O BEM!</strong> Destinaremos <strong>10% da receita arrecadada pelo jogo</strong> a organizações sociais, incluindo instituições de acolhimento e cuidado de pessoas idosas. As entidades beneficiadas e os repasses serão divulgados em nossa prestação de contas.</p>
+    <div class="apoio-topo">
+      <p class="eyebrow">MAIS UMA FICHA · UMA BOA CAUSA</p>
+      <h1 id="titulo-apoio" tabindex="-1">APOIE O PROJETO</h1>
+      <p>Seu apoio mantém o fliperama vivo, ajuda a criar novos conteúdos e fortalece ações sociais.</p>
     </div>
-    <div class="menu-painel">
-      <fieldset class="menu-doacoes">
-        <legend>Escolha um valor</legend>
-        <label><input type="radio" name="apoio" value="2" checked><span><strong>R$ 2</strong><small>Uma ficha</small></span></label>
-        <label><input type="radio" name="apoio" value="5"><span><strong>R$ 5</strong><small>Mais um round</small></span></label>
-        <label><input type="radio" name="apoio" value="10"><span><strong>R$ 10</strong><small>Força total</small></span></label>
-      </fieldset>
-      <aside class="menu-resumo">
-        <p class="eyebrow">CONTRIBUIÇÃO VOLUNTÁRIA</p>
-        <p>Seu apoio ajuda a produzir novos cenários, manter o jogo e apoiar nossa iniciativa social.</p>
-        <p class="pix-aviso">Digite <strong id="valor-apoio-pix" aria-live="polite">R$ 2</strong> no app do banco ou informe o valor que preferir.</p>
-        <div class="pix-acoes"><button type="button" data-copiar-pix>Copiar código Pix</button></div>
-        <input data-pix-manual type="text" aria-label="Código Pix para copiar" readonly hidden>
-        <small data-pix-feedback role="status"></small>
+    <div class="apoio-v2-grid">
+      <div class="apoio-v2-esquerda">
+        <div class="impacto-social">
+          <strong>♥ AQUI A PANCADARIA TAMBÉM FAZ O BEM!</strong>
+          <p><strong>10% da receita arrecadada pelo jogo</strong> serão destinados a organizações sociais, incluindo instituições de acolhimento e cuidado de pessoas idosas.</p>
+          <small>As entidades beneficiadas e os repasses serão divulgados em nossa prestação de contas.</small>
+        </div>
+        <fieldset class="menu-doacoes apoio-v2-valores">
+          <legend>ESCOLHA UMA FICHA</legend>
+          <label><input type="radio" name="apoio" value="2" checked><span><strong>R$ 2</strong><small>Uma ficha</small></span></label>
+          <label><input type="radio" name="apoio" value="5"><span><strong>R$ 5</strong><small>Mais um round</small></span></label>
+          <label><input type="radio" name="apoio" value="10"><span><strong>R$ 10</strong><small>Força total</small></span></label>
+          <label><input type="radio" name="apoio" value="livre"><span><strong>LIVRE</strong><small>Você escolhe</small></span></label>
+        </fieldset>
+        <div class="apoio-v2-objetivos">
+          <p class="eyebrow">SEU APOIO ENTRA EM CAMPO PARA</p>
+          <div><span>★ Manter o jogo no ar</span><span>★ Criar novos lutadores</span><span>★ Lançar novas arenas</span><span>♥ Apoiar ações sociais</span></div>
+        </div>
+      </div>
+      <aside class="menu-resumo apoio-v2-pix" aria-label="Contribuição por Pix">
+        <p class="eyebrow">PAGAMENTO PIX · VALOR LIVRE</p>
+        <h2>ESCANEIE E APOIE</h2>
         <figure class="pix-qr">
-          <img src="src/pix/qr-code.png" width="450" height="450" alt="QR Code Pix para apoiar o jogo">
-          <figcaption>Ou escaneie o QR Code no app do banco.</figcaption>
+          <img src="src/pix/qr-code.png" width="450" height="450" alt="QR Code Pix do Pancadaria Municipal para escanear no aplicativo do banco">
+          <figcaption>Abra o app do banco, escaneie o QR Code e confirme o valor.</figcaption>
         </figure>
-        <small>O Pix é feito no app do banco. O jogo ainda não confirma pagamentos.</small>
+        <p class="pix-aviso" id="apoio-instrucao-valor">Sugestão: <strong id="valor-apoio-pix" aria-live="polite">R$ 2</strong>. Você pode contribuir com qualquer valor.</p>
+        <div class="pix-acoes apoio-v2-acoes">
+          <button type="button" class="principal" data-copiar-pix>▣ COPIAR PIX COPIA E COLA</button>
+          <button type="button" id="compartilhar-apoio">Compartilhar link de apoio</button>
+        </div>
+        <input data-pix-manual type="text" aria-label="Código Pix para copiar" readonly hidden>
+        <small data-pix-feedback role="status" aria-live="polite"></small>
+        <div class="apoio-v2-confianca">
+          <span><strong>Recebedor:</strong> I RAMOS SANTOS CONSULT</span>
+          <span><strong>Identificação:</strong> Pancadaria Municipal</span>
+          <span><strong>Pagamento:</strong> realizado no seu banco; sem cadastro no jogo.</span>
+        </div>
       </aside>
     </div>
   </section>
