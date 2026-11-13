@@ -555,7 +555,7 @@ $('iniciar').addEventListener('click', () => abrirMenu('selecao'));
 configurarIndicacoes($('form-indicacao'), $('enviar-indicacao'), $('status-indicacao'), $('pix-indicacao'));
 for (const option of document.querySelectorAll('input[name="apoio"]')) {
   option.addEventListener('change', () => {
-    $('valor-apoio-pix').textContent = 'R$ ' + option.value;
+    $('valor-apoio-pix').textContent = option.value === 'livre' ? 'qualquer valor' : 'R$ ' + option.value;
   });
 }
 for (const button of musicButtons) {
