@@ -2,6 +2,8 @@ const assetRoot = new URL('./lutadores/', import.meta.url);
 
 async function carregarImagem(url) {
   const imagem = new Image();
+  // Cache bust da arte junto da versão do módulo, inclusive dos PNGs.
+  url.search = new URL(import.meta.url).search;
   imagem.src = url.href;
   await imagem.decode();
   return imagem;
