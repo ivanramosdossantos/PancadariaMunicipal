@@ -43,7 +43,7 @@ export const elenco = [
     color: '#8b668e', deep: '#4b3658', shine: '#ceabd0', skin: '#c18b64',
   },
   {
-    id: 'patinho', oculto: true, nome: 'Patinho Futsal', normal: 'Chute de Bico',
+    id: 'patinho', nome: 'Patinho Futsal', normal: 'Chute de Bico',
     estadoNormal: FighterState.LIGHT_KICK, especial: 'Bicada Mortal',
     descricao: 'Finge que vai chutar e avança de bico. A finta avisa a hora de defender.',
     base: Ken, efeito: LungeSpecial, recarga: 3000, pacoteArte: true, voz: true,
@@ -51,7 +51,7 @@ export const elenco = [
     color: '#427ecb', deep: '#28467a', shine: '#8ec6ff', skin: '#f5be53',
   },
   {
-    id: 'desastroso', nome: 'O Desastroso', normal: 'Tapão Sem Querer',
+    id: 'desastroso', oculto: true, nome: 'O Desastroso', normal: 'Tapão Sem Querer',
     estadoNormal: FighterState.MEDIUM_PUNCH, especial: 'Balinha de Brita',
     descricao: 'Arremessa três balinhas de brita em arco na direção da cabeça do rival. Defenda ou pule para escapar.',
     base: Ryu, efeito: GravelCandySpecial, recarga: 3400, pacoteArte: true, voz: false,
