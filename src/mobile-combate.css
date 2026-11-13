@@ -49,7 +49,7 @@
   }
   #duelo .arena{
     box-sizing:border-box;position:relative;
-    width:min(100vw, calc(100dvh * 1146 / 672))!important;
+    width:min(100vw, 170.5357dvh)!important;
     max-width:none!important;margin:auto;
     border:0!important;
     aspect-ratio:1146 / 672;overflow:hidden;
