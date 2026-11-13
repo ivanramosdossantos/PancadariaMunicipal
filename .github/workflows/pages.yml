@@ -52,6 +52,8 @@ jobs:
           node --check < integracoes/google-sheets/Code.gs
           node --check src/apoio-pix.js
           node skills/verificar-pacote.mjs lutador src/lutadores/desastroso
+          node skills/verificar-pacote.mjs lutador src/lutadores/patomilgrau
+          node --test qa/pato-mil-grau.test.mjs
           node --check src/municipal.js
           node --check src/patrocinios.js
           node --check src/especiais.js
