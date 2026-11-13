@@ -26,14 +26,18 @@ test('Atlas e retratos são PNGs reais fornecidos pelo novo pacote', () => {
   }
 });
 
-test('Animações respeitam limites de 320x304 e contatos de ataque', () => {
+test('Animações respeitam dimensões reais do PNG e contatos de ataque', () => {
+  const atlas = readFileSync(dir + 'sprites.png');
+  const larguraAtlas = atlas.readUInt32BE(16);
+  const alturaAtlas = atlas.readUInt32BE(20);
+  assert.ok(larguraAtlas > 0 && alturaAtlas > 0);
   assert.equal(ficha.id, 'patomilgrau');
   assert.equal(ficha.especial.nome, 'Bicada Mil Grau');
   for (const estado of ['parado','andar','pular','defender','normal','especial','atingido','queda','nocaute','vitoria','rasteira','aereo']) {
     const quadros = ficha.animacoes[estado];
     assert.ok(quadros?.length, estado);
     for(const q of quadros){
-      assert.ok(q.x>=0 && q.y>=0 && q.x+q.largura<=320 && q.y+q.altura<=304, estado);
+      assert.ok(q.x>=0 && q.y>=0 && q.x+q.largura<=larguraAtlas && q.y+q.altura<=alturaAtlas, estado);
       assert.ok(q.pivoX>=0 && q.pivoX<=q.largura && q.pivoY>=0 && q.pivoY<=q.altura, estado);
     }
   }
@@ -48,5 +52,5 @@ test('Capa, Pix, doações e controles mobile preservados', () => {
   assert.match(html,/id="apoiar-apos-duelo"/);
   assert.match(html,/data-key="ArrowLeft"/);
   assert.match(html,/data-key="KeyX"/);
-  assert.match(html,/src\/municipal.js\?v=pato-mil-grau-v1/);
+  assert.match(html,/src\/municipal.js\?v=pato-mil-grau-v2/);
 });
