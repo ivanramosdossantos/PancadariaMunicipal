@@ -43,12 +43,21 @@ export const elenco = [
     color: '#8b668e', deep: '#4b3658', shine: '#ceabd0', skin: '#c18b64',
   },
   {
-    id: 'patinho', nome: 'Patinho Futsal', normal: 'Chute de Bico',
+    id: 'patinho', oculto: true, nome: 'Patinho Futsal', normal: 'Chute de Bico',
     estadoNormal: FighterState.LIGHT_KICK, especial: 'Bicada Mortal',
     descricao: 'Finge que vai chutar e avança de bico. A finta avisa a hora de defender.',
     base: Ken, efeito: LungeSpecial, recarga: 3000, pacoteArte: true, voz: true,
     investida: { delay: 0.08, speed: 275, duration: 0.26, damage: 26, tint: '#b8dfff' },
     color: '#427ecb', deep: '#28467a', shine: '#8ec6ff', skin: '#f5be53',
+  },
+  {
+    id: 'patomilgrau', nome: 'Pato Mil Grau', normal: 'Tapão de Asa',
+    estadoNormal: FighterState.MEDIUM_PUNCH, especial: 'Bicada Mil Grau',
+    descricao: 'Ajeita o terno, ameaça o rival e dispara uma bicada em alta velocidade. Defenda ou recue.',
+    base: Ken, efeito: LungeSpecial, recarga: 3200, pacoteArte: true, voz: false,
+    investida: { delay: 0.12, speed: 310, duration: 0.29, damage: 27, tint: '#ffc94c' },
+    color: '#24232c', deep: '#101015', shine: '#e9b950', skin: '#f9e9d4',
+    alternativa: { color: '#5a4d63', deep: '#22202c', shine: '#ffd178' },
   },
   {
     id: 'desastroso', oculto: true, nome: 'O Desastroso', normal: 'Tapão Sem Querer',
